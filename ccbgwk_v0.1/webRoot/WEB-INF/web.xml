@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="2.5"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <session-config>
+        <session-timeout>360</session-timeout>
+    </session-config>
+
+    <servlet>
+        <servlet-name>SchedulerManager</servlet-name>
+        <servlet-class>pub.platform.advance.utils.SchedulerManager</servlet-class>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ImgServlet</servlet-name>
+        <servlet-class>pub.platform.security.ImgServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>login</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet>
+         <servlet-name>IElement</servlet-name>
+         <servlet-class>gwk.burlap.server.ElementImpl</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>IElement</servlet-name>
+         <url-pattern>/burlap</url-pattern>
+     </servlet-mapping>
+    
+
+
+    <servlet-mapping>
+        <servlet-name>ImgServlet</servlet-name>
+        <url-pattern>/signjpg</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SchedulerManager</servlet-name>
+        <url-pattern>/SchedulerManager</url-pattern>
+    </servlet-mapping>
+
+    <mime-mapping>
+        <extension>xls</extension>
+        <mime-type>application/vnd.ms-excel</mime-type>
+    </mime-mapping>
+
+    <welcome-file-list>
+        <welcome-file>/index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

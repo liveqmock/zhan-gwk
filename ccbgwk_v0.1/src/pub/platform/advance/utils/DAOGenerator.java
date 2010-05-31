@@ -16,8 +16,9 @@ import pub.platform.utils.*;
 
 public class DAOGenerator {
   // 默认的包名
-  private static final String schme = "CCB";
-  public static final String PACKAGE = "com.ccb.dao";
+//  private static final String schme = "CCB";
+  private static final String schme = "GWK";
+  public static final String PACKAGE = "gwk.dao";
   static JavaBeanGenerator jbg = new JavaBeanGenerator();
 
   /**
@@ -81,7 +82,10 @@ public class DAOGenerator {
     // 生成单个表的文件
 //    generateAllTables();
 //     generateTable("LN_COOPPROJ");
-     generateTable("LN_TASKINFO");
+     generateTable("LS_BDGAGENCY");
+     generateTable("LS_BDGAGENCY_H");
+     generateTable("LS_CARDBASEINFO");
+     generateTable("LS_CONSUMEINFO");
 
   }
 

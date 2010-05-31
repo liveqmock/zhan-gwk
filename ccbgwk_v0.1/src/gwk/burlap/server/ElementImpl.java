@@ -1,6 +1,5 @@
 package gwk.burlap.server;
 
-import com.caucho.burlap.client.BurlapRuntimeException;
 import com.caucho.burlap.server.BurlapServlet;
 import gwk.burlap.IElement;
 
@@ -25,7 +24,7 @@ public class ElementImpl extends BurlapServlet implements IElement {
         elements.add("elementsһ��");      
         try {
             String gbk = new String("中文".getBytes("ISO-8859-1"),"GBK");
-            elements.add(gbk);
+            elements.add(gbk);   
         } catch (UnsupportedEncodingException e) {
             throw e;
         }

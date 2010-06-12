@@ -56,13 +56,14 @@
             " tx_cd,ref_number,businame,txlog " +
             " from ls_consumeinfo " +
             " where 1=1 ";
+    
     dbGrid.setfieldSQL(sql);
     dbGrid.setWhereStr(" order by lsh ");
 
     dbGrid.setField("流水号", "text", "10", "lsh", "true", "0");
     dbGrid.setField("通讯状态", "dropdown", "8", "status", "true", "CONSUMESTATUS");
     dbGrid.setField("持卡人", "text", "8", "cardname", "true", "0");
-    dbGrid.setField("卡号", "text", "12", "account", "true", "0");
+    dbGrid.setField("公务卡卡号", "text", "12", "account", "true", "0");
     dbGrid.setField("交易日期", "text", "8", "busidate", "true", "0");
     dbGrid.setField("入帐日期", "text", "8", "inac_date", "true", "0");
     dbGrid.setField("金额", "money", "8", "busimoney", "true", "0");
@@ -85,7 +86,7 @@
             <!-- 系统日志表使用 -->
             <input type="hidden" id="busiNode"/>
             <tr>
-                <td width="15%" class="lbl_right_padding"> 卡号</td>
+                <td width="15%" class="lbl_right_padding"> 公务卡卡号</td>
                 <td width="30%" align="right" nowrap="nowrap"
                     class="data_input" colspan="3">
                     <input type="text" id="account" size="30" style="width:91% ">

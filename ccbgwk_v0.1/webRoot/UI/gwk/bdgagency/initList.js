@@ -8,7 +8,6 @@ var gWhereStr = "";
  * <p>
  * ■每次查询完毕后焦点自动定位到第一个控件，且全选；
  *
- * @return
  */
 function body_resize() {
     divfd_ActionTable.style.height = document.body.clientHeight - 225 +"px";

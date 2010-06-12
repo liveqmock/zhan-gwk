@@ -8,7 +8,6 @@ var gWhereStr = "";
  * <p>
  * ■每次查询完毕后焦点自动定位到第一个控件，且全选；
  * 
- * @return
  */
 function body_resize() {
     // var wheight = document.body.clientHeight - 300;
@@ -99,7 +98,6 @@ function queryClick() {
  * ■系统锁为1的时候，系统锁定，0的时候未锁定
  * 
  * @param ：form名字或者ID
- * @return
  */
 
 function cbRetrieve_Click(formname) {
@@ -160,7 +158,6 @@ function coopprojTable_query_click() {
 /**
  * 双击表格弹出详细信息查看画面 调用查看函数
  * 
- * @return
  */
 function coopprojTable_TRDbclick() {
     coopprojTable_query_click();
@@ -172,7 +169,6 @@ function coopprojTable_TRDbclick() {
  * @param doType:操作类型
  *            增加（add）
  * @param loanid:贷款申请序号
- * @return
  */
 function coopprojTable_appendRecod_click() {
 
@@ -212,8 +208,6 @@ function coopprojTable_appendRecod_click() {
  * 
  * @param doType:操作类型
  *            修改 edit
- * @param 
- * @return
  */
 function coopprojTable_editRecord_click() {
     // 增加系统锁检查

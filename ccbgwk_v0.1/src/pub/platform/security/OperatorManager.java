@@ -131,17 +131,17 @@ public class OperatorManager implements Serializable {
 		ConnectionManager cm = ConnectionManager.getInstance();
 		DatabaseConnection dc = cm.get();
 		try {
-/*
 			String loginWhere = "where operid='" + operid
 					+ "' and operpasswd ='" + password + "'and operenabled='1'";
-*/
             //zhan 20100415 for UAAP
+            /*
             if (operid == null) {
                 isLogin = false;
                 return false;
             }
             String loginWhere = "where operid='" + operid
                     + "' and operenabled='1'";
+            */
             this.operatorid = operid;
             operator = new PtOperBean();
             operator = (PtOperBean) operator.findFirstByWhere(loginWhere);

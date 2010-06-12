@@ -23,7 +23,7 @@ function StartMenu()
 
 
 
-	var nRoot = tree.node.add("", "", "0", "个人信贷管理支持系统", "/images/frame/domain.gif");
+	var nRoot = tree.node.add("", "", "0", "区级公务卡管理系统", "/images/frame/domain.gif");
 
 	nRoot.xData.xNode = new Object();
 

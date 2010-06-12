@@ -5,6 +5,8 @@ import gov.mof.fasp.service.BankService;
 import gov.mof.fasp.service.CommonQueryService;
 import gov.mof.fasp.service.ElementService;
 import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
 import pub.platform.db.RecordSet;
@@ -26,15 +28,20 @@ import java.util.Map;
  */
 public class MyTest {
 
+    private static final Log logger = LogFactory.getLog(MyTest.class);
+
     public static void main(String argv[]) {
 
         MyTest test = new MyTest();
-//         test.testBurlap();
-        test.getAllElementInfo();
+        //test.testBurlap();
+
+//         test.testQuery();
+
+//         test.getAllElementInfo();
 //       test.queryElementVersion();
-//       test.syncElementCode();
+        //test.syncElementCode();
 //        test.writeOfficeCardInfo();
-//        test.writeConsumeInfo();
+        test.writeConsumeInfo();
 //        test.testAdapter_queryservice();
 //        test.testHttp();
     }
@@ -50,7 +57,7 @@ public class MyTest {
 
 
 //        String url = "http://localhost:7001/burlap";
-        String url = "http://48.135.204.1:7004/exserver/remoting/elementservice";
+        String url = "http://48.0.204.250:7002/exserver/remoting/elementservice";
 //        String url = "http://48.135.204.1:7004/exserver/remoting/service/bankservice";
 
         BurlapProxyFactory factory = new BurlapProxyFactory();
@@ -61,7 +68,8 @@ public class MyTest {
             System.out.println("occur exception: " + e);
         }
         try {
-            System.out.println(element.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2010));
+            List rtnlist = element.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2010);
+            System.out.println(rtnlist);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -138,6 +146,8 @@ public class MyTest {
             int i = 0;
 
         } catch (Exception e) {
+            conn.rollback();
+            logger.error(e);
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally {
             ConnectionManager.getInstance().release();
@@ -262,7 +272,7 @@ public class MyTest {
             //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
 
             //405 固定值
-            List rtnlist =  service.writeOfficeCard("BANK.CCB", "8015", "2010", "405", cardList);
+            List rtnlist = service.writeOfficeCard("BANK.CCB", "8015", "2010", "405", cardList);
             for (int i = 0; i < rtnlist.size(); i++) {
                 rtnlist.get(2);
 
@@ -300,9 +310,10 @@ public class MyTest {
 
     public void writeConsumeInfo() {
         BankService service = FaspServiceAdapter.getBankService();
+        //循环
+/*
         List cardList = new ArrayList();
         Map m = new HashMap();
-        //循环
         m.put("ID", "201005270000001");
         m.put("ACCOUNT", "6283660015627785");
         m.put("CARDNAME", "沈函泉");
@@ -311,14 +322,59 @@ public class MyTest {
         m.put("BUSINAME", "青岛乐天超市崂山分店");
         m.put("Limitdate", "20100616");
         cardList.add(m);
+*/
 
+        DatabaseConnection conn = ConnectionManager.getInstance().get();
+
+//        String inac_date = "2010-05-29";
+//        String inac_date = "2010-06-02";
+//        String inac_date = "2010-06-03";
+//        String inac_date = "2010-05-30";
+//        String inac_date = "2010-06-04";
+        String inac_date = "2010-06-08";
+        String sql = "select id,account,cardname,busidate,busimoney,businame,limitdate " +
+                " from ls_consumeinfo where status='10' and inac_date='" + inac_date + "' " +
+                " order by id ";
+
+        RecordSet rs = null;
         try {
-            //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
 
-            List rtnlist = service.writeConsumeInfo("BANK.CCB", "8015", "2010", "405", cardList);
-            for (int i = 0; i < rtnlist.size(); i++) {
-                rtnlist.get(1);
+            rs = conn.executeQuery(sql);
+            List cardList = new ArrayList();
+            while (rs.next()) {
+                Map m = new HashMap();
+                String id = rs.getString("id");
+                String account = rs.getString("account");
+                String cardname = rs.getString("cardname");
+                String busidate = rs.getString("busidate");
+                Double busimoney = rs.getDouble("busimoney");
+                String businame = rs.getString("businame");
+                String limitdate = rs.getString("limitdate");
+                if (busimoney <= 0) {
+                     limitdate="";
+                }
+                m.put("ID", id);
+                m.put("ACCOUNT", account);
+                m.put("CARDNAME", cardname);
+                m.put("BUSIDATE", busidate);
+                m.put("BUSIMONEY", busimoney);
+                m.put("BUSINAME", businame);
+                m.put("Limitdate", limitdate);
+                cardList.add(m);
 
+            }
+            if (cardList.size() > 0) {
+
+                List rtnlist = service.writeConsumeInfo("BANK.CCB", "8015", "2010", "405", cardList);
+//                List rtnlist = null;
+                for (int i = 0; i < rtnlist.size(); i++) {
+                    Map m1 = (Map) rtnlist.get(i);
+                    String result = (String) m1.get("result");
+                    if ("SUCCESS".equalsIgnoreCase(result)) {
+                        System.out.println(result);
+                    }
+
+                }
             }
             int i = 0;
 
@@ -326,6 +382,11 @@ public class MyTest {
 
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            ConnectionManager.getInstance().release();
         }
 
     }
@@ -333,6 +394,7 @@ public class MyTest {
     /*
     自财政局获取还款信息
      */
+
     public void testAdapter_queryservice() {
         CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
         List cardList = new ArrayList();
@@ -432,4 +494,43 @@ public class MyTest {
     }
 
 */
+
+
+    public void testQuery() {
+        ElementService service = FaspServiceAdapter.getElementService();
+        List ElementCodeList = new ArrayList();
+
+        try {
+            //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
+
+//            DatabaseConnection dc = cm.getConnection();
+            //TODO rtn
+            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2010);
+            for (int i = 0; i < rtnlist.size(); i++) {
+                Map m1 = (Map) rtnlist.get(i);
+                if (i == rtnlist.size() - 1) {
+                    String version = (String) m1.get("version");
+                    System.out.println(" ======================= ");
+                    System.out.println(" version=" + version);
+                } else {
+                    String code = (String) m1.get("code");
+                    String name = (String) m1.get("name");
+                    String guid = (String) m1.get("guid");
+                    String levelno = (String) m1.get("levelno");
+                    String supercode = (String) m1.get("supercode");
+                    String isleaf = (String) m1.get("isleaf");
+                    System.out.println("code=" + code + name);
+
+                }
+            }
+
+            int i = 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } finally {
+            //ConnectionManager.getInstance().release();
+        }
+    }
+
 }

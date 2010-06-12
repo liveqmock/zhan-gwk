@@ -20,20 +20,24 @@
         <servlet-class>pub.platform.security.ImgServlet</servlet-class>
     </servlet>
 
+    <!--<servlet>-->
+    <!--<servlet-name>login</servlet-name>-->
+    <!--<jsp-file>/index.jsp</jsp-file>-->
+    <!--</servlet>-->
+
     <servlet>
-        <servlet-name>login</servlet-name>
-        <jsp-file>/index.jsp</jsp-file>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>pub.platform.security.AdminServlet</servlet-class>
     </servlet>
 
     <servlet>
-         <servlet-name>IElement</servlet-name>
-         <servlet-class>gwk.burlap.server.ElementImpl</servlet-class>
-     </servlet>
-     <servlet-mapping>
-         <servlet-name>IElement</servlet-name>
-         <url-pattern>/burlap</url-pattern>
-     </servlet-mapping>
-    
+        <servlet-name>IElement</servlet-name>
+        <servlet-class>gwk.burlap.server.ElementImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IElement</servlet-name>
+        <url-pattern>/burlap</url-pattern>
+    </servlet-mapping>
 
 
     <servlet-mapping>
@@ -45,12 +49,18 @@
         <url-pattern>/SchedulerManager</url-pattern>
     </servlet-mapping>
 
+    <!-- Action Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>index.html</url-pattern>
+    </servlet-mapping>
+
     <mime-mapping>
         <extension>xls</extension>
         <mime-type>application/vnd.ms-excel</mime-type>
     </mime-mapping>
 
     <welcome-file-list>
-        <welcome-file>/index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 </web-app>

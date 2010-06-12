@@ -8,7 +8,7 @@
 <script language="javascript" src="./js/basic.js"></script>
 <html>
 <head>
-    <title>个人信贷管理支持系统</title>
+    <title>区级公务卡管理系统</title>
     <link href="/css/ccb.css" type="text/css" rel="stylesheet">
     <meta content="mshtml 6.00.2800.1106" name="generator">
 </head>

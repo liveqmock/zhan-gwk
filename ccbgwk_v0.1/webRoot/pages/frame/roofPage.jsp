@@ -53,9 +53,9 @@
     <script type="text/javascript">
         function Relogin() {
             parent.window.reload = "true";
-//            parent.window.location.replace("/qdgddy");
+            parent.window.location.replace("/index.html");
 //            parent.window.location.replace("/close.jsp");
-            parent.window.location.replace("/welcome.jsp");
+//            parent.window.location.replace("/welcome.jsp");
         }
         function changepwd() {
             var sfeature = "dialogwidth:400px; dialogheight:200px;center:yes;help:no;resizable:no;scroll:no;status:no";

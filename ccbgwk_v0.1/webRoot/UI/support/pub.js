@@ -327,7 +327,6 @@ function formatCommaWhenFocusOut(strValue) {
  * Number判断
  * 
  * @param obj
- * @return
  */
 function isDigit(str) {
     var patrn = /^-?[0-9]{1,38}.*$/;
@@ -341,7 +340,6 @@ function isDigit(str) {
 /**
 * FocusOut千分位追加 
 * @param obj
-* @return 
 */
 function Txn_LostFocus(obj) {
     if (obj.tagName.toUpperCase() == "INPUT") {
@@ -381,7 +379,6 @@ function Txn_LostFocus(obj) {
 /**
 * Focusin 千分位删除
 * @param obj
-* @return 
 */
 function Txn_GotFocus(obj) {
     if (obj.tagName.toUpperCase() == "INPUT") {

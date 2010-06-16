@@ -57,7 +57,7 @@ function queryClick() {
 
 
 /**
- * 察看贷款详细函数
+ * 察看详细函数
  */
 function ActionTable_query_click() {
 

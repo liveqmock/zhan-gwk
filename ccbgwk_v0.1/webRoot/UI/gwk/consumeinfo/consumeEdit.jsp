@@ -35,6 +35,7 @@
     //异常处理？
     LSCONSUMEINFO bean = new LSCONSUMEINFO();
 
+    
     // 初始化页面
     if (lsh != null && !"".equals(lsh)) {
         bean = LSCONSUMEINFO.findFirst("where lsh='" + lsh + "'");
@@ -63,6 +64,7 @@
     <script language="javascript" src="consumeEdit.js"></script>
 </head>
 <body bgcolor="#ffffff" onLoad="formInit();" class="Bodydefault">
+<%--<body bgcolor="#ffffff" class="Bodydefault">--%>
 <form id="editForm" name="editForm">
     <!-- 合作项目状态 -->
     <input type="hidden" id="MYPROJSTATUS">

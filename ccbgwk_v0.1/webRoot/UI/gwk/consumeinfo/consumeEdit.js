@@ -41,7 +41,7 @@ function formInit() {
 
     // …Ë÷√ƒ¨»œΩπµ„
     if (operation != "select") {
-        document.getElementById("proj_no").focus();
+        document.getElementById("lsh").focus();
     }
 }
 

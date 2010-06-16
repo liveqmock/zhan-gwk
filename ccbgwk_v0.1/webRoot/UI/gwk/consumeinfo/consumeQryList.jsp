@@ -27,26 +27,6 @@
     OperatorManager omgr = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
     String deptId = omgr.getOperator().getPtDeptBean().getDeptid();
 
-    //test
-/*
-    ConnectionManager cm = ConnectionManager.getInstance();
-    DatabaseConnection dc = cm.get();
-
-    StringBuilder deptAll = new StringBuilder(" ");
-    try {
-        RecordSet chrs = dc.executeQuery("select deptid from ptdept start with deptid='" + omgr.getOperator().getDeptid() + "' connect by prior deptid=parentdeptid");
-        while (chrs != null && chrs.next()) {
-            deptAll.append("'" + chrs.getString("deptid") + "',");
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-//         if ( isAutoRelease )
-        cm.release();
-    }
-    deptAll = deptAll.deleteCharAt(deptAll.length() - 1);
-*/
-
     DBGrid dbGrid = new DBGrid();
     dbGrid.setGridID("ActionTable");
     dbGrid.setGridType("edit");
@@ -73,7 +53,10 @@
     dbGrid.setField("消费地点", "text", "15", "businame", "true", "0");
     dbGrid.setField("通讯日志", "text", "20", "txlog", "true", "0");
 
-    dbGrid.setbuttons("导出Excel=excel,查看详细=queryConsume,查看项目=query,moveFirst,prevPage,nextPage,moveLast");
+    dbGrid.setpagesize(30);
+    dbGrid.setdataPilotID("datapilot");
+
+    dbGrid.setbuttons("导出Excel=excel,查看详细=query,moveFirst,prevPage,nextPage,moveLast");
 
 %>
 <body bgcolor="#ffffff" onLoad="body_resize()" onResize="body_resize();" class="Bodydefault">

@@ -121,7 +121,6 @@ function reSelect() {
 /**
  * 根据经办行联动下拉项目:客户经理ID
  * 
- * @return
  */
 function operReSelectCustMgr() {
     refresh_select("CUSTMGR_ID", "select OPERID as value ,OPERNAME as text  from ptoper where" + " deptid='"

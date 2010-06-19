@@ -1,6 +1,6 @@
 <!--
 /*********************************************************************
-* 功能描述: 消费信息查询
+* 功能描述: 消费信息发送
 * 作者:
 * 开发日期: 2010/06/10
 * 修改人:
@@ -18,8 +18,7 @@
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=GBK">
     <title></title>
-    <%--<script language="javascript" src="coopprojList.js"></script>--%>
-    <script language="javascript" src="consumeQryList.js"></script>
+    <script language="javascript" src="consumeSendList.js"></script>
     <script language="javascript" src="/UI/support/pub.js"></script>
 
 </head>
@@ -32,13 +31,14 @@
     dbGrid.setGridType("edit");
 
 
+    //TODO 枚举 ‘10’ 常量处理
     String sql = "select lsh,status,cardname,account,busidate,inac_date,busimoney,limitdate," +
             " tx_cd,ref_number,businame,txlog " +
             " from ls_consumeinfo " +
-            " where 1=1 ";
+            " where 1=1 and status = '10' ";
     
     dbGrid.setfieldSQL(sql);
-    dbGrid.setWhereStr(" order by lsh ");
+    dbGrid.setWhereStr("  order by lsh ");
 
     dbGrid.setField("流水号", "text", "10", "lsh", "true", "0");
     dbGrid.setField("通讯状态", "dropdown", "8", "status", "true", "CONSUMESTATUS");
@@ -56,7 +56,7 @@
     dbGrid.setpagesize(30);
     dbGrid.setdataPilotID("datapilot");
 
-    dbGrid.setbuttons("导出Excel=excel,查看详细=query,moveFirst,prevPage,nextPage,moveLast");
+    dbGrid.setbuttons("发送消费信息=Send,导出Excel=excel,查看详细=query,moveFirst,prevPage,nextPage,moveLast");
 
 %>
 <body bgcolor="#ffffff" onLoad="body_resize()" onResize="body_resize();" class="Bodydefault">
@@ -81,7 +81,7 @@
                 </td>
             </tr>
             <tr>
-                <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding"> 交易类型</td>
+                <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding"> 交易码</td>
                 <td width="30%" align="right" nowrap="nowrap" class="data_input" colspan="3"><input type="text" id="tx_cd"
                                                                                         size="60" style="width:91% ">
                 </td>

@@ -1,8 +1,7 @@
 <!--
 /*********************************************************************
 * 功能描述: Odsb 数据读入
-* 作 者: leonwoo
-* 开发日期: 2010/01/16
+* 开发日期: 2010/06/16
 * 修 改 人:
 * 修改日期:
 * 版 权: 公司
@@ -53,7 +52,7 @@
         <table border="0" cellspacing="0" cellpadding="0" width="50%">
             <tr>
                 <td width="40%" class="lbl_right_padding">ODSB读取数据记录数</td>
-                <td width="60%" class="data_input" id="_cell_importCnt"></td>
+                <td width="60%" class="data_input"  id="_cell_importCnt"></td>
             </tr>
         </table>
         <br>

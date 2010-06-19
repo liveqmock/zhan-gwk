@@ -24,26 +24,20 @@ import java.util.GregorianCalendar;
 
 public class odsbReadAction extends Action {
     private static final Log logger = LogFactory.getLog(odsbReadAction.class);
-    // 检查金额、姓名等
-    final String CHECKAMT_SQL = "select count(*) checkResult "
-            + " from LN_LOANAPPLY a inner join ln_odsb_loanapply b on a.loanid=b.loanid "
-            + " where a.NEEDADDCD= '1' and (trim(a.cust_name) <> trim(b.cust_name) "
-            + " or a.rt_orig_loan_amt <> b.rt_orig_loan_amt " + " or trim(a.bankid) <> trim(b.bankid)) ";
-    // 检查合作方编号
-    final String CHECKPROJ_SQL = "select count(*) checkProj from ln_odsb_loanapply a where not "
-            + " exists(select 1 from ln_coopproj b where b.proj_no=a.proj_no) and trim(a.proj_no) is not null ";
 
     /**
      * <p/>
      * 从ODSB读入数据
      * 1、自本地表中检索已从ODSB中取得的消费数据最后日期
-     * 2、自ODSB表中获取本地最后消费之后的消费数据
+     * 2、自ODSB表中获取本地最后消费之后的消费数据  (同时更新公务卡基本信息，包括卡状态处理)
      * 3、生成流水号，插入到本地消费表中
      *
      * @return
      */
     public int readFromODSB() {
         int rtn = 0;
+        int count = 0;
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat df_time = new SimpleDateFormat("HH:mm:ss");
 
@@ -67,7 +61,7 @@ public class odsbReadAction extends Action {
             }
 
             //取得本地表中本日处理过的最大流水号
-            sql = "select max(lsh) as lsh from ls_consumeinfo ";
+            sql = "select max(lsh) as lsh from ls_consumeinfo where lsh like '" + yymmdd + "%'";
             String last_today_lsh = null;
             int i_last_today_lsh = 0;
             rs = dc.executeQuery(sql);
@@ -75,26 +69,29 @@ public class odsbReadAction extends Action {
                 last_today_lsh = rs.getString("lsh");
             }
             if (last_today_lsh != null) {
-                i_last_today_lsh = Integer.parseInt(last_today_lsh.substring(8,15));
+                i_last_today_lsh = Integer.parseInt(last_today_lsh.substring(8, 15));
             }
 
 
             //TODO 确认tx_cd的含义 40 43
             sql = " insert into odsb_crd_crt_trad  " +
-                    " select * from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb a, ls_cardbaseinfo b " +
+                    " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb a, ls_cardbaseinfo b " +
                     " where a.crd_no = b.account and a.tx_cd in ('40','43') and a.inac_date > '" + last_inac_date + "' ";
 
 
-            rtn = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
+            //rtn = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
+            rtn = dc.executeUpdate(" delete from  odsb_crd_crt_trad ");
             rtn = dc.executeUpdate(sql);
             if (rtn < 0) {
                 this.res.setType(0);
                 this.res.setResult(false);
-                this.res.setMessage(PropertyManager.getProperty("300"));
+                this.res.setMessage("读取ODSB卡消费数据失败，请检查网络或数据库连接。");
+//                this.res.setMessage(PropertyManager.getProperty("300"));
                 return -1;
             }
 
             //处理卡信息表
+            //TODO 卡BIN的处理
             sql = " insert into odsb_crd_crt  " +
                     " select * from  odsbdata.BF_AGT_CRD_CRT@odsb  " +
                     " where crd_no like '6283660015%' ";
@@ -105,7 +102,7 @@ public class odsbReadAction extends Action {
             if (crd_rtn < 0) {
                 this.res.setType(0);
                 this.res.setResult(false);
-                this.res.setMessage(PropertyManager.getProperty("300"));
+                this.res.setMessage("读取ODSB卡基本数据失败，请检查网络或数据库连接。");
                 return -1;
             }
 
@@ -115,7 +112,6 @@ public class odsbReadAction extends Action {
             rs = dc.executeQuery(sql);
             LSCONSUMEINFO consume = new LSCONSUMEINFO();
 
-            int count = 0;
             //处理本日多次进行导入操作的情况
             count += i_last_today_lsh;
 
@@ -152,10 +148,14 @@ public class odsbReadAction extends Action {
                 consume.setOdsbtime(strtime);
                 consume.setRecversion(0);
 
-                consume.insert();
+                int insertrtn = consume.insert();
+                if (insertrtn < 0 ) {
+                    this.res.setType(0);
+                    this.res.setResult(false);
+                    this.res.setMessage("导入ODSB卡消费数据失败，请查看系统错误日志。");
+                    return -1;
+                }
             }
-
-
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class odsbReadAction extends Action {
         this.res.setFieldName("importCnt");
         this.res.setFieldType("text");
         this.res.setEnumType("0");
-        this.res.setFieldValue(String.valueOf(rtn));
+        this.res.setFieldValue(String.valueOf(count));
         this.res.setType(4);
         this.res.setResult(true);
         return 0;

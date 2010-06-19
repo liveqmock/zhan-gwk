@@ -21,6 +21,10 @@ String remark;
 String operid;
 String operdate;
 String sentflag;
+String txlog;
+String odsbdate;
+String odsbtime;
+int recversion;
 public static final String TABLENAME ="ls_cardbaseinfo";
 private String operate_mode = "add";
 public ChangeFileds cf = new ChangeFileds();
@@ -44,6 +48,10 @@ abb.remark=rs.getString("remark");abb.setKeyValue("REMARK",""+abb.getRemark());
 abb.operid=rs.getString("operid");abb.setKeyValue("OPERID",""+abb.getOperid());
 abb.operdate=rs.getTimeString("operdate");abb.setKeyValue("OPERDATE",""+abb.getOperdate());
 abb.sentflag=rs.getString("sentflag");abb.setKeyValue("SENTFLAG",""+abb.getSentflag());
+abb.txlog=rs.getString("txlog");abb.setKeyValue("TXLOG",""+abb.getTxlog());
+abb.odsbdate=rs.getString("odsbdate");abb.setKeyValue("ODSBDATE",""+abb.getOdsbdate());
+abb.odsbtime=rs.getString("odsbtime");abb.setKeyValue("ODSBTIME",""+abb.getOdsbtime());
+abb.recversion=rs.getInt("recversion");abb.setKeyValue("RECVERSION",""+abb.getRecversion());
 list.add(abb);
 abb.operate_mode = "edit";
 }public String getAccount() { if ( this.account == null ) return ""; return this.account;}
@@ -63,6 +71,10 @@ public String getRemark() { if ( this.remark == null ) return ""; return this.re
 public String getOperid() { if ( this.operid == null ) return ""; return this.operid;}
 public String getOperdate() {  if ( this.operdate == null ) { return ""; } else { return this.operdate.trim().split(" ")[0];} }public String getOperdateTime() {  if ( this.operdate == null ) return ""; return this.operdate.split("\\.")[0];}
 public String getSentflag() { if ( this.sentflag == null ) return ""; return this.sentflag;}
+public String getTxlog() { if ( this.txlog == null ) return ""; return this.txlog;}
+public String getOdsbdate() { if ( this.odsbdate == null ) return ""; return this.odsbdate;}
+public String getOdsbtime() { if ( this.odsbtime == null ) return ""; return this.odsbtime;}
+public int getRecversion() { return this.recversion;}
 public void setAccount(String account) { sqlMaker.setField("account",account,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAccount().equals(account)) cf.add("account",this.account,account); } this.account=account;}
 public void setCardname(String cardname) { sqlMaker.setField("cardname",cardname,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getCardname().equals(cardname)) cf.add("cardname",this.cardname,cardname); } this.cardname=cardname;}
 public void setBdgagency(String bdgagency) { sqlMaker.setField("bdgagency",bdgagency,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getBdgagency().equals(bdgagency)) cf.add("bdgagency",this.bdgagency,bdgagency); } this.bdgagency=bdgagency;}
@@ -80,6 +92,10 @@ public void setRemark(String remark) { sqlMaker.setField("remark",remark,Field.T
 public void setOperid(String operid) { sqlMaker.setField("operid",operid,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getOperid().equals(operid)) cf.add("operid",this.operid,operid); } this.operid=operid;}
 public void setOperdate(String operdate) { sqlMaker.setField("operdate",operdate,Field.DATE); if (this.operate_mode.equals("edit")) { if (!this.getOperdate().equals(operdate)) cf.add("operdate",this.operdate,operdate); } this.operdate=operdate;}
 public void setSentflag(String sentflag) { sqlMaker.setField("sentflag",sentflag,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getSentflag().equals(sentflag)) cf.add("sentflag",this.sentflag,sentflag); } this.sentflag=sentflag;}
+public void setTxlog(String txlog) { sqlMaker.setField("txlog",txlog,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getTxlog().equals(txlog)) cf.add("txlog",this.txlog,txlog); } this.txlog=txlog;}
+public void setOdsbdate(String odsbdate) { sqlMaker.setField("odsbdate",odsbdate,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getOdsbdate().equals(odsbdate)) cf.add("odsbdate",this.odsbdate,odsbdate); } this.odsbdate=odsbdate;}
+public void setOdsbtime(String odsbtime) { sqlMaker.setField("odsbtime",odsbtime,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getOdsbtime().equals(odsbtime)) cf.add("odsbtime",this.odsbtime,odsbtime); } this.odsbtime=odsbtime;}
+public void setRecversion(int recversion) { sqlMaker.setField("recversion",""+recversion,Field.NUMBER); if (this.operate_mode.equals("edit")) { if (this.getRecversion()!=recversion) cf.add("recversion",this.recversion+"",recversion+""); } this.recversion=recversion;}
 public void init(int i,ActionRequest actionRequest) throws Exception { if ( actionRequest.getFieldValue(i,"account") !=null ) {this.setAccount(actionRequest.getFieldValue(i,"account"));}
 if ( actionRequest.getFieldValue(i,"cardname") !=null ) {this.setCardname(actionRequest.getFieldValue(i,"cardname"));}
 if ( actionRequest.getFieldValue(i,"bdgagency") !=null ) {this.setBdgagency(actionRequest.getFieldValue(i,"bdgagency"));}
@@ -97,6 +113,10 @@ if ( actionRequest.getFieldValue(i,"remark") !=null ) {this.setRemark(actionRequ
 if ( actionRequest.getFieldValue(i,"operid") !=null ) {this.setOperid(actionRequest.getFieldValue(i,"operid"));}
 if ( actionRequest.getFieldValue(i,"operdate") !=null ) {this.setOperdate(actionRequest.getFieldValue(i,"operdate"));}
 if ( actionRequest.getFieldValue(i,"sentflag") !=null ) {this.setSentflag(actionRequest.getFieldValue(i,"sentflag"));}
+if ( actionRequest.getFieldValue(i,"txlog") !=null ) {this.setTxlog(actionRequest.getFieldValue(i,"txlog"));}
+if ( actionRequest.getFieldValue(i,"odsbdate") !=null ) {this.setOdsbdate(actionRequest.getFieldValue(i,"odsbdate"));}
+if ( actionRequest.getFieldValue(i,"odsbtime") !=null ) {this.setOdsbtime(actionRequest.getFieldValue(i,"odsbtime"));}
+if ( actionRequest.getFieldValue(i,"recversion") !=null && actionRequest.getFieldValue(i,"recversion").trim().length() > 0 ) {this.setRecversion(Integer.parseInt(actionRequest.getFieldValue(i,"recversion")));}
 }public void init(ActionRequest actionRequest) throws Exception { this.init(0,actionRequest);}public void initAll(int i,ActionRequest actionRequest) throws Exception { this.init(i,actionRequest);}public void initAll(ActionRequest actionRequest) throws Exception { this.initAll(0,actionRequest);}public Object clone() throws CloneNotSupportedException { LSCARDBASEINFO obj = (LSCARDBASEINFO)super.clone();obj.setAccount(obj.account);
 obj.setCardname(obj.cardname);
 obj.setBdgagency(obj.bdgagency);
@@ -114,4 +134,8 @@ obj.setRemark(obj.remark);
 obj.setOperid(obj.operid);
 obj.setOperdate(obj.operdate);
 obj.setSentflag(obj.sentflag);
+obj.setTxlog(obj.txlog);
+obj.setOdsbdate(obj.odsbdate);
+obj.setOdsbtime(obj.odsbtime);
+obj.setRecversion(obj.recversion);
 return obj;}}

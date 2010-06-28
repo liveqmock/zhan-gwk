@@ -5,7 +5,7 @@
  */
 function body_resize() {
     divfd_ActionTable.style.height = document.body.clientHeight - 235 + "px";
-    ActionTable.fdwidth = "1300px";
+    ActionTable.fdwidth = "1340px";
 
     initDBGrid("ActionTable");
     body_init(queryForm, "queryClick");

@@ -21,10 +21,10 @@
       <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/adapter.jar!/" />
       <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/ctgclient.jar!/" />
       <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/mybatis-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-lang-2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/xSocket-2.8.13.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="intellijad://intellijad" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

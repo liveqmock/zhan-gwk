@@ -47,12 +47,34 @@ public class odsbReadAction extends Action {
         String yymmdd = strdate.substring(0, 4) + strdate.substring(5, 7) + strdate.substring(8, 10);
 
         try {
-            //TODO 检查ODSB状态
+            // 检查ODSB状态
+            String checksql = "select TO_CHAR(biz_date, 'yyyymmdd'),Jobflow_status " +
+                    "from odssys.f_jci_jobflowinstance@odsb_remote " +
+                    "where job_flow_id ='990063719900001' ";
+            String jobflow_status = null;
+            RecordSet rs = dc.executeQuery(checksql);
+            while (rs.next()) {
+                jobflow_status = rs.getString("Jobflow_status");
+            }
+            if (jobflow_status == null) {
+                this.res.setType(0);
+                this.res.setResult(false);
+                this.res.setMessage("检查ODSB系统接口状态失败，请检查网络或数据库连接。");
+                return -1;
+            }
+            //0：初始状态， 1：运行状态， 2：完成状态，3：未初始化，4:时间驱动，待初始化
+            if (!"2".equals(jobflow_status) && !"3".equals(jobflow_status)) {
+                this.res.setType(0);
+                this.res.setResult(false);
+                this.res.setMessage("ODSB系统尚未就绪，请稍候。");
+                return -1;
+            }
+
 
             //取得本地表中最后的入帐日期
             String sql = "select max(inac_date) as inac_date from ls_consumeinfo ";
             String last_inac_date = null;
-            RecordSet rs = dc.executeQuery(sql);
+            rs = dc.executeQuery(sql);
             while (rs.next()) {
                 last_inac_date = rs.getString("inac_date");
             }
@@ -75,7 +97,7 @@ public class odsbReadAction extends Action {
 
             //TODO 确认tx_cd的含义 40 43
             sql = " insert into odsb_crd_crt_trad  " +
-                    " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb a, ls_cardbaseinfo b " +
+                    " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb_remote a, ls_cardbaseinfo b " +
                     " where a.crd_no = b.account and a.tx_cd in ('40','43') and a.inac_date > '" + last_inac_date + "' ";
 
 
@@ -93,7 +115,7 @@ public class odsbReadAction extends Action {
             //处理卡信息表
             //TODO 卡BIN的处理
             sql = " insert into odsb_crd_crt  " +
-                    " select * from  odsbdata.BF_AGT_CRD_CRT@odsb  " +
+                    " select * from  odsbdata.BF_AGT_CRD_CRT@odsb_remote  " +
                     " where crd_no like '6283660015%' ";
 
             int crd_rtn = 0;
@@ -139,7 +161,7 @@ public class odsbReadAction extends Action {
                 consume.setOperdate(df.format(date));
                 consume.setStatus("10");
                 consume.setTx_cd(rs.getString("tx_cd"));
-                consume.setRef_number(rs.getString("ref_number"));
+                consume.setRef_number(rs.getString("ref_nmbr"));
                 consume.setCmbi_merch_no(rs.getString("cmbi_merch_no"));
                 consume.setInac_date(inac_day);
                 consume.setInac_amt(rs.getDouble("inac_amt"));

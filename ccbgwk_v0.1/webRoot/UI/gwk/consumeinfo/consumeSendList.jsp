@@ -55,7 +55,8 @@
 
     dbGrid.setpagesize(30);
     dbGrid.setdataPilotID("datapilot");
-
+    dbGrid.setCheck(true);
+   
     dbGrid.setbuttons("发送消费信息=Send,导出Excel=excel,查看详细=query,moveFirst,prevPage,nextPage,moveLast");
 
 %>

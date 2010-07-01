@@ -1,5 +1,6 @@
-package gateway.mbs.server;
+package gateway.mbs.xsocketserver;
 
+import gateway.mbs.server.ISocketDataHandler;
 import org.xsocket.MaxReadSizeExceededException;
 import org.xsocket.connection.IDataHandler;
 import org.xsocket.connection.INonBlockingConnection;
@@ -27,7 +28,7 @@ public class ProtocolHandler implements ISocketDataHandler {
         int dataLength = 0;
         String txcode = null;
         ////////////
-        // "transaction" start  
+        // "transaction" start
         //
 
         // mark read position
@@ -84,7 +85,6 @@ public class ProtocolHandler implements ISocketDataHandler {
 
 
 }
-
 
 class ContentHandler implements IDataHandler {
 

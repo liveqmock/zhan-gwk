@@ -1,4 +1,4 @@
-package gateway.mbs.server;
+package gateway.mbs.xsocketserver;
 
 import org.xsocket.connection.IConnectExceptionHandler;
 import org.xsocket.connection.IConnectHandler;

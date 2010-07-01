@@ -1,4 +1,4 @@
-package gateway.mbs.server;
+package gateway.mbs.xsocketserver;
 
 import org.xsocket.MaxReadSizeExceededException;
 import org.xsocket.connection.INonBlockingConnection;
@@ -30,6 +30,7 @@ public class ServerDataHandler implements ISocketDataHandler {
 			System.out.println("\r\n");
 
             //通讯包处理
+
 
             connection.write(data);
 			return true;

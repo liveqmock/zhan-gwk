@@ -1,4 +1,4 @@
-package gateway.mbs.servlet;
+package gateway.mbs.server.servlet;
 
 import gateway.mbs.server.Server;
 import gateway.mbs.util.ServletUtil;

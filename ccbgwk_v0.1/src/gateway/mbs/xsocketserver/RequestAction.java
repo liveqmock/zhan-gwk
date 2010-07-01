@@ -1,7 +1,7 @@
 package gateway.mbs.xsocketserver;
 
-import gateway.mbs.server.domain.RequestData;
-import gateway.mbs.server.protocol.Protocol;
+import gateway.mbs.xsocketserver.domain.RequestData;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +14,8 @@ public interface RequestAction {
     /**
      * 处理请求，返回反应数据
      */
-    public void dealReqeust(RequestData requestData,Protocol protocol);
+//    public void dealReqeust(RequestData requestData,Protocol protocol);
+    public void dealReqeust(RequestData requestData);
 
     /**
      * 是否能处理请求

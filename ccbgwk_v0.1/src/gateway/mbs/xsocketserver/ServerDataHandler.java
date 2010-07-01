@@ -1,5 +1,9 @@
 package gateway.mbs.xsocketserver;
 
+import gateway.mbs.xsocketserver.domain.RequestData;
+import gateway.mbs.xsocketserver.protocol.ProtocolHandler;
+import gateway.mbs.xsocketserver.protocol.ResponseHandler;
+import gateway.mbs.xsocketserver.requestaction.T1000Action;
 import org.xsocket.MaxReadSizeExceededException;
 import org.xsocket.connection.INonBlockingConnection;
 
@@ -30,9 +34,25 @@ public class ServerDataHandler implements ISocketDataHandler {
 			System.out.println("\r\n");
 
             //通讯包处理
+            //TODO 先读取前4个字节 核对包长度
+            ProtocolHandler protocol = new ProtocolHandler(data);
+            String txncode = protocol.getTxncode();
 
+            RequestData requestData = new RequestData();
+            RequestData responseData = new RequestData();
 
-            connection.write(data);
+            if ("1000".equals(txncode)) {
+                T1000Action action = new  T1000Action();
+                action.dealReqeust(protocol.getRequestData());
+                action.dealReponse(requestData,responseData);
+            }
+
+            ResponseHandler response = new   ResponseHandler();
+            response.getBytesReponseData(responseData);
+            //reponse处理
+            connection.write(txncode);
+
+//            connection.write(data);
 			return true;
 		}
 

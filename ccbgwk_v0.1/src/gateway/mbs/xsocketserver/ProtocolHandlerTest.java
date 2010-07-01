@@ -1,6 +1,5 @@
 package gateway.mbs.xsocketserver;
 
-import gateway.mbs.server.ISocketDataHandler;
 import org.xsocket.MaxReadSizeExceededException;
 import org.xsocket.connection.IDataHandler;
 import org.xsocket.connection.INonBlockingConnection;
@@ -16,7 +15,7 @@ import java.nio.ByteBuffer;
  * Time: 15:58:39
  * To change this template use File | Settings | File Templates.
  */
-public class ProtocolHandler implements ISocketDataHandler {
+public class ProtocolHandlerTest implements ISocketDataHandler {
 
     public boolean onData(INonBlockingConnection connection) throws IOException {
 
@@ -89,9 +88,9 @@ public class ProtocolHandler implements ISocketDataHandler {
 class ContentHandler implements IDataHandler {
 
     private int remaining = 0;
-    private ProtocolHandler hdl = null;
+    private ProtocolHandlerTest hdl = null;
 
-    public ContentHandler(ProtocolHandler hdl, int dataLength, int signature) {
+    public ContentHandler(ProtocolHandlerTest hdl, int dataLength, int signature) {
         this.hdl = hdl;
         remaining = dataLength;
         //...

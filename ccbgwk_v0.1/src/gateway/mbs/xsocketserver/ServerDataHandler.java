@@ -38,7 +38,7 @@ public class ServerDataHandler implements ISocketDataHandler {
             ProtocolHandler protocol = new ProtocolHandler(data);
             String txncode = protocol.getTxncode();
 
-            RequestData requestData = new RequestData();
+            RequestData requestData = protocol.getRequestData();
             RequestData responseData = new RequestData();
 
             if ("1000".equals(txncode)) {
@@ -48,9 +48,10 @@ public class ServerDataHandler implements ISocketDataHandler {
             }
 
             ResponseHandler response = new   ResponseHandler();
-            response.getBytesReponseData(responseData);
+            byte[] responseByte = response.getBytesReponseData(responseData);
+            
             //reponse¥¶¿Ì
-            connection.write(txncode);
+            connection.write(responseByte);
 
 //            connection.write(data);
 			return true;

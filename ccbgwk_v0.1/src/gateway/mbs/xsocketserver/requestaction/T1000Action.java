@@ -41,7 +41,8 @@ public class T1000Action implements RequestAction {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
         responseData.setTxnTime(sdf.format(date));
-
+        responseData.setVersion("01"); //TODO ??
+        responseData.setMac("_macdatamacdata_");
         //°üÌå
         //±ÊÊý
         String recordCount = StringUtils.leftPad("2", 6, ' ');

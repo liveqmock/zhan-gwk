@@ -20,7 +20,7 @@ public class ProtocolHandler {
     private Log log = LogFactory.getLog(this.getClass());
 
     private byte[] buffer;
-    private RequestData requestData;
+    private RequestData requestData = new RequestData();
     private int[] headFieldLengths = {4, 3, 10, 8, 1, 4, 3, 14, 2, 16};
     private int headerLength = 65;
 
@@ -39,7 +39,7 @@ public class ProtocolHandler {
                 case 0: //°ü³¤¶È
                     requestData.setPkgLength(new String(bField, "ISO-8859-1"));
                     //TODO:
-                    requestData.setLength(Integer.getInteger(requestData.getPkgLength()));
+                    requestData.setLength(Integer.parseInt(requestData.getPkgLength()));
                     break;
                 case 1:
                     requestData.setAreaCode(new String(bField, "ISO-8859-1"));

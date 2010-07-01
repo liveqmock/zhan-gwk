@@ -14,7 +14,7 @@ import java.nio.channels.ClosedChannelException;
  * Time: 15:58:39
  * To change this template use File | Settings | File Templates.
  */
-public class ServerDataHander implements ISocketDataHander {
+public class ServerDataHandler implements ISocketDataHandler {
 
 		public boolean onData(INonBlockingConnection connection)
 				throws IOException, BufferUnderflowException,
@@ -23,11 +23,15 @@ public class ServerDataHander implements ISocketDataHander {
 			byte[] data = connection.readBytesByLength(connection.available());
 
 			System.out.println("date from["+connection.getRemoteAddress()+"]:");
-			for (int i = 0; i < data.length; i++) {
+
+            for (int i = 0; i < data.length; i++) {
 				System.out.println(data[i] + " ");
 			}
 			System.out.println("\r\n");
-			connection.write(data);
+
+            //通讯包处理
+
+            connection.write(data);
 			return true;
 		}
 

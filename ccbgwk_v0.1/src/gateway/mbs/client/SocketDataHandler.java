@@ -5,7 +5,7 @@ import org.xsocket.connection.IConnectHandler;
 import org.xsocket.connection.IDataHandler;
 import org.xsocket.connection.IDisconnectHandler;
 
-public interface SocketDataHander extends IDataHandler,
+public interface SocketDataHandler extends IDataHandler,
         IConnectExceptionHandler, IConnectHandler, IDisconnectHandler {
 
 }

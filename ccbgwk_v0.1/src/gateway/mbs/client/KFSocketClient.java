@@ -17,17 +17,21 @@ public class KFSocketClient {
 		this.chatClient = chatClient;
 	}
 	public void sendData(String text) throws IOException {
+/*
 		String[] req = text.split(" ");
 		byte[] b = new byte[req.length];
 		for (int i = 0; i < req.length; i++) {
 			b[i] = Byte.parseByte(req[i]);
 		}
+*/
 		//byte[] b = new byte[]{R.sid.radio,R.aid.radio.IOCTL_RADIO_AUTOSCAN};
 		//ByteBuffer[] buffer = new ByteBuffer[b.length];
+
+        byte[] b = text.getBytes();
 		bc.write(b);
 	}
 
-	public class ClientDataHander implements SocketDataHander{
+	public class ClientDataHander implements SocketDataHandler {
 
 		//@Override
 		public boolean onData(INonBlockingConnection cbc) throws IOException,

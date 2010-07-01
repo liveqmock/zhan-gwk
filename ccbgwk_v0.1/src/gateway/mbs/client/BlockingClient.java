@@ -29,7 +29,7 @@ import java.io.IOException;
 
 
 /**
-*
+*     阻塞模式客户端 测试用   html解析
 * @author grro@xsocket.org
 */
 public final class BlockingClient  {

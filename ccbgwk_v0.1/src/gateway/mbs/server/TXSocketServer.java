@@ -14,7 +14,8 @@ public class TXSocketServer {
 
 	public TXSocketServer(int port) throws UnknownHostException, IOException {
 		PORT = port;
-		this.srv = new Server(PORT, new ServerDataHander());
+//		this.srv = new Server(PORT, new ProtocolHandler());
+		this.srv = new Server(PORT, new ServerDataHandler());
 		//this.chatServer = chatServer;
 
 

@@ -1,7 +1,7 @@
-package gateway.mbs.response;
+package gateway.mbs.server.protocol.response;
 
-import gateway.mbs.protocol.Protocol;
-import gateway.mbs.protocol.domain.RequestData;
+import gateway.mbs.server.protocol.Protocol;
+import gateway.mbs.server.domain.RequestData;
 import gateway.mbs.util.XmlUtil;
 
 /**

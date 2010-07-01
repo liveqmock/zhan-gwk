@@ -1,4 +1,4 @@
-package gateway.mbs.protocol.requestaction;
+package gateway.mbs.server.protocol.requestaction;
 
 import java.util.LinkedList;
 import java.util.List;

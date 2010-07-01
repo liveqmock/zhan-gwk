@@ -1,4 +1,4 @@
-package gateway.mbs.protocol.domain;
+package gateway.mbs.server.domain;
 
 import gateway.mbs.util.XmlUtil;
 

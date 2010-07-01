@@ -8,7 +8,7 @@ package gateway.mbs.server;
  * To change this template use File | Settings | File Templates.
  */
 
-import gateway.mbs.protocol.domain.User;
+import gateway.mbs.server.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

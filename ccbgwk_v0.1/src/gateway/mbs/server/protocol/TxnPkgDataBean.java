@@ -1,4 +1,4 @@
-package gateway.mbs.protocol;
+package gateway.mbs.server.protocol;
 
 /**
  * Created by IntelliJ IDEA.

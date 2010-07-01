@@ -8,10 +8,10 @@ package gateway.mbs.server;
  * To change this template use File | Settings | File Templates.
  */
 
-import gateway.mbs.protocol.Protocol;
-import gateway.mbs.protocol.domain.User;
-import gateway.mbs.response.SendALlUserList;
-import gateway.mbs.response.SendMsgToAll;
+import gateway.mbs.server.protocol.Protocol;
+import gateway.mbs.server.domain.User;
+import gateway.mbs.server.protocol.response.SendALlUserList;
+import gateway.mbs.server.protocol.response.SendMsgToAll;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

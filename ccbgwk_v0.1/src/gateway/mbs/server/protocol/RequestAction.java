@@ -1,6 +1,6 @@
-package gateway.mbs.protocol;
+package gateway.mbs.server.protocol;
 
-import gateway.mbs.protocol.domain.RequestData;
+import gateway.mbs.server.domain.RequestData;
 
 /**
  * Created by IntelliJ IDEA.

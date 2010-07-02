@@ -80,8 +80,8 @@ public class DAOGenerator {
 
   public static void main(String[] argv) {
     // 生成单个表的文件
-    generateAllTables();
-//     generateTable("LS_BDGAGENCY");
+//    generateAllTables();
+     generateTable("LS_PERSONALINFO");
 //     generateTable("LS_BDGAGENCY_H");
 //     generateTable("LS_CARDBASEINFO");
 //     generateTable("LS_CONSUMEINFO");

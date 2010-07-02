@@ -1,8 +1,12 @@
 package gateway.mbs.xsocketserver.protocol;
 
 import gateway.mbs.xsocketserver.domain.RequestData;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -33,6 +37,40 @@ public class ResponseHandler {
 
         byte[] buffer = strBuffer.toString().getBytes();
         return buffer;
+    }
+
+    /**
+     * 生成错误信息包
+     * @param requestData
+     * @param errCode
+     * @param errMsg
+     * @return
+     */
+    public byte[] getBytesErrorResponseData(RequestData requestData,String errCode, String errMsg) {
+
+        RequestData responseData  = new RequestData();
+        responseData.setAreaCode(requestData.getAreaCode());
+        responseData.setBranchId(requestData.getBranchId());
+        responseData.setOperId(requestData.getOperId());
+        responseData.setNextFlag("0"); //无后续包
+        responseData.setTxnCode("1000");
+        responseData.setErrCode(errCode);
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        responseData.setTxnTime(sdf.format(date));
+        responseData.setVersion("01"); //TODO ??
+        responseData.setMac("_macdatamacdata_");
+        //包体
+
+        responseData.setBodyData(errMsg);
+
+        //长度处理
+        int length = 65 + errMsg.length();
+        responseData.setLength(length);
+        String strlength = StringUtils.leftPad(String.valueOf(length), 4, ' ');
+        responseData.setPkgLength(strlength);
+
+        return  getBytesReponseData(responseData);
     }
 
 }

@@ -28,7 +28,7 @@ public class TXSocketServer {
 
     public static void main(String[] args) {
         try {
-            TXSocketServer server = new TXSocketServer(8090);
+            TXSocketServer server = new TXSocketServer(8000);
             server.start();
             //server.srv.close();
         } catch (IOException e) {

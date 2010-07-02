@@ -44,7 +44,7 @@ public class SwingChatClient extends JFrame {
 		hostField.setText("localhost");
 		// nameField.setEditable(false);
 		portField = new JTextField(10);
-		portField.setText("8090");
+		portField.setText("8000");
 		// serverField.setEditable(false);
 
 		JPanel h = new JPanel();

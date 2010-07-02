@@ -30,7 +30,7 @@ public class T1000Action implements RequestAction {
 
     }
 
-    public void dealReponse(RequestData requestData, RequestData responseData) {
+    public void dealResponse(RequestData requestData, RequestData responseData) {
 
         responseData.setAreaCode(requestData.getAreaCode());
         responseData.setBranchId(requestData.getBranchId());
@@ -50,16 +50,124 @@ public class T1000Action implements RequestAction {
         String totalAmt = StringUtils.leftPad("1123.45", 13, ' ');
 
         //循环: 卡号20 金额 11
-        String cardNo1 = StringUtils.leftPad("12345678", 20, ' ');
+        String cardNo1 = StringUtils.leftPad("A20100701003", 20, ' ');
+        String name1 = StringUtils.leftPad("姓名甲", 20, ' ');
         String amt1 = StringUtils.leftPad("123.45", 11, ' ');
-        String cardNo2 = StringUtils.leftPad("12345678", 20, ' ');
+        String cardNo2 = StringUtils.leftPad("A20100701004", 20, ' ');
+        String name2 = StringUtils.leftPad("姓名乙", 20, ' ');
         String amt2 = StringUtils.leftPad("1000.00", 11, ' ');
 
-        responseData.setBodyData(recordCount + totalAmt + cardNo1 + amt1 + cardNo2 + amt2);
+        responseData.setBodyData(recordCount + totalAmt + cardNo1 + name1 + amt1 + cardNo2 + name2 + amt2);
 
         //长度处理
-        int length = 65 + 19 + 31 * 2;
+        int length = 65 + 19 + 51 * 2;
         responseData.setLength(length);
-        responseData.setPkgLength(String.valueOf(length));
+        String strlength = StringUtils.leftPad(String.valueOf(length), 4, ' ');
+        responseData.setPkgLength(strlength);
+    }
+    public void dealResponse1(RequestData requestData, RequestData responseData) {
+
+        responseData.setAreaCode(requestData.getAreaCode());
+        responseData.setBranchId(requestData.getBranchId());
+        responseData.setOperId(requestData.getOperId());
+        responseData.setNextFlag("1"); //无后续包
+        responseData.setTxnCode("1000");
+        responseData.setErrCode("000");
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        responseData.setTxnTime(sdf.format(date));
+        responseData.setVersion("01"); //TODO ??
+        responseData.setMac("_macdatamacdata_");
+        //包体
+        //笔数
+        String recordCount = StringUtils.leftPad("2", 6, ' ');
+        //合计金额
+        String totalAmt = StringUtils.leftPad("1123.45", 13, ' ');
+
+        //循环: 卡号20 金额 11
+        String cardNo1 = StringUtils.leftPad("AA20100701001", 20, ' ');
+        String name1 = StringUtils.leftPad("姓名甲", 20, ' ');
+        String amt1 = StringUtils.leftPad("123.45", 11, ' ');
+        String cardNo2 = StringUtils.leftPad("AA20100701002", 20, ' ');
+        String name2 = StringUtils.leftPad("姓名乙", 20, ' ');
+        String amt2 = StringUtils.leftPad("1000.00", 11, ' ');
+
+        responseData.setBodyData(recordCount + totalAmt + cardNo1 + name1 + amt1 + cardNo2 + name2 + amt2);
+
+        //长度处理
+        int length = 65 + 19 + 51 * 2;
+        responseData.setLength(length);
+        String strlength = StringUtils.leftPad(String.valueOf(length), 4, ' ');
+        responseData.setPkgLength(strlength);
+    }
+    public void dealResponse1a(RequestData requestData, RequestData responseData) {
+
+        responseData.setAreaCode(requestData.getAreaCode());
+        responseData.setBranchId(requestData.getBranchId());
+        responseData.setOperId(requestData.getOperId());
+        responseData.setNextFlag("1"); //无后续包
+        responseData.setTxnCode("1000");
+        responseData.setErrCode("000");
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        responseData.setTxnTime(sdf.format(date));
+        responseData.setVersion("01"); //TODO ??
+        responseData.setMac("_macdatamacdata_");
+        //包体
+        //笔数
+        String recordCount = StringUtils.leftPad("2", 6, ' ');
+        //合计金额
+        String totalAmt = StringUtils.leftPad("1123.45", 13, ' ');
+
+        //循环: 卡号20 金额 11
+        String cardNo1 = StringUtils.leftPad("AA20100701003", 20, ' ');
+        String name1 = StringUtils.leftPad("姓名甲", 20, ' ');
+        String amt1 = StringUtils.leftPad("123.45", 11, ' ');
+        String cardNo2 = StringUtils.leftPad("AA20100701004", 20, ' ');
+        String name2 = StringUtils.leftPad("姓名乙", 20, ' ');
+        String amt2 = StringUtils.leftPad("1000.00", 11, ' ');
+
+        responseData.setBodyData(recordCount + totalAmt + cardNo1 + name1 + amt1 + cardNo2 + name2 + amt2);
+
+        //长度处理
+        int length = 65 + 19 + 51 * 2;
+        responseData.setLength(length);
+        String strlength = StringUtils.leftPad(String.valueOf(length), 4, ' ');
+        responseData.setPkgLength(strlength);
+    }
+    public void dealResponse1b(RequestData requestData, RequestData responseData) {
+
+        responseData.setAreaCode(requestData.getAreaCode());
+        responseData.setBranchId(requestData.getBranchId());
+        responseData.setOperId(requestData.getOperId());
+        responseData.setNextFlag("0"); //无后续包
+        responseData.setTxnCode("1000");
+        responseData.setErrCode("000");
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        responseData.setTxnTime(sdf.format(date));
+        responseData.setVersion("01"); //TODO ??
+        responseData.setMac("_macdatamacdata_");
+        //包体
+        //笔数
+        String recordCount = StringUtils.leftPad("2", 6, ' ');
+        //合计金额
+        String totalAmt = StringUtils.leftPad("1123.45", 13, ' ');
+
+        //循环: 卡号20 金额 11
+        String cardNo1 = StringUtils.leftPad("AA20100701005", 20, ' ');
+        String name1 = StringUtils.leftPad("姓名甲", 20, ' ');
+        String amt1 = StringUtils.leftPad("123.45", 11, ' ');
+        String cardNo2 = StringUtils.leftPad("AA20100701006", 20, ' ');
+        String name2 = StringUtils.leftPad("姓名乙", 20, ' ');
+        String amt2 = StringUtils.leftPad("1000.00", 11, ' ');
+
+        responseData.setBodyData(recordCount + totalAmt + cardNo1 + name1 + amt1 + cardNo2 + name2 + amt2);
+
+        //长度处理
+        int length = 65 + 19 + 51 * 2;
+        responseData.setLength(length);
+        String strlength = StringUtils.leftPad(String.valueOf(length), 4, ' ');
+        responseData.setPkgLength(strlength);
     }
 }

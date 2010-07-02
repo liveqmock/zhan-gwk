@@ -10,7 +10,7 @@ var isCSS, isW3C, isIE4, isNN4, isIE6CSS;
 var isSelfEvent = 0;
 var menu;
 var debug = false;
-//var copyright = '--- 
+//var copyright = '---
 var copyright = '';
 // Initialize upon load to let all browsers establish content objects
 function initDHTMLAPI( ) {
@@ -370,9 +370,16 @@ function validateDate(fld) {
 	return true;
 }
 
+/*
+* 判断日期，格式：yyyy-mm-dd
+* */
 function checkDate(fld) {
     var mo, day, yr;
-    var entry = fld.value;
+    var entry;
+    //haiyu huang 2010-6-24 添加判断
+    if (typeof(fld) == "object")
+        entry = fld.value;
+    else entry = fld;
 	//alert(entry);
     var re = /\d{4}\b[-]\b\d{1,2}[-]\d{1,2}/;
 

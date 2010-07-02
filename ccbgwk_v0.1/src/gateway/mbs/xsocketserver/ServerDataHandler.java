@@ -29,7 +29,7 @@ public class ServerDataHandler implements ISocketDataHandler {
 			System.out.println("date from["+connection.getRemoteAddress()+"]:");
 
             for (int i = 0; i < data.length; i++) {
-				System.out.println(data[i] + " ");
+				System.out.print(data[i] + " ");
 			}
 			System.out.println("\r\n");
 
@@ -44,16 +44,49 @@ public class ServerDataHandler implements ISocketDataHandler {
             if ("1000".equals(txncode)) {
                 T1000Action action = new  T1000Action();
                 action.dealReqeust(protocol.getRequestData());
-                action.dealReponse(requestData,responseData);
+                //action.dealResponse(requestData,responseData);
+                action.dealResponse1(requestData,responseData);
+
+                ResponseHandler response = new   ResponseHandler();
+                byte[] responseByte = response.getBytesReponseData(responseData);
+
+                for (int i = 0; i < responseByte.length; i++) {
+                    System.out.print(responseByte[i] + " ");
+                }
+                System.out.println("\r\n");
+                System.out.println(new String(responseByte, "ISO-8859-1"));
+
+                //reponse处理
+                connection.write(responseByte);
+
+                //===
+                responseData = new RequestData();
+                action.dealResponse1a(requestData,responseData);
+                responseByte = response.getBytesReponseData(responseData);
+                System.out.println(new String(responseByte, "ISO-8859-1"));
+                connection.write(responseByte);
+
+                responseData = new RequestData();
+                action.dealResponse1b(requestData,responseData);
+                responseByte = response.getBytesReponseData(responseData);
+                System.out.println(new String(responseByte, "ISO-8859-1"));
+                connection.write(responseByte);
+
             }
 
+/*
             ResponseHandler response = new   ResponseHandler();
             byte[] responseByte = response.getBytesReponseData(responseData);
-            
+
+            for (int i = 0; i < responseByte.length; i++) {
+				System.out.print(responseByte[i] + " ");
+			}
+			System.out.println("\r\n");
+            System.out.println(new String(responseByte, "ISO-8859-1"));
+
             //reponse处理
             connection.write(responseByte);
-
-//            connection.write(data);
+*/
 			return true;
 		}
 

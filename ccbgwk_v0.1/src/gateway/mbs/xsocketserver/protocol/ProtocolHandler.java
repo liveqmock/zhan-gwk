@@ -39,7 +39,7 @@ public class ProtocolHandler {
                 case 0: //°ü³¤¶È
                     requestData.setPkgLength(new String(bField, "ISO-8859-1"));
                     //TODO:
-                    requestData.setLength(Integer.parseInt(requestData.getPkgLength()));
+                    requestData.setLength(Integer.parseInt(requestData.getPkgLength().trim()));
                     break;
                 case 1:
                     requestData.setAreaCode(new String(bField, "ISO-8859-1"));

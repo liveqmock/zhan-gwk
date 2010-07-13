@@ -23,5 +23,5 @@ package gateway.mbs.xsocketserver.domain;
 MAC校验	16	验证交易包的合法性
 
  */
-public class RequestData extends TxnDataPkg {
+public class ResponseData extends TxnDataPkg {
 }

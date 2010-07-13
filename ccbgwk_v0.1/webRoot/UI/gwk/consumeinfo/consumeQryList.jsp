@@ -53,7 +53,7 @@
     dbGrid.setField("消费地点", "text", "15", "businame", "true", "0");
     dbGrid.setField("通讯日志", "text", "20", "txlog", "true", "0");
 
-    dbGrid.setpagesize(30);
+    dbGrid.setpagesize(50);
     dbGrid.setdataPilotID("datapilot");
 
     dbGrid.setbuttons("导出Excel=excel,查看详细=query,moveFirst,prevPage,nextPage,moveLast");

@@ -34,6 +34,18 @@
         <servlet-name>IElement</servlet-name>
         <servlet-class>gwk.burlap.server.ElementImpl</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>ControlServlet</servlet-name>
+        <servlet-class>pub.ControlServlet</servlet-class>
+        <init-param>
+            <param-name>initclassset</param-name>
+            <param-value>gateway.mbs.xsocketserver.TestServer</param-value>
+        </init-param>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+
+
     <servlet-mapping>
         <servlet-name>IElement</servlet-name>
         <url-pattern>/burlap</url-pattern>

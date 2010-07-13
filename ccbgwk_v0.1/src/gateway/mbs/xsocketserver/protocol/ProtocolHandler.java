@@ -85,6 +85,9 @@ public class ProtocolHandler {
     public String getTxncode() {
         return this.requestData.getTxnCode();
     }
+    public String getNextFlag() {
+        return this.requestData.getNextFlag();
+    }
 
     public byte[] getBuffer() {
         return buffer;

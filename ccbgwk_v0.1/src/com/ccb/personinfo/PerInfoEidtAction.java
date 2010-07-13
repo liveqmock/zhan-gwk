@@ -39,7 +39,7 @@ public class PerInfoEidtAction  extends Action {
         for (int i= 0;i < this.req.getRecorderCount();i++){
             try{
                 // 检测身份证号有无重复
-                RecordSet rec = dc.executeQuery("select 1 from perinfo t where t.perid = '"
+                RecordSet rec = dc.executeQuery("select 1 from ls_personalinfo t where t.perid = '"
                         + req.getFieldValue(i, "perid").trim() + "'");
                 while (rec.next()) {
                     this.res.setType(0);
@@ -116,7 +116,7 @@ public class PerInfoEidtAction  extends Action {
                     iBeforeVersion = Integer.parseInt(req.getFieldValue(i, "recversion"));
                 }
                 int iAfterVersion = 0;
-                RecordSet rs = dc.executeQuery("select recversion from perinfo where recinsequence='"
+                RecordSet rs = dc.executeQuery("select recversion from ls_personalinfo where recinsequence='"
                         + req.getFieldValue(i, "recinsequence") + "'");
                  while (rs.next()) {
                     iAfterVersion = rs.getInt("recVersion");

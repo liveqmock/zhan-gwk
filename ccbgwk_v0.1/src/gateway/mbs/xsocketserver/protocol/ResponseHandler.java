@@ -1,6 +1,7 @@
 package gateway.mbs.xsocketserver.protocol;
 
 import gateway.mbs.xsocketserver.domain.RequestData;
+import gateway.mbs.xsocketserver.domain.ResponseData;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +19,7 @@ import java.util.Date;
  */
 public class ResponseHandler {
     private Log log = LogFactory.getLog(this.getClass());
-    public byte[] getBytesReponseData(RequestData response)  {
+    public byte[] getBytesReponseData(ResponseData response)  {
 
 //        byte[] buffer = new byte[response.getLength()];
 
@@ -48,7 +49,7 @@ public class ResponseHandler {
      */
     public byte[] getBytesErrorResponseData(RequestData requestData,String errCode, String errMsg) {
 
-        RequestData responseData  = new RequestData();
+        ResponseData responseData  = new ResponseData();
         responseData.setAreaCode(requestData.getAreaCode());
         responseData.setBranchId(requestData.getBranchId());
         responseData.setOperId(requestData.getOperId());

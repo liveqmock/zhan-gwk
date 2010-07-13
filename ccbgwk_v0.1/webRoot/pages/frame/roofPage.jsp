@@ -134,7 +134,7 @@
 
 </head>
 <body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0">
-
+<input id="hhidOperatorID" type="hidden" value="<%=operid%>">
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr width="100%" height="50px" style="margin-bottom: 0px;margin-top:0px;margin:0px;padding:0px">
         <td width="50%" style="height:50" colspan="4">

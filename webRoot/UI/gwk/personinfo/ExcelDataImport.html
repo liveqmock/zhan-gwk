@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>批量数据导入</title>
+    <LINK href="/css/ccb.css" type="text/css" rel="stylesheet">
+    <script language="javascript" src="/js/function.js"></script>
+    <script language="javascript" src="ExcelDataImport.js"></script>
+</head>
+<body>
+<fieldset style="margin:10px;">
+       <legend>数据批量导入</legend>
+      <form action="ExcelDataImport.jsp" style="margin-left:10px;" method="post" enctype="multipart/form-data" name="importfm">
+          <table id="tabUpload"  border="0" cellspacing="0" cellpadding="1" width="60%">
+              <tr>
+                  <td width="10%" class="lbl_right_padding">文件：</td>
+                  <td width="60%" nowrap="nowrap" class="data_input" >
+                      <input type="file" style="width:90%;height:22px;" id="himport" name="himport"/>
+                  </td>
+                  <td width="30%" nowrap="nowrap" class="data_input" >
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <input type="button" onclick="ExcelFomatCheck()" style=" height:22px;width:60px;" value="导入">
+                  </td>
+              </tr>
+          </table>
+      </form>
+      <div id="divErrPerIDLst" style="display:none;">
+          <p style="color:red;font-weight:bold;margin-top:25px;">以下身份证号码是错误的，请确认后再重新插入：</p>
+          <p id="pErrorPerIDLst" ></p>
+          <p align="center">
+              <input type="button" style="width:60px;" value="返回" onclick="reback()">
+          </p>
+      </div>
+    </fieldset>
+</body>
+</html>

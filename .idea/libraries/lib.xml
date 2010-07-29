@@ -1,0 +1,34 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/ecs.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/ojdbc6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/log4j-1.2.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/jdomV8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/quartz.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/concurret.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-beanutils.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/jxl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-logging.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/mail.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/csspji.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-collections-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/jxls-reader-0.9.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/jxls-core-0.9.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-jexl-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-digester-1.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/poi-3.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/adapter.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/ctgclient.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/mybatis-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-lang-2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/xSocket-2.8.13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/commons-io-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/webRoot/WEB-INF/lib/jsmartcom_zh_CN.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="intellijad://intellijad" />
+    </SOURCES>
+  </library>
+</component>

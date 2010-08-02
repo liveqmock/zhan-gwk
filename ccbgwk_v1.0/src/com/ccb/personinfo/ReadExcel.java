@@ -2,6 +2,7 @@ package com.ccb.personinfo;
 
 
 import com.ccb.dao.LSPERSONALINFO;
+import com.ccb.dao.LSTASKINFO;
 import com.ccb.util.SeqUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -113,6 +114,17 @@ public class ReadExcel extends Action {
                     perInfo.setCreatedate(BusinessDate.getTodaytime());
                     if (perInfo.insert() < 0)
                         return "-1";
+                }
+                LSTASKINFO task = new LSTASKINFO();
+                task.setTaskid(SeqUtil.getTaskSeq());
+                task.setTablename("LSPERSONALINFO");
+//                task.setTablepk(req.getFieldValue(i, "recinsequence"));
+                task.setTasktype("add");
+                task.setTasktime(BusinessDate.getTodaytime());
+//                task.setOperid(this.getOperator().getOperid());
+                task.setRemarks("数据批量导入！");
+                if (task.insert() < 0) {
+                    return "-1";
                 }
             }
         } catch (Exception ex) {

@@ -9,6 +9,7 @@ package com.ccb.personinfo;
  */
 
 import com.ccb.dao.LSPERSONALINFO;
+import com.ccb.dao.LSTASKINFO;
 import com.ccb.util.SeqUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +30,9 @@ public class PerInfoEidtAction  extends Action {
     private static final Log logger = LogFactory.getLog(PerInfoEidtAction.class);
     // 贷款信息对象
     LSPERSONALINFO perInfo = null;
+   //日志信息对象
+    LSTASKINFO task = null;
+
     // 流水记录表
     /*
     *添加新纪录
@@ -68,6 +72,20 @@ public class PerInfoEidtAction  extends Action {
                     return -1;
                 }
                 //TODO 流水日志表记入
+                task = new LSTASKINFO(); 
+                task.setTaskid(SeqUtil.getTaskSeq());
+                task.setTablename("LSPERSONALINFO");
+                task.setTablepk(nbxlh);
+                task.setTasktype("add");
+                task.setTasktime(BusinessDate.getTodaytime());
+                task.setOperid(this.getOperator().getOperid());
+                if (task.insert() < 0) {
+                    this.res.setType(0);
+                    this.res.setResult(false);
+                    this.res.setMessage(PropertyManager.getProperty("300"));
+                    return -1;
+                }
+
             }catch (Exception ex1) {
                 logger.error("个人信息添加记录出错：" + ex1.getMessage());
                 ex1.printStackTrace();
@@ -127,6 +145,19 @@ public class PerInfoEidtAction  extends Action {
                     this.res.setMessage(PropertyManager.getProperty("300"));
                     return -1;
                 }
+                task = new LSTASKINFO();
+                task.setTaskid(SeqUtil.getTaskSeq());
+                task.setTablename("LSPERSONALINFO");
+                task.setTablepk(req.getFieldValue(i, "recinsequence"));
+                task.setTasktype("edit");
+                task.setTasktime(BusinessDate.getTodaytime());
+                task.setOperid(this.getOperator().getOperid());
+                if (task.insert() < 0) {
+                    this.res.setType(0);
+                    this.res.setResult(false);
+                    this.res.setMessage(PropertyManager.getProperty("300"));
+                    return -1;
+                }
             }catch (Exception ex1) {
                 logger.error("个人信息修改记录出错：" + ex1.getMessage());
                 ex1.printStackTrace();
@@ -158,6 +189,19 @@ public class PerInfoEidtAction  extends Action {
                     this.res.setMessage(PropertyManager.getProperty("300"));
                     return -1;
                     //流水日志的更新。。。
+                }
+                task = new LSTASKINFO();
+                task.setTaskid(SeqUtil.getTaskSeq());
+                task.setTablename("LSPERSONALINFO");
+                task.setTablepk(req.getFieldValue(i, "recinsequence"));
+                task.setTasktype("delete");
+                task.setTasktime(BusinessDate.getTodaytime());
+                task.setOperid(this.getOperator().getOperid());
+                if (task.insert() < 0) {
+                    this.res.setType(0);
+                    this.res.setResult(false);
+                    this.res.setMessage(PropertyManager.getProperty("300"));
+                    return -1;
                 }
             }
         } catch (Exception ex){

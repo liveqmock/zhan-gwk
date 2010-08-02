@@ -149,7 +149,7 @@ var idTmr = "";
 //                }
 
             }catch(ex){
-                alert(ex.getMessage);
+                alert(ex);
             }
             finally{
                //¹Ø±ÕExcel½ø³Ì

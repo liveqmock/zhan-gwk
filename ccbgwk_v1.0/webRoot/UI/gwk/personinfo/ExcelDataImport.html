@@ -8,26 +8,22 @@
     <script language="javascript" src="ExcelDataImport.js"></script>
 </head>
 <body>
-<fieldset style="margin:10px;">
+<fieldset style="margin:20px;">
        <legend>数据批量导入</legend>
       <form action="ExcelDataImport.jsp" style="margin-left:10px;" method="post" enctype="multipart/form-data" name="importfm">
-          <table id="tabUpload"  border="0" cellspacing="0" cellpadding="1" width="60%">
-               <tr>
+          <table id="tabUpload"  border="0" align="center" cellspacing="0" cellpadding="4" width="90%">
+               <tr style="height:30px;">
                    <td width="10%" align="right" nowrap="nowrap" class="lbl_right_padding">
                       选择文件
                   </td>
-                  <td colspan="2" width="90%" align="right" nowrap="nowrap" class="data_input" >
-                      <input type="file" style="height:22px;width:60%;" id="himport" name="himport"/>
+                  <td width="90%" align="right" nowrap="nowrap" class="data_input" >
+                      <input type="file" style="height:22px;width:70%;" id="himport" name="himport"/>
                   </td>
                </tr>
-               <tr>
-                   <td class="lbl_right_padding" align="center" width="10%">
-                       导入
-                   </td>
-                   <td width="40%" class="data_input">&nbsp;</td>
-                   <td width="50%" class="data_input">
+               <tr style="height:30px;">
+                   <td colspan="2" width="100%" class="data_input" style="text-align: center;">
 
-                       <input type="button" onclick="ExcelFomatCheck()" style=" height:22px;width:80px;" value="导入数据">
+                       <input type="button" onclick="ExcelFomatCheck()" style=" height:22px;width:100px;" align="center" value="导入数据">
                    </td>
                </tr>
           </table>

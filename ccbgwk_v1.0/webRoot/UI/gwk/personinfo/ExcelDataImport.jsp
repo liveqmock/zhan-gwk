@@ -15,7 +15,7 @@
     su.setMaxFileSize(10000000);     //限制上传文件大小
     su.setTotalMaxFileSize(20000);
     su.setAllowedFilesList("xls");
-    su.setDeniedFilesList("exe,bat,jsp,htm,html");
+    su.setDeniedFilesList("exe,bat,jsp,htm,html,gif");
 //
 //    String fm = (String)su.getRequest().getParameter("aaa");
 ////    String fm = request.getParameter("_post");

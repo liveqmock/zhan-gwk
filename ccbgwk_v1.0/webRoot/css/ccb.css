@@ -817,6 +817,7 @@ TD.lbl_right_padding { /*width: 180px; /* 横幅：180ピクセル */
 	text-align: right; /* テキストの配置：右寄せ */
 	font-size: 9pt; /* フォントの大きさ：9pt */
 	padding: 0px 5px 0px 5px;
+    color:#525152;
 }
 
 /* ■表示専用　文字列（左詰） */

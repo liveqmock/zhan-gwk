@@ -154,7 +154,6 @@ function PerInfoTab_query_click() {
         alert(MSG_SYSLOCK);
         return;
     }
-
     var sfeature = "dialogwidth:800px; dialogheight:320px;center:yes;help:no;resizable:yes;scroll:yes;status:no";
     var tab = document.all["PerInfoTab"];
     var trobj = tab.rows[tab.activeIndex];
@@ -163,6 +162,7 @@ function PerInfoTab_query_click() {
         alert(MSG_NORECORD);
         return;
     }
+   
     if ((trobj.ValueStr != undefined) && (trobj.ValueStr != "")) {
         var tmp = trobj.ValueStr.split(";");
         recSequence = tmp[0];
@@ -172,6 +172,7 @@ function PerInfoTab_query_click() {
     // ²Ù×÷ÀàÐÍ£ºselect
     arg.doType = "select";
 //    arg.perID = perID;
+    arg.operid =  parent.parent.document.frames("roofFrame").document.getElementById("hhidOperatorID").value;
     dialog("PerInfoEdit.jsp?doType=select&recSequ="+recSequence, arg, sfeature);
 }
 

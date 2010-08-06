@@ -19,21 +19,11 @@ var gWhereStr = "";
  * 
  */
 function body_resize() {
-    divfd_loanTab.style.height = document.body.clientHeight - 180;
-    refresh_select("operid", "select OPERID as value ,OPERNAME as text  from ptoper where" + " deptid='"
-            + document.getElementById("defaultBankID").value + "'");
-    var _cell = document.getElementById("operid");
-    // 创建默认空值
-    var _option = document.createElement("option");
-    _option.value = "";
-    _option.text = "";
-    _cell.appendChild(_option);
-    _cell.value = "";
-
-    loanTab.fdwidth = "100%";
-    initDBGrid("loanTab");
+    divfd_gwkTab.style.height = document.body.clientHeight - 180 + "px";
+    gwkTab.fdwidth = "1000px";
+    initDBGrid("gwkTab");
     // 初始化页面焦点
-    body_init(queryForm, "cbRetrieve");
+    body_init(queryForm, "cbRetrieve_Click");
 }
 
 /**
@@ -41,17 +31,17 @@ function body_resize() {
  * 
  * @return
  */
-function reSelect() {
-    refresh_select("operid", "select OPERID as value ,OPERNAME as text  from ptoper where" + " deptid='"
-            + document.getElementById("BANKID").value + "'");
-    var _cell = document.getElementById("operid");
-    // 创建默认空值
-    var _option = document.createElement("option");
-    _option.value = "";
-    _option.text = "";
-    _cell.appendChild(_option);
-    _cell.value = "";
-}
+//function reSelect() {
+//    refresh_select("operid", "select OPERID as value ,OPERNAME as text  from ptoper where" + " deptid='"
+//            + document.getElementById("BANKID").value + "'");
+//    var _cell = document.getElementById("operid");
+//    // 创建默认空值
+//    var _option = document.createElement("option");
+//    _option.value = "";
+//    _option.text = "";
+//    _cell.appendChild(_option);
+//    _cell.value = "";
+//}
 
 /**
  * <p>
@@ -83,17 +73,14 @@ function cbRetrieve_Click(formname) {
     if (trimStr(document.getElementById("TASKTIME2").value) != "") {
         whereStr += " and TASKTIME <=to_date('" + trimStr(document.getElementById("TASKTIME2").value) + "','YYYY-MM-DD HH24:mi:ss')";
     }
-    if (trimStr(document.getElementById("BANKID").value) != "") {
-        whereStr += " and a.bankid in(select deptid from ptdept start with deptid='"+document.getElementById("bankid").value+"' connect by prior deptid=parentdeptid)";
+    if (trimStr(document.getElementById("dbtabName").value) != "") {
+        whereStr += " and tablename like '%" + trimStr(document.getElementById("dbtabName").value) + "%'";
     }
-    if (trimStr(document.getElementById("operid").value) != "") {
-        whereStr += " and operid='" + trimStr(document.getElementById("operid").value) + "'";
-    }
-    whereStr += " order by tasktime desc";
-
-    document.all["loanTab"].whereStr = whereStr;
-    document.all["loanTab"].RecordCount = "0";
-    document.all["loanTab"].AbsolutePage = "1";
+    whereStr += " order by t.tablename desc";
+    
+    document.all["gwkTab"].whereStr = whereStr;
+    document.all["gwkTab"].RecordCount = "0";
+    document.all["gwkTab"].AbsolutePage = "1";
     // Table_Refresh in dbgrid.js pack
-    Table_Refresh("loanTab", false);
+    Table_Refresh("gwkTab");
 }

@@ -84,8 +84,7 @@ public class T1000Action implements RequestAction {
         }
         List rtnlist = null;
         try {
-            //        rtnlist = queryConsumeInfo(voucherid, year);
-            rtnlist = queryConsumeInfoTest(voucherid, year);
+            rtnlist = queryConsumeInfo(voucherid, year);
         } catch(Exception e) {
             logger.error("交易1000数据请求超时错误:");
             logger.error(e);
@@ -110,7 +109,7 @@ public class T1000Action implements RequestAction {
         logger.info(voucherid + " " + year);
 
     }
-
+    //取得数据
     private List queryConsumeInfo(String voucherid, String year) {
         CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
         Map m = new HashMap();
@@ -126,29 +125,6 @@ public class T1000Action implements RequestAction {
         }
         return rtnlist;
     }
-
-    /**
-     * 测试
-     * //新加字段(费用年度)设定值 2010/07/13 haiyu
-     * @param voucherid
-     * @param year
-     * @return
-     */
-    private List queryConsumeInfoTest(String voucherid, String year) {
-        List list = new ArrayList();
-        for (int i = 0; i < 1000; i++) {
-            Map m = new HashMap();
-            m.put("VOUCHERID", voucherid);
-            m.put("ACCOUNT", "1000111" + i);
-            m.put("CARDNAME", "aaa" + i);
-            m.put("Amt", String.valueOf(123.12 + i));
-            //新加字段(费用年度,)设定值 2010/07/13 haiyu
-            m.put("year",year);
-            list.add(m);
-        }
-        return list;
-    }
-
     /**
      * 自财政局获取还款信息
      * 新加字段(费用年度,网点编号)设定值 2010/07/13 haiyu

@@ -81,12 +81,12 @@ public class DAOGenerator {
   public static void main(String[] argv) {
     // 生成单个表的文件
 //    generateAllTables();
-     generateTable("LS_PAYBACKINFO");
+//     generateTable("ls_taskinfo");
 //     generateTable("LS_PERSONALINFO");
 //     generateTable("LS_BDGAGENCY_H");
 //     generateTable("LS_CARDBASEINFO");
 //     generateTable("LS_CONSUMEINFO");
-
+      generateTable("LS_CARDSTATUS");
   }
 
 }

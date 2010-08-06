@@ -13,13 +13,10 @@ public class TXSocketServer implements AutorunInterface {
     private static final Log logger = LogFactory.getLog(TXSocketServer.class);
 	private static  int PORT = 8000;
 	IServer srv;
-	//SwingChatServer chatServer;
 
 	public TXSocketServer() throws UnknownHostException, IOException {
-//		PORT = port;
-//		this.srv = new Server(PORT, new ProtocolHandlerTest());
+
 		this.srv = new Server(PORT, new ServerDataHandler());
-		//this.chatServer = chatServer;
 
 
 	}

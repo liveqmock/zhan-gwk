@@ -79,12 +79,13 @@ public class PerInfoEidtAction  extends Action {
                 task.setTasktype("add");
                 task.setTasktime(BusinessDate.getTodaytime());
                 task.setOperid(this.getOperator().getOperid());
-                if (task.insert() < 0) {
-                    this.res.setType(0);
-                    this.res.setResult(false);
-                    this.res.setMessage(PropertyManager.getProperty("300"));
-                    return -1;
-                }
+                task.insert();
+//                if (task.insert() < 0) {
+//                    this.res.setType(0);
+//                    this.res.setResult(false);
+//                    this.res.setMessage(PropertyManager.getProperty("300"));
+//                    return -1;
+//                }
 
             }catch (Exception ex1) {
                 logger.error("个人信息添加记录出错：" + ex1.getMessage());

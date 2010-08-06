@@ -82,9 +82,6 @@ public class JobInfo {
 
   /**
    * »’÷æ
-   *
-   * @param job
-   * @param e
    */
   public void log(Throwable ex) {
     DatabaseConnection dc = null;
@@ -124,19 +121,19 @@ public class JobInfo {
 
       info += " " + this.toString();
 
-     // System.out.println(info);
+       System.out.println(info);
 
-//      String insert =
-//          "insert into SYS_SCHEDULER_LOG (JOBID, JOBNAME, INFO)values('"
-//          + this.getJOBID()
-//          + "','"
-//          + this.getJOBNAME()
-//          + "','"
-//          + info
-//          + "')";
+      String insert =
+          "insert into SYS_SCHEDULER_LOG values('"
+          + this.getJOBID()
+          + "','"
+          + this.getJOBNAME()
+          + "',sysdate,'"
+          + info
+          + "')";
 
       dc = ConnectionManager.getInstance().getConnection();
-      //dc.executeUpdate(insert);
+      dc.executeUpdate(insert);
       dc.executeUpdate(update);
 
     }

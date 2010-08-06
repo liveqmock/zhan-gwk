@@ -116,28 +116,22 @@ function ActionTable_Send_click() {
                     if (attrName == "rtnCnt") {
                         rtnCnt = decode(oneRecord.getAttribute("value"));
                         if(rtnCnt == "-1"){
-                            alert("发送超时，请进行消费信息的发送异常管理。");
-                            document.location.href = "consumeSendMgrList.jsp";
+                            alert("发送失败，请进行消费信息的发送异常管理。");
                         }else{
                         var arr = rtnCnt.split("_");
                         sendCnt = arr[0];
                         updateCnt = arr[1];
-                        if (sendCnt != updateCnt) {
-                            alert("发送数据记录数：" + sendCnt + "\n发送成功记录数：" + updateCnt);
-                            document.location.href = "consumeSendMgrList.jsp";
+
+                        if (sendCnt == 0 &&  updateCnt == 0) {
+                            alert("没有未发送数据。");
                         } else {
                             alert("发送数据记录数：" + sendCnt + "\n发送成功记录数：" + updateCnt);
-                            document.location.href = "consumeQryList.jsp";
                         }
                         }
                     }
                 }
             }
-
-            //  var whereStr = " and ( lsh >= '" + startLsh + "')";
-            //  document.all["ActionTable"].whereStr = whereStr + " order by lsh ";
-            //  Table_Refresh("ActionTable");
-
+           Table_Refresh("ActionTable");
         } else {
             hide_status_label(window);
         }

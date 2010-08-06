@@ -42,8 +42,13 @@
             StringUtils.getLoadForm(bean,out);
         }
          if (doType.equals("select")){
-             PTOPER ptrbean = PTOPER.findFirst(" where operid ='" + bean.getCreatecode() + "'");
-            createName = ptrbean.getOpername();
+             if (bean.getCreatecode()!=0) {
+                PTOPER ptrbean = PTOPER.findFirst(" where operid ='" + bean.getCreatecode() + "'");
+                createName = ptrbean.getOpername(); 
+             } else {
+                 createName = "";
+             }
+
         } else {
             createName = omgr.getOperatorName(); 
          }

@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
+import pub.platform.utils.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,26 +37,11 @@ public class odsbReadAction extends Action {
      */
     public int readFromODSB() {
         int rtn = 0;
-        int count = 0;
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat df_time = new SimpleDateFormat("HH:mm:ss");
-
-        Date date = new Date();
-        String strdate = df.format(date);
-        String strtime = df_time.format(date);
-        String yymmdd = strdate.substring(0, 4) + strdate.substring(5, 7) + strdate.substring(8, 10);
-        String newLsh = "";
+        int lshCount = 0;
+        StringBuffer show_content = new StringBuffer();
         try {
             // 检查ODSB状态
-            String checksql = "select TO_CHAR(biz_date, 'yyyymmdd'),Jobflow_status " +
-                    "from odssys.f_jci_jobflowinstance@odsb_remote " +
-                    "where job_flow_id ='990063719900001' ";
-            String jobflow_status = null;
-            RecordSet rs = dc.executeQuery(checksql);
-            while (rs.next()) {
-                jobflow_status = rs.getString("Jobflow_status");
-            }
+             String jobflow_status = checkODSBStatus();
             if (jobflow_status == null) {
                 this.res.setType(0);
                 this.res.setResult(false);
@@ -69,87 +55,56 @@ public class odsbReadAction extends Action {
                 this.res.setMessage("ODSB系统尚未就绪，请稍候。");
                 return -1;
             }
-
-
+            show_content.append("可读").append("_");
             //取得本地表中最后的入帐日期
-            String sql = "select max(inac_date) as inac_date from ls_consumeinfo ";
-            String last_inac_date = null;
-            rs = dc.executeQuery(sql);
-            while (rs.next()) {
-                last_inac_date = rs.getString("inac_date");
-            }
-            if (last_inac_date == null) {
-                last_inac_date = "1899-01-01";
-            }
-
-            //取得本地表中本日处理过的最大流水号
-            sql = "select max(lsh) as lsh from ls_consumeinfo where lsh like '" + yymmdd + "%'";
-            String last_today_lsh = null;
-            int i_last_today_lsh = 0;
-            rs = dc.executeQuery(sql);
-            while (rs.next()) {
-                last_today_lsh = rs.getString("lsh");
-            }
-            if (last_today_lsh != null) {
-                i_last_today_lsh = Integer.parseInt(last_today_lsh.substring(8, 15));
-            }
-
+             String last_inac_date = queryLastInacDate();
+             show_content.append(last_inac_date).append("_");
             // BF_EVT_CRD_CRT_TRAD  贷记卡交易明细
             // BF_AGT_CRD_CRT  贷记卡
             // BF_AGT_CRD_CRT_ACCT 贷记卡账户
             //TODO 确认tx_cd的含义 40 43
-            // 将odsb的贷记卡交易明细数据读入gwk
-            sql = " insert into odsb_crd_crt_trad  " +
-                    " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb_remote a, ls_cardbaseinfo b " +
-                    " where a.crd_no = b.account and a.tx_cd in ('40','43') and a.inac_date > '" + last_inac_date + "' ";
-
-
-            //rtn = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
-            rtn = dc.executeUpdate(" delete from  odsb_crd_crt_trad ");
-            rtn = dc.executeUpdate(sql);
+            // 将最后入账日期之后的odsb的贷记卡交易明细数据读入gwk
+            rtn = insertIntoGwk(last_inac_date);
             if (rtn < 0) {
                 this.res.setType(0);
                 this.res.setResult(false);
                 this.res.setMessage("读取ODSB卡消费数据失败，请检查网络或数据库连接。");
-//                this.res.setMessage(PropertyManager.getProperty("300"));
                 return -1;
             }
-
-            //处理卡信息表
-            //TODO 卡BIN的处理
-            sql = " insert into odsb_crd_crt  " +
-                    " select * from  odsbdata.BF_AGT_CRD_CRT@odsb_remote  " +
-                    " where crd_no like '6283660015%' ";
-
-            int crd_rtn = 0;
-            dc.executeUpdate(" truncate table odsb_crd_crt ");
-            crd_rtn = dc.executeUpdate(sql);
+            show_content.append(String.valueOf(rtn)).append("_");
+             //处理卡信息表
+            int crd_rtn = insertCrdCrt();
             if (crd_rtn < 0) {
                 this.res.setType(0);
                 this.res.setResult(false);
                 this.res.setMessage("读取ODSB卡基本数据失败，请检查网络或数据库连接。");
                 return -1;
             }
-
+            show_content.append(String.valueOf(rtn));
+             //取得本地表中本日处理过的最大流水号
+            String yymmdd = DateUtil.getDateStr();
+            int i_last_today_lsh = getLastLsh(yymmdd);
+            // 获取需要的时间格式
+            Date date = new Date();
+            String strtime = pub.platform.utils.StringUtils.toDateFormat(date,"HH:mm:ss");
+            String dateTime = DateUtil.getCurrentDateTime();
+            String currentDate = DateUtil.getCurrentDate();
             //处理本地表
-            sql = " select a.*,b.cardname,c.stmt_day from odsb_crd_crt_trad a, ls_cardbaseinfo b, odsb_crd_crt c " +
+            String sql = " select a.*,b.cardname,c.stmt_day from odsb_crd_crt_trad a, ls_cardbaseinfo b, odsb_crd_crt c " +
                     " where a.crd_no=b.account and a.crd_no=c.crd_no ";
             rs = dc.executeQuery(sql);
             LSCONSUMEINFO consume = new LSCONSUMEINFO();
 
             //处理本日多次进行导入操作的情况
-            count += i_last_today_lsh;
-            //==============================================
-            // 新增数据的起始流水号
-            newLsh =  yymmdd + StringUtils.leftPad(String.valueOf(count), 7, '0');
-            //===============================================
+            lshCount += i_last_today_lsh;
+            int count = 0;
             while (rs.next()) {
                 //流水号
                 count++;
-                String lsh = String.valueOf(count);
+                lshCount++;
+                String lsh = String.valueOf(lshCount);
                 lsh = yymmdd + StringUtils.leftPad(lsh, 7, '0');
                 consume.setLsh(lsh);
-
                 consume.setAccount(rs.getString("crd_no"));
                 consume.setBusidate(rs.getString("tx_day"));
                 consume.setBusimoney(rs.getDouble("inac_amt"));
@@ -164,7 +119,7 @@ public class odsbReadAction extends Action {
 
                 consume.setRemark("自ODSB初始读入");
                 consume.setOperid("9999");
-                consume.setOperdate(df.format(date));
+                consume.setOperdate(dateTime);
                 consume.setStatus("10");
                 consume.setTx_cd(rs.getString("tx_cd"));
                 consume.setRef_number(rs.getString("ref_nmbr"));
@@ -172,7 +127,7 @@ public class odsbReadAction extends Action {
                 consume.setInac_date(inac_day);
                 consume.setInac_amt(rs.getDouble("inac_amt"));
                 consume.setTxlog("自ODSB初始读入");
-                consume.setOdsbdate(strdate);
+                consume.setOdsbdate(currentDate);
                 consume.setOdsbtime(strtime);
                 consume.setRecversion(0);
 
@@ -184,6 +139,17 @@ public class odsbReadAction extends Action {
                     return -1;
                 }
             }
+             // 本次读取的数据记录数
+            show_content.append("_").append(String.valueOf(count));
+            // 本日读取的数据总数
+            show_content.append("_").append(String.valueOf(lshCount));
+
+            // 若有读入数据，则添加本次读取的数据的起始和终止流水号
+            if(count > 0){
+            show_content.append("_").append(yymmdd + StringUtils.leftPad(String.valueOf(i_last_today_lsh+1), 7, '0')).append("_");
+            show_content.append(yymmdd + StringUtils.leftPad(String.valueOf(lshCount), 7, '0'));
+            }
+
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
@@ -193,24 +159,74 @@ public class odsbReadAction extends Action {
             return -1;
         }
 
-        //返回读入记录数
-        String cnt_lsh = String.valueOf(count)+"_"+newLsh;
-        this.res.setFieldName("importCnt");
+        //返回odsb状态_本地表中最后的入帐日_读取ODSB卡消费数据记录数_读取ODSB卡基本数据记录数_本次读入记录数_本日读取数据总数_起始数据流水线号_终止数据流水线号
+        this.res.setFieldName("importData");
         this.res.setFieldType("text");
         this.res.setEnumType("0");
-        this.res.setFieldValue(cnt_lsh);
+        this.res.setFieldValue(new String(show_content));
         this.res.setType(4);
         this.res.setResult(true);
-
-        // 返回新增数据的起始流水号
-        /*this.res.setFieldName("newLsh");
-        this.res.setFieldType("text");
-        this.res.setEnumType("0");
-        this.res.setFieldValue(newLsh);
-        this.res.setType(4);
-        this.res.setResult(true);*/
         return 0;
     }
+    // 检查ODSB状态
+    private String checkODSBStatus(){
+         String checksql = "select TO_CHAR(biz_date, 'yyyymmdd'),Jobflow_status " +
+                    "from odssys.f_jci_jobflowinstance@odsb_remote " +
+                    "where job_flow_id ='990063719900001' ";
+            String jobflow_status = null;
+            RecordSet rs = dc.executeQuery(checksql);
+            while (rs.next()) {
+                jobflow_status = rs.getString("Jobflow_status");
+            }
+        return jobflow_status;
+    }
+    //取得本地表中最后的入帐日期
+     private String queryLastInacDate(){
+           String sql = "select max(inac_date) as inac_date from ls_consumeinfo ";
+            String last_inac_date = null;
+            rs = dc.executeQuery(sql);
+            while (rs.next()) {
+                last_inac_date = rs.getString("inac_date");
+            }
+            if (last_inac_date == null) {
+                last_inac_date = "1899-01-01";
+            }
+         return last_inac_date;
+     }
+    //取得本地表中某日(yymmdd)处理过的最大流水号
+    private int getLastLsh(String yymmdd){
+           String sql = "select max(lsh) as lsh from ls_consumeinfo where lsh like '" + yymmdd + "%'";
+            String last_today_lsh = null;
+            int i_last_today_lsh = 0;
+            rs = dc.executeQuery(sql);
+            while (rs.next()) {
+                last_today_lsh = rs.getString("lsh");
+            }
+            if (last_today_lsh != null) {
+                i_last_today_lsh = Integer.parseInt(last_today_lsh.substring(8, 15));
+            }
+        return i_last_today_lsh;
+    }
+    // 将大于入账日（inac_date）的odsb的贷记卡交易明细数据读入gwk
+    private int insertIntoGwk(String inac_date) {
+        int exeCount = 0;
+        String sql = " insert into odsb_crd_crt_trad  " +
+                    " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb_remote a, ls_cardbaseinfo b " +
+                    " where a.crd_no = b.account and a.tx_cd in ('40','43') and a.inac_date > '" + inac_date + "' ";
+        exeCount = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
+        exeCount = dc.executeUpdate(sql);
+        return exeCount;
+    }
+     //处理卡信息表
+     private int insertCrdCrt() {
+           String sql = " insert into odsb_crd_crt  " +
+                    " select * from  odsbdata.BF_AGT_CRD_CRT@odsb_remote  " +
+                    " where crd_no like '6283660015%' ";
+            int crd_rtn = 0;
+            dc.executeUpdate(" truncate table odsb_crd_crt ");
+            crd_rtn = dc.executeUpdate(sql);
+            return crd_rtn;
+     }
 
     // inac_date 入账日    长度10
     // stmt_day 账单日    长度3

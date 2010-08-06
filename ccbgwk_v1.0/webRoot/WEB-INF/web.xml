@@ -12,7 +12,7 @@
     <servlet>
         <servlet-name>SchedulerManager</servlet-name>
         <servlet-class>pub.platform.advance.utils.SchedulerManager</servlet-class>
-        <load-on-startup>-1</load-on-startup>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
@@ -40,9 +40,9 @@
         <servlet-class>pub.ControlServlet</servlet-class>
         <init-param>
             <param-name>initclassset</param-name>
-            <param-value>gateway.mbs.xsocketserver.TestServer</param-value>
+            <param-value>gateway.mbs.xsocketserver.TXSocketServer</param-value>
         </init-param>
-        <load-on-startup>-1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
 
 

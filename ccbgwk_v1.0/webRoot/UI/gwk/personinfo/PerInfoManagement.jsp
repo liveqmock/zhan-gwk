@@ -35,7 +35,7 @@
        dbGrid.setvisible("false,true,true,true,true,true");
        dbGrid
            .setfieldName("recinsequence,pername,perid,deptName,superDeptName,createdate");
-       dbGrid.setfieldWidth("0,10,10,20,20,15");
+       dbGrid.setfieldWidth("0,10,15,20,20,15");
        dbGrid.setfieldType("text,text,text,text,text,text");
        dbGrid.setfieldCheck(";textLength=40; textLength=20;textLength=18;textLength=18;textLength=30");
        dbGrid.setpagesize(50);

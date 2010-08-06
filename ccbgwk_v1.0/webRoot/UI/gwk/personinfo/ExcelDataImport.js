@@ -86,6 +86,10 @@ var idTmr = "";
             var oWB;
             var oSheet;
             var excelfile = document.getElementById("himport").value;
+            if (excelfile.substring(excelfile.length-3,excelfile.length).toLowerCase() != "xls") {
+                alert("文件类型不正确，请输入Excel格式文件!");
+                return false;
+            }
             var isRight = true;
             var errPeridLst = "";      //错误身份证号码list
             var FormatTitle = "文件表头不正确，请检查文件是否正确。";

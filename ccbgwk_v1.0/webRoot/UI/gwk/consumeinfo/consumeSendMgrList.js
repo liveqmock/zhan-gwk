@@ -31,25 +31,18 @@ function ActionTable_Send_click() {
                     // 记录数
                     if (attrName == "rtnCnt") {
                         rtnCnt = decode(oneRecord.getAttribute("value"));
-                        if (rtnCnt == "-1") {
-                            alert("发送超时，请稍后再试。");
-                             document.location.href = "consumeSendMgrList.jsp";
-                        } else {
                             var arr = rtnCnt.split("_");
                             sendCnt = arr[0];
                             updateCnt = arr[1];
-                            if (sendCnt != updateCnt) {
-                                alert("发送数据记录数：" + sendCnt + "\n发送成功记录数：" + updateCnt);
-                                document.location.href = "consumeSendMgrList.jsp";
-                            } else {
-                                alert("发送数据记录数：" + sendCnt + "\n发送成功记录数：" + updateCnt);
-                                document.location.href = "consumeQryList.jsp";
-                            }
+                           if (sendCnt == 0 &&  updateCnt == 0) {
+                            alert("没有未发送数据。");
+                        } else {
+                            alert("发送数据记录数：" + sendCnt + "\n发送成功记录数：" + updateCnt);
                         }
                     }
                 }
             }
-
+           Table_Refresh("ActionTable");
         } else {
             hide_status_label(window);
         }

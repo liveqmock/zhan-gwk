@@ -749,7 +749,7 @@ boolean isRegister = false;
 if(strAction!=null && strAction.equals("passwordConfirm"))
 {
 	String password = request.getParameter("password");
-	if ( password !=null && password.equals("wyz@ccbLoan") ) {
+	if ( password !=null && password.equals("fbi@ccbgwk") ) {
 		session.setAttribute("isRegister","isRegister");
 	}
 }

@@ -5,7 +5,7 @@ function body_load()
 {
 
 	//divfd_DbgagencyTable.style.height="100%";
-    divfd_DbgagencyTable.style.height = document.body.clientHeight - 210 + "px";
+    divfd_DbgagencyTable.style.height = document.body.clientHeight - 235 + "px";
     //divfd_DbgagencyTable.style.width="100%";
     DbgagencyTable.fdwidth = "1200px";
      body_init(queryForm, "cbRetrieve");

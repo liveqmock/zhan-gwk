@@ -31,8 +31,8 @@
         dbGrid.setfieldName("keycode,LogicCode,LogicClass,LogicMethod,LogicDesc");
 
         dbGrid.setfieldType("text,text,text,text,text");
-        dbGrid.setfieldCheck(";isNull=false,textLength=6;isNull=false,textLength=200;textLength=50;textLength=200");
-        dbGrid.setpagesize(18);
+        dbGrid.setfieldCheck(";isNull=false,textLength=20;isNull=false,textLength=200;textLength=50;textLength=200");
+        dbGrid.setpagesize(30);
         dbGrid.setCheck(true);
         dbGrid.setWhereStr("  order by 1");
 

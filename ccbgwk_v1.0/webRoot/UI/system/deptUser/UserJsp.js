@@ -84,7 +84,7 @@ function chgArea()
 {
 
    //div_gcoreusercard.style.width = 950;
-   divfd_userTable.style.height = 320;
+   divfd_userTable.style.height = document.body.offsetHeight - 130;
    WidthEquals("Title_userTable","userTable");
    initDBGrid("userTable");
 }

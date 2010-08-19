@@ -32,7 +32,7 @@
         dbGrid.setbuttons("default");
   %>
   <body bgcolor="#ffffff" onload="body_load()" onresize="body_load()" class="Bodydefault">
-    <FIELDSET>
+    <FIELDSET style="margin:20px 10px;">
       <LEGEND>
         ╫ги╚ап╠М
       </LEGEND>

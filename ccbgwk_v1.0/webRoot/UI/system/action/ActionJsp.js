@@ -4,7 +4,8 @@ var menu;
 function body_load()
 {
 
-	 divfd_ActionTable.style.height="100%";
+    divfd_ActionTable.style.height = document.body.clientHeight - 180 + "px";
+	 //divfd_ActionTable.style.height="100%";
 	 //ActionTable.fdwidth="100%";
      ActionTable.actionname     ="sm0011";
      ActionTable.addmethodname  ="addenum";

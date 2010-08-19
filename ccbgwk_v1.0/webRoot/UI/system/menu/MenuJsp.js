@@ -9,7 +9,7 @@ function body_load() {
 	var whereStr = "and (parentmenuid='" + m_objParam + "') order by Levelidx";
 	tab.whereStr = whereStr;
 	MenuTable.actionname = "sm0021";
-	divfd_MenuTable.style.height="350px";
+	divfd_MenuTable.style.height=document.body.offsetHeight - 130;
 	MenuTable.fdwidth="800px";
      ///MenuTable.addmethodname  ="addenum";
 	MenuTable.editmethodname = "editenum";

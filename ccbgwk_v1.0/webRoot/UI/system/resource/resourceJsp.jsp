@@ -26,7 +26,7 @@
         dbGrid.setfieldType("text,text,text,text,dropdown,text");
         dbGrid
             .setfieldCheck(";isNull=false,textLength=6;textLength=6;isNull=false,textLength=100;isNull=false;textLength=50");
-        dbGrid.setpagesize(30);
+        dbGrid.setpagesize(80);
         dbGrid.setCheck(true);
         dbGrid.setWhereStr(" order by PTResource.ResID");
         //////数据集按钮

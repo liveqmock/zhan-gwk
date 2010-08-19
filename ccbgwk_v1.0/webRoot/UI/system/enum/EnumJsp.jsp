@@ -41,7 +41,7 @@
         dbGrid.setfieldWidth("5,0,20,20,25,30");
         dbGrid.setfieldType("text,text,text,text,text");
         dbGrid.setfieldCheck(";isNull=false,textLength=20;isNull=false,textLength=20;textLength=30;textLength=100");
-        dbGrid.setpagesize(30);
+        dbGrid.setpagesize(10);
         dbGrid.setCheck(true);
         dbGrid.setWhereStr("  order by 1");
 

@@ -1,7 +1,7 @@
 //////初始化信息
 function body_load() {
   resourceTable.fdwidth = "1000px";
-  divfd_resourceTable.style.height = "100%";
+  divfd_resourceTable.style.height = document.body.offsetHeight - 130;
   resourceTable.actionname = "sm0071";
   // /MenuTable.addmethodname ="addenum";
   resourceTable.editmethodname = "editenum";

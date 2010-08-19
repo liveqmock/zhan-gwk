@@ -1,5 +1,23 @@
+
+var dhxLayout;
+function doOnLoad() {
+
+    changeheigth();
+    onUserDocumentLoad();
+
+    dhxLayout = new dhtmlXLayoutObject("parentId", "2U");
+    dhxLayout.cells("a").setText("机构清单");
+    dhxLayout.cells("b").setText("用户明细");
+
+    //var rightHight = document.body.offsetHeight;
+    dhxLayout.cells("a").setWidth(240);
+    dhxLayout.cells("a").attachObject("menuId");
+    dhxLayout.cells("b").attachObject("gridId");
+}
+
+
  function changeheigth(){
-	document.all("rootUl").style.height=document.body.offsetHeight -55;
+	document.all("rootUl").style.height=document.body.offsetHeight -65;
 }
 
 
@@ -150,9 +168,9 @@ function tvNodeSelected(){
 	if (document.node.xData.xNode.appID =="1")
 	{
 
-		innerDocTD.innerHTML = "<iframe id='frmContainer' src='roleJsp.jsp' style='WIDTH:100%;HEIGHT:100%' frameborder='0' scrolling='auto'></iframe>";
+		innerDocTD.innerHTML = "<iframe id='frmContainer' src='roleJsp.jsp' style='WIDTH:98%;HEIGHT:98%' frameborder='0' scrolling='auto'></iframe>";
 
 	}else
-		innerDocTD.innerHTML = "<iframe id='frmContainer' src='/UI/system/blank.html' style='WIDTH:100%;HEIGHT:100%' frameborder='0' scrolling='auto'></iframe>";
+		innerDocTD.innerHTML = "<iframe id='frmContainer' src='/UI/system/blank.html' style='WIDTH:98%;HEIGHT:98%' frameborder='0' scrolling='auto'></iframe>";
 	imgClick();
 }

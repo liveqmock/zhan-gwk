@@ -10,8 +10,9 @@ import pub.platform.utils.ImgSign;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -38,14 +39,24 @@ public class OperatorManager implements Serializable {
 	 */
 	private String fimgSign = "";
 
-	
-	
-	
 	private String operatorname = null;
 
 	private String operatorid = null;
 
+    //当前权限下的菜单项（不包含子菜单）
 	private String xmlString = null;
+
+    //当前权限下的全部菜单
+	private String jsonString = null;
+
+    /*
+    20100820 zhanrui
+    当前权限下的按照targetmachine分类的菜单项
+    目前只分为两大类
+    1、default：主要是业务菜单（targetmachine 为空或 为default）
+    2、system：主要是系统管理相关菜单
+     */
+    private Map jsonMap = new HashMap();
 
 	private Resources resources;
 
@@ -175,7 +186,10 @@ public class OperatorManager implements Serializable {
             try {
                 mb = new MenuBean();
 
-                this.xmlString = mb.generateStream(operid);
+                //this.xmlString = mb.generateStream(operid);
+                //this.jsonString = mb.generateJsonStream(operid);
+                this.jsonMap.put("default", mb.generateJsonStream(operid, "default"));
+                this.jsonMap.put("system", mb.generateJsonStream(operid, "system"));
 
             } catch (Exception ex3) {
                 ex3.printStackTrace();
@@ -245,6 +259,7 @@ public class OperatorManager implements Serializable {
 		roles = null;
 		mb = null;
 		xmlString = null;
+		jsonString = null;
 		remoteHost = null;
 		remoteAddr = null;
 		loginTime = null;
@@ -361,4 +376,11 @@ public class OperatorManager implements Serializable {
 		return fimgSign;
 	}
 
+    public String getJsonString(){
+        return jsonString;
+    }
+
+    public String getJsonString(String target){
+        return (String)this.jsonMap.get(target);
+    }
 }

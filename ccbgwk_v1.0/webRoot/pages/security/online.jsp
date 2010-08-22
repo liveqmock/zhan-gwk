@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=GBK" %>
 
 <%pub.platform.security.OperatorManager _om = (pub.platform.security.OperatorManager)session.getAttribute(pub.platform.form.config.SystemAttributeNames.USER_INFO_NAME);
   if ( _om == null ) {

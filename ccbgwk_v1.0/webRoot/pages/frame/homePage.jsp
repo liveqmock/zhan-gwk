@@ -21,8 +21,8 @@
 <frameset rows="80px,*" border="0" framespacing="0" frameborder="0" noresize="noresize" scrolling="no"
           onload="promtMsg()" onunload="unloadevent()">
     <frame name="roofFrame" src="roofPage.jsp" frameborder="0" noresize="noresize" scrolling="no">
-    <frameset id="menuFrame" framespacing="0" cols="180,12,*" frameborder="0" framespacing="0">
-        <frame id="menuList" src="menuPage.jsp" frameborder="0" noresize="noresize" scrolling="no" style="display: ">
+    <frameset id="menuFrame" framespacing="0" cols="200,12,*" frameborder="0" framespacing="0">
+        <frame id="menuList" src="menuTest.jsp" frameborder="0" noresize="noresize" scrolling="no">
         <frame id="dockFrame" src="dockPage.jsp" frameborder="0" noresize="noresize" scrolling="no">
         <frame id="workFrame" src="trackMisc.jsp" frameborder="0" noresize="noresize" scrolling="auto">
     </frameset>

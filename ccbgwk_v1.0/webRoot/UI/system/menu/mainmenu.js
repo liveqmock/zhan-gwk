@@ -78,6 +78,8 @@ function showApplications(eleRoot, nFather, bManagedApp) {
         nApp.span.childindex = decode(getAttrValue(node.childNodes[4], "value"));
 
         nApp.xData.codeName = decode(getAttrValue(node.childNodes[1], "value"));
+        nApp.xData.targetmachine = decode(getAttrValue(node.childNodes[5], "value"));
+
         if (decode(getAttrValue(node.childNodes[3], "value")) != "0") {
             nApp.xData.waitforLoad = true;
 
@@ -188,6 +190,7 @@ function loadChildren(n) {
                 nApp.span.title = decode(getAttrValue(node.childNodes[2], "value"));
                 nApp.span.childcount = decode(getAttrValue(node.childNodes[3], "value"));
                 nApp.span.childindex = decode(getAttrValue(node.childNodes[4], "value"));
+                nApp.xData.targetmachine = decode(getAttrValue(node.childNodes[5], "value"));
                 nApp.xData.codeName = decode(getAttrValue(node.childNodes[1], "value"));
 
 
@@ -224,7 +227,7 @@ function addSubNode(node) {
     //try{
 
 
-    var sfeature = "dialogwidth:300px; Dialogheight:220px;center:yes;help:no;resizable:yes;scroll:no;status:no";
+    var sfeature = "dialogwidth:300px; Dialogheight:250px;center:yes;help:no;resizable:yes;scroll:no;status:no";
 
     var spath = "editmainmenu.jsp";
     var arg = new Object();
@@ -244,7 +247,7 @@ function addSubNode(node) {
 
 function editSubNode(node) {
     //try{
-    var sfeature = "dialogwidth:300px; Dialogheight:220px;center:yes;help:no;resizable:yes;scroll:no;status:no";
+    var sfeature = "dialogwidth:300px; Dialogheight:250px;center:yes;help:no;resizable:yes;scroll:no;status:no";
 
     var spath = "editmainmenu.jsp";
     var arg = new Object();
@@ -254,7 +257,11 @@ function editSubNode(node) {
     arg.title = node.span.title;
     arg.caption = node.xData.codeName;
     arg.index = node.span.childindex;
-
+    if (node.xData.targetmachine == "null"){
+        arg.targetmachine = "default";
+    }else{
+        arg.targetmachine = node.xData.targetmachine;
+    }
     var goupstr = window.showModalDialog(spath, arg, sfeature);
 
     onUserDocumentLoad();

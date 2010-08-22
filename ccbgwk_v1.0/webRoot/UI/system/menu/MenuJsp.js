@@ -10,7 +10,8 @@ function body_load() {
 	tab.whereStr = whereStr;
 	MenuTable.actionname = "sm0021";
 	divfd_MenuTable.style.height=document.body.offsetHeight - 130;
-	MenuTable.fdwidth="800px";
+	MenuTable.fdwidth="100%";
+//	MenuTable.fdwidth="800px";
      ///MenuTable.addmethodname  ="addenum";
 	MenuTable.editmethodname = "editenum";
 	MenuTable.delmethodname = "delenum";

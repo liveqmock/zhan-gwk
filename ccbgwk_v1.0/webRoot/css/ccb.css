@@ -498,7 +498,7 @@ tr {
 	/*border-bottom-style: groove;*/
 	border-right-style: solid;
 	/*border-left-style: groove;*/
-	border-width: 8px;
+	border-width: 1px;
 }
 
 .borderGrooveTRL /** 用于在表框等地方产生刻线边框的效果，这种是上边和右边和左边。 */ {

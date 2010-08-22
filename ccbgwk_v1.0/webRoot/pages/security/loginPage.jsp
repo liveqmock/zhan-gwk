@@ -67,7 +67,7 @@
     </style>
 </head>
 
-<body topmargin="0" onLoad="FocusUsername();">
+<body topmargin="0" onLoad="FocusUsername();" background="/images/background-gradient.png">
 <div align="center">
     <table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr align="center">

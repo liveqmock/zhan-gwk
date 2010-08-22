@@ -6,7 +6,6 @@ import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import pub.platform.db.ConnectionManager;
-import pub.platform.db.DatabaseConnection;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
 
@@ -16,12 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: zhangxiaobo
- * Date: 2010-8-6
- * Time: 11:42:00
- * To change this template use File | Settings | File Templates.
- */
+* Created by IntelliJ IDEA.
+* User: zhangxiaobo
+* Date: 2010-8-6
+* Time: 11:42:00
+* To change this template use File | Settings | File Templates.
+*/
 public class CardStatusAction extends Action{
 
     private static final Log logger = LogFactory.getLog(CardStatusAction.class);

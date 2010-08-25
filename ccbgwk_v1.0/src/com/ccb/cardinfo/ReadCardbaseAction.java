@@ -132,7 +132,7 @@ public class ReadCardbaseAction extends Action {
      private int insertAllCrdCrt() throws Exception{
            String sql = " insert into odsb_crd_crt  " +
                     " select * from  odsbdata.BF_AGT_CRD_CRT@odsb_remote  " +
-                    " where crd_no like '6283660015%' ";
+                    " where crd_no like '628366001%' ";
             int crd_rtn = 0;
             //dc.executeUpdate(" truncate table odsb_crd_crt ");
             crd_rtn = dc.executeUpdate(sql);
@@ -166,7 +166,7 @@ public class ReadCardbaseAction extends Action {
                       "'建设银行','37101986827059123456',p.perid,'公务卡开卡',8015,o.open_card_dt,o.open_card_dt,"+
                       "substr(o.open_card_dt,0,4)+3||substr(o.open_card_dt,5,6) as enddate ,'0',null,'AUTO',sysdate,'0'" +
                       ",null,to_char(sysdate,'yyyy-mm-dd'),to_char(sysdate,'HH24:MI:SS'),0,'1' from ls_personalinfo p"+
-                      "left join odsb_crd_crt o on p.perid = o.embosser_name3 where o.crd_no in ("+accounts+"))";
+                      " left join odsb_crd_crt o on p.perid = o.embosser_name3 where o.crd_no in ("+accounts+"))";
               newCnt = dc.executeUpdate(insertCrdBsSql);
             }
         }

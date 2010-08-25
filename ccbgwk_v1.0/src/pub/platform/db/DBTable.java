@@ -1,15 +1,10 @@
 package pub.platform.db;
 
-import java.io.File;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-
 import jxl.Workbook;
-import jxl.format.*;
 import jxl.format.Alignment;
 import jxl.format.Border;
 import jxl.format.BorderLineStyle;
+import jxl.format.*;
 import jxl.format.VerticalAlignment;
 import jxl.write.*;
 import pub.platform.advance.utils.PropertyManager;
@@ -17,6 +12,11 @@ import pub.platform.form.config.EnumerationBean;
 import pub.platform.form.config.EnumerationType;
 import pub.platform.utils.Basic;
 import pub.platform.utils.Util;
+
+import java.io.File;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 /**
  * <p>
@@ -506,7 +506,8 @@ public class DBTable {
 
     }
 
-    public String writeExcel_new(WritableWorkbook book, String SqlStr, String whereStr, String fieldCN, String fieldType,String fieldWidth,String enumType) {
+    //zhan 2010/7 修改
+    public String writeExcel_new(WritableWorkbook book, String SqlStr, String whereStr, String fieldCN, String fieldType,String fieldWidth,String visible, String enumType) {
         DatabaseConnection DBCon = manager.getConnection();
 
         try {
@@ -514,6 +515,7 @@ public class DBTable {
             String[] fieldCNArr = fieldCN.split(",", -2);
             String[] fieldTypeArr = fieldType.split(",", -2);
             String[] fieldWidthArr = fieldWidth.split(",", -2);
+            String[] visibleArr = visible.split(",", -2);
             String[] enumTypeArr = enumType.split(",", -2);
 
 
@@ -536,6 +538,11 @@ public class DBTable {
             sheet.setColumnView(0, 5);
 
             for (int i = 0; i < fieldCNArr.length; i++) {
+                //隐藏字段不输出
+                if (visibleArr[i].toLowerCase().equals("false")) {
+                    continue;
+                }
+
                 label = new Label(i + 1, 1, fieldCNArr[i], wcf_title);
                 // 将定义好的单元格添加到工作表中
                 sheet.addCell(label);
@@ -547,7 +554,7 @@ public class DBTable {
             * 生成一个保存数字的单元格 必须使用Number的完整包路径，否则有语法歧义 单元格位置是第二列，第一行，值为789.123
             */
 
-            
+
             //money
             NumberFormat nf_money = new NumberFormat("#,###,###,##0.00");
             WritableCellFormat wcf_money = new WritableCellFormat(nf_money);
@@ -561,7 +568,7 @@ public class DBTable {
             // 水平对齐
             wcf_money.setAlignment(Alignment.RIGHT);
 
-            
+
             //number
 //            NumberFormat nf = new NumberFormat("#,###,###,###.##");
 //            WritableCellFormat wcf_number = new WritableCellFormat(nf);
@@ -575,7 +582,7 @@ public class DBTable {
             wcf_number.setVerticalAlignment(VerticalAlignment.CENTRE);
             // 水平对齐
             wcf_number.setAlignment(Alignment.RIGHT);
-            
+
             //text:align left
             WritableCellFormat wcf_text_left = new WritableCellFormat();
             wcf_text_left.setFont(new WritableFont(WritableFont.COURIER, 11, WritableFont.NO_BOLD, false));
@@ -600,7 +607,7 @@ public class DBTable {
             // 水平对齐
             wcf_text_center.setAlignment(Alignment.CENTRE);
 
-            
+
             //明细数据输出
             int reindex = 1;
 
@@ -609,17 +616,24 @@ public class DBTable {
             EnumerationBean enumBean;
 
             while (rs.next()) {
-                for (int i = 0; i < rs.getColumnCount(); i++) {
+                int columnCount = rs.getColumnCount();
+                for (int i = 0; i < columnCount; i++) {
+
+                    //隐藏字段不输出
+                    if (visibleArr[i].toLowerCase().equals("false")) {
+                        continue;
+                    }
+
                     if (fieldTypeArr[i].toLowerCase().equals("number")) {
-                        numberCell = new jxl.write.Number(i + 1, reindex + 1, rs.getDouble(i),wcf_number);
+                        numberCell = new jxl.write.Number(i + 1, reindex + 1, rs.getDouble(i), wcf_number);
                         sheet.addCell(numberCell);
-                    }else if (fieldTypeArr[i].toLowerCase().equals("money")) {
-                        numberCell = new jxl.write.Number(i + 1, reindex + 1, rs.getDouble(i),wcf_money);
+                    } else if (fieldTypeArr[i].toLowerCase().equals("money")) {
+                        numberCell = new jxl.write.Number(i + 1, reindex + 1, rs.getDouble(i), wcf_money);
                         sheet.addCell(numberCell);
-                    }else if (fieldTypeArr[i].toLowerCase().equals("center")) {
-                        label = new Label(i + 1, reindex + 1, rs.getString(i),wcf_text_center);
+                    } else if (fieldTypeArr[i].toLowerCase().equals("center")) {
+                        label = new Label(i + 1, reindex + 1, rs.getString(i), wcf_text_center);
                         sheet.addCell(label);
-                    }else if (fieldTypeArr[i].toLowerCase().equals("dropdown")) {
+                    } else if (fieldTypeArr[i].toLowerCase().equals("dropdown")) {
                         String fieldValue = rs.getString(i);
                         String enumStr = fieldValue;
                         if ((!enumTypeArr[i].equals("-1")) && (!enumTypeArr[i].equals("0"))) {
@@ -635,11 +649,11 @@ public class DBTable {
                                 enumStr = "";
                         }
 
-                        label = new Label(i + 1, reindex + 1, enumStr,wcf_text_center);
+                        label = new Label(i + 1, reindex + 1, enumStr, wcf_text_center);
 //                        label = new Label(i + 1, reindex + 1, rs.getString(i),wcf_text_center);
                         sheet.addCell(label);
-                    }else {
-                        label = new Label(i + 1, reindex + 1, rs.getString(i),wcf_text_left);
+                    } else {
+                        label = new Label(i + 1, reindex + 1, rs.getString(i), wcf_text_left);
                         sheet.addCell(label);
                     }
                 }
@@ -652,7 +666,7 @@ public class DBTable {
 //         book.write();
 //         book.close();
 //         return "/temp/" + savefile;
-            return "ok";
+           return "ok";
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

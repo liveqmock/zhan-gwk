@@ -11,16 +11,16 @@
 
 package pub.platform.db;
 
+import pub.platform.advance.utils.PropertyManager;
+import pub.platform.form.config.SystemAttributeNames;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import pub.platform.advance.utils.PropertyManager;
-import pub.platform.form.config.SystemAttributeNames;
-
 /**
  * 数据库工具包
- * 
+ *
  * @author <a href="mailto:wuyeyuan@tom.com">wuyeyuan</a>
  * @version $Revision: 1.1 $ $Date: 2006/05/17 09:19:30 $
  */
@@ -29,7 +29,7 @@ public class DBUtil {
 
     /**
      * 将日期类型转换成SQL92的标准
-     * 
+     *
      * @param date
      *            日期
      * @return
@@ -55,7 +55,7 @@ public class DBUtil {
 
     /**
      * 按要求转码
-     * 
+     *
      * @param content
      * @param fromEncoding
      * @param toEncoding
@@ -84,7 +84,7 @@ public class DBUtil {
 
     /**
      * 按要求转码
-     * 
+     *
      * @param content
      * @param fromEncoding
      * @param toEncoding
@@ -96,7 +96,7 @@ public class DBUtil {
 
     /**
      * 按要求将web编码转为DB编码(by wxj) 从配置文件中读取转码要求，将字符串转码。
-     * 
+     *
      * @param p_value
      * @return
      */
@@ -108,7 +108,7 @@ public class DBUtil {
 
     /**
      * 按要求将web编码转为DB编码(by wxj) 从配置文件中读取转码要求，将字符串转码。
-     * 
+     *
      * @param p_value
      * @return
      */
@@ -229,9 +229,7 @@ public class DBUtil {
 
     /**
      * 取出汉字对应的拼音
-     * 
-     * @param databaseconnection
-     * @param 汉字
+     *
      */
     public static String getSpell(DatabaseConnection con, String chsChar) {
         String strSpell = "";

@@ -285,11 +285,12 @@ public class DBXML {
                 String fieldCN = childRoot.getAttributeValue("fieldCN");
                 String fieldType = childRoot.getAttributeValue("fieldType");
                 String fieldWidth = childRoot.getAttributeValue("fieldWidth");
+                String visible = childRoot.getAttributeValue("visible");
                 String enumType = childRoot.getAttributeValue("enumType");
                 String whereStr = Basic.decode(childRoot.getAttributeValue("whereStr"));
 
                 DBTable datatable = new DBTable();
-                return datatable.writeExcel_new(wwb, SqlStr, whereStr, fieldCN, fieldType,fieldWidth,enumType);
+                return datatable.writeExcel_new(wwb, SqlStr, whereStr, fieldCN, fieldType,fieldWidth,visible,enumType);
 
             }
             if (rootNode.getAttributeValue("type").equals("comboBox")) {

@@ -4,17 +4,17 @@
 //**************************************************//
 
 /*******************************************************************************
- * 
+ *
  * 文件名： dbgrid.js
- * 
+ *
  * 作 用： 数据控件调用方法。
- * 
+ *
  * 作 者： 公共包
- * 
+ *
  * 时 间： yyyy-mm-dd
- * 
+ *
  * 版 权： leonwoo
- * 
+ *
  ******************************************************************************/
 
 function CreateText(el) {
@@ -2943,6 +2943,9 @@ function printLExcel(printtype, tab) {
         appendAttri(xmlDoc, childNode, "fieldCN", tab.fieldCN);
         appendAttri(xmlDoc, childNode, "fieldWidth", tab.fieldwidth);
         appendAttri(xmlDoc, childNode, "enumType", tab.enumType);
+        //zhanrui 2010/07/28
+        appendAttri(xmlDoc, childNode, "visible", tab.visible);
+
         appendAttri(xmlDoc, childNode, "SQLStr", tab.SQLStr);
         appendAttri(xmlDoc, childNode, "whereStr", encode(decode(tab.whereStr)));
 

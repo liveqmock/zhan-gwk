@@ -13,9 +13,17 @@ import java.util.List;
 public class TreeNode {
     private String id;
     private String text;
+    private String tooltip;
     private List<TreeUserDataBean> userdata = new ArrayList();
     private List<TreeNode> item = new ArrayList();
 
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
 
     public String getId() {
         return id;

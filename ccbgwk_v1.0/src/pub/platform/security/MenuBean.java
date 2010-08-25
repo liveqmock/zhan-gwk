@@ -128,6 +128,7 @@ public class MenuBean
                 TreeNode node = new TreeNode();
                 node.setId(item.getMenuItemId());
                 node.setText(item.getLabel());
+                node.setTooltip(item.getDescription());
                 TreeUserDataBean udb = new TreeUserDataBean("url", item.getUrl());
                 node.addUserData(udb);
                 udb = new TreeUserDataBean("description", item.getDescription());

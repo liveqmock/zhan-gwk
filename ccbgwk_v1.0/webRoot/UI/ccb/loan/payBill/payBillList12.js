@@ -2,8 +2,6 @@ var dw_form;
 
 /**
  * 初始化
- * 
- * @return
  */
 function payBillInit() {
   body_init(queryForm, "expExcel");
@@ -11,14 +9,7 @@ function payBillInit() {
   dw_form = new DataWindow(document.getElementById("queryForm"), "form");
 }
 
-/**
- * report
- * 
- * @param
- * @param doType:select
- *          操作类型
- * @return 无
- */
+
 function loanTab_expExcel_click() {
 
   // 增加系统锁检查

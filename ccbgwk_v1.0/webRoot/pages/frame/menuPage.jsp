@@ -30,24 +30,20 @@
     <script language="javascript" src="/dhtmlx/codebase/ext/dhtmlxtree_json.js"></script>
 
     <script language="javascript">
-        <%
+       <%
              String jsonDefaultMenu = null;
              String jsonSystemMenu = null;
              OperatorManager om = (OperatorManager)session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
              try {
-//                 xmlString =om.getXmlString();
+                 //xmlString =om.getXmlString();
                  jsonDefaultMenu = om.getJsonString("default");
                  jsonSystemMenu = om.getJsonString("system");
-                 System.out.println( om.getOperator().getPtDeptBean().getSuperdqdm());
-                 System.out.println( om.getOperator().getPtDeptBean().getSuperdqmc());
+                 //System.out.println( om.getOperator().getPtDeptBean().getSuperdqdm());
+                 //System.out.println( om.getOperator().getPtDeptBean().getSuperdqmc());
               } catch(Exception e) {
                  System.out.println("jsp" +e +"\n");
               }
-
-//              xmlString = "{id:0,item:[{'id':'X1',text:'aa',userdata:[{name:'href',content:'http://www.baidu.com'}]}]}";
-//              xmlString = "{id:0,item:[{'id':'X1',text:'aa',item:[{id:'a1',text:'asas',item:[]}]},{'id':'X1',text:'bb'}]}";
-              //xmlString = "'{id:0,item:[{id:\"X1\",text:\"bb\"}]}'";
-         %>
+        %>
         var defaultMenuStr = '<%=jsonDefaultMenu%>';
         var systemMenuStr = '<%=jsonSystemMenu%>';
 
@@ -75,6 +71,7 @@
 
             biztree.setSkin('dhx_skyblue');
             biztree.setImagePath("/dhtmlx/codebase/imgs/csh_books/");
+            //biztree.enableTreeLines(true);
             biztree.loadJSONObject(treeDefaultJson);
             biztree.attachEvent("onClick", function(id) {
                 var action = (biztree.getUserData(id, "url"));
@@ -100,8 +97,6 @@
                 }
                 return true;
             });
-
-
         }
 
         function doOnResize() {

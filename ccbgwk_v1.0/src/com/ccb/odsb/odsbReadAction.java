@@ -221,7 +221,7 @@ public class odsbReadAction extends Action {
      private int insertCrdCrt() {
            String sql = " insert into odsb_crd_crt  " +
                     " select * from  odsbdata.BF_AGT_CRD_CRT@odsb_remote  " +
-                    " where crd_no like '6283660015%' ";
+                    " where crd_no like '628366001%' ";
             int crd_rtn = 0;
             dc.executeUpdate(" truncate table odsb_crd_crt ");
             crd_rtn = dc.executeUpdate(sql);

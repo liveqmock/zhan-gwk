@@ -33,7 +33,7 @@
        dbGrid.setField("还帐户号","text","14","gatheringbankacctcode","true","0");
        dbGrid.setField("身份证号","text","12","idnumber","true","0");
        dbGrid.setField("用途","text","10","digest","true","0");
-       dbGrid.setField("开卡日期","text","6","createdate","true","0");
+       dbGrid.setField("开卡日期","text","8","createdate","true","0");
        dbGrid.setField("有效起始日期","text","9","startdate","true","0");
        dbGrid.setField("有效终止日期","text","9","enddate","true","0");
        dbGrid.setField("是否发送","dropdown","8","sentflag","true","CARDSENDFLAG");

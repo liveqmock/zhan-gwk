@@ -55,41 +55,38 @@
       <table border="0" cellspacing="0" cellpadding="0" width="100%" >
         <form id="queryForm" name="queryForm">
         <tr height="20">
-            <td width="10%" align="right" nowrap="nowrap" class="lbl_right_padding">
+            <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">
               卡号
             </td>
-            <td width="20%" align="right" nowrap="nowrap" class="data_input" >
+            <td width="30%" align="right" nowrap="nowrap" class="data_input" >
                 <input style="width:90%" type="text" id="cardNo" size="40" class="ajax-suggestion url-getLoanPull.jsp">
             </td>
-            <td width="10%" align="right" nowrap="nowrap" class="lbl_right_padding">
+            <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">
               持卡人姓名
             </td>
-            <td width="15%" align="right" nowrap="nowrap" class="data_input" >
+            <td width="30%" align="right" nowrap="nowrap" class="data_input" >
                  <input style="width:90%" type="text" id="cust_name" size="40" class="ajax-suggestion url-getLoanPull.jsp">
             </td>
-            <td width="10%" align="right" nowrap="nowrap" class="lbl_right_padding">
-              预算单位
-            </td>
-            <td width="20%" align="right" nowrap="nowrap" class="data_input">
-                <input type="text" style="width:90%;" id="departmentName" name="departmentName"
-                       value="" size="40" class="ajax-suggestion url-getLoanPull.jsp">
-            </td>
+            
             <td align="center">
                 <input name="cbRetrieve" type="button" class="buttonGrooveDisable" id="button" onClick="cbRetrieve_Click()" value="检索">
             </td>
         </tr>
         <tr height="20">
-            <td width="10%" align="right" nowrap="nowrap" class="lbl_right_padding">
+            <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">
                 身份证ID
             </td>
-            <td width="20%" align="right" nowrap="nowrap" class="data_input">
+            <td width="30%" align="right" nowrap="nowrap" class="data_input">
                <input type="text" style="width:90%;" id="personalID" name="personalID" size="40" class="ajax-suggestion url-getLoanPull.jsp">
             </td>
 
-            <td width="10%">&nbsp;</td>
-            <td width="15%">&nbsp;</td>
-            <td width="10%">&nbsp;</td>
-            <td width="20%">&nbsp;</td>
+            <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">
+              预算单位
+            </td>
+            <td width="30%" align="right" nowrap="nowrap" class="data_input">
+                <input type="text" style="width:90%;" id="departmentName" name="departmentName"
+                       value="" size="40" class="ajax-suggestion url-getLoanPull.jsp">
+            </td>
             <td  align="center" nowrap="nowrap">
                 <input name="Input" class="buttonGrooveDisable" type="reset" value="重填" >
             </td>

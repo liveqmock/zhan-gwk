@@ -103,7 +103,7 @@ public class T1000Action implements RequestAction {
                 logger.error("交易1000返回数据不存在:支付令号 " + voucherid + ",年度 " + year);
                 setErrorResponseData("100");
                 responseDataList.add(this.responseData);
-                
+
             }
         }
         logger.info(voucherid + " " + year);
@@ -143,15 +143,17 @@ public class T1000Action implements RequestAction {
             String voucherid = (String) m.get("VOUCHERID");
             String account = (String) m.get("ACCOUNT");
             String cardname = (String) m.get("CARDNAME");
-            String amtstr = (String) m.get("Amt");
-//            String year = (String)m.get("year");
-            long amt = (long) (Double.parseDouble(amtstr) * 100);
-
+//            String amtstr = (String) m.get("AMT");     20100929 haiyu modify
+            String amtstr = String.valueOf(m.get("AMT"));
+//            double amt =Double.parseDouble(amtstr);
+//            String year = (String)m.get("year");                20100929 haiyu modify
+            long amt = (long) (Double.parseDouble(amtstr) * 100);   //20100929 haiyu modify
+//             long amt = (long) amtstr * 100;
             LSPAYBACKINFO paybackInfo = new LSPAYBACKINFO();
             paybackInfo.setVoucherid(voucherid.trim());
             paybackInfo.setAccount(account.trim());
             paybackInfo.setCardname(cardname.trim());
-            paybackInfo.setAmt((double) amt / 100);
+            paybackInfo.setAmt((double) amt / 100);     //20100929 haiyu modify
             paybackInfo.setQuerydate(currDate);
             //新加字段(财政局编号,费用年度,网点编号)设定值 2010/07/13 haiyu
             paybackInfo.setYear(year);
@@ -176,11 +178,11 @@ public class T1000Action implements RequestAction {
 
     /**
      * 生成全部响应包列表
-     * 
+     *
      * @param paybackInfos 自财政局查询返回的扣款数据列表
      */
     private void generateResponseData(List<LSPAYBACKINFO> paybackInfos) {
-        //每个数据包中记录计数             
+        //每个数据包中记录计数
         int count = 0;
         int listsize = paybackInfos.size();
         if (listsize > this.recordNum) {

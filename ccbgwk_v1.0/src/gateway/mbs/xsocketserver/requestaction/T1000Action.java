@@ -95,7 +95,7 @@ public class T1000Action implements RequestAction {
 
         if (rtnlist != null) {
             if (rtnlist.size() > 0) {
-                List<LSPAYBACKINFO> paybackinfos = getPaybackInfoList(rtnlist);
+                List<LSPAYBACKINFO> paybackinfos = getPaybackInfoList(rtnlist,year);
                 generateResponseData(paybackinfos);
                 savePaybackinfoToDB(paybackinfos);
             } else {
@@ -132,7 +132,7 @@ public class T1000Action implements RequestAction {
      * @param burlapRtnList
      * @return
      */
-    private List<LSPAYBACKINFO> getPaybackInfoList(List burlapRtnList) {
+    private List<LSPAYBACKINFO> getPaybackInfoList(List burlapRtnList,String year) {
         String branchId = requestData.getBranchId();  //网点编号
         String areaCode = requestData.getAreaCode();  //财政局编号
         List<LSPAYBACKINFO> paybackInfos = new ArrayList();
@@ -144,8 +144,8 @@ public class T1000Action implements RequestAction {
             String account = (String) m.get("ACCOUNT");
             String cardname = (String) m.get("CARDNAME");
             String amtstr = (String) m.get("Amt");
-            String year = (String)m.get("year");
-            long amt = (long) Double.parseDouble(amtstr) * 100;
+//            String year = (String)m.get("year");
+            long amt = (long) (Double.parseDouble(amtstr) * 100);
 
             LSPAYBACKINFO paybackInfo = new LSPAYBACKINFO();
             paybackInfo.setVoucherid(voucherid.trim());
@@ -337,7 +337,7 @@ public class T1000Action implements RequestAction {
             //笔数
             String recordCount = StringUtils.leftPad(String.valueOf(this.totalCount), 6, ' ');
             //合计金额
-            double amt = this.totalAmt / 100;
+            double amt = (double)this.totalAmt / 100;
             String amtSum = StringUtils.leftPad(String.valueOf(amt), 13, ' ');
 
             responseData.setBodyData(recordCount + amtSum + bodyStr);

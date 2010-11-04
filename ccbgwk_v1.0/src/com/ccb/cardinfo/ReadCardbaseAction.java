@@ -144,8 +144,8 @@ public class ReadCardbaseAction extends Action {
         int newCnt = 0;
         // 查找odsb读取的数据中的新增账户号
         String allSql = "select distinct occ.crd_no as account from odsb_crd_crt occ join ls_personalinfo gwy"+
-                        " on rtrim(occ.embosser_name3) = rtrim(gwy.perid) where occ.crd_no not in (select account from ls_cardbaseinfo)"+
-                        " and occ.crd_sts in ('801','802')";
+                        " on rtrim(occ.embosser_name3) = rtrim(gwy.perid) where occ.crd_no not in (select account from ls_cardbaseinfo)";
+//        +                        " and occ.crd_sts in ('801','802')";     
         RecordSet rs = dc.executeQuery(allSql);
         // 处理新增数据的账户号
         if(rs != null){

@@ -130,6 +130,7 @@ public class ServerDataHandler implements ISocketDataHandler {
 
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.error("交易1000处理错误.");
             }
         }

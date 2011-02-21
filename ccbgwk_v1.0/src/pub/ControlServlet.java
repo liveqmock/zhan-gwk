@@ -23,6 +23,7 @@ import java.util.StringTokenizer;
 
 public class ControlServlet extends HttpServlet {
     private static final Log logger = LogFactory.getLog(ControlServlet.class);
+    private static final long serialVersionUID = 1627072689424617231L;
 
     public void init() {
         String initClassSet = this.getInitParameter("initclassset");
@@ -34,6 +35,8 @@ public class ControlServlet extends HttpServlet {
                     Class classIn = Class.forName(className);
                     AutorunInterface ai = (AutorunInterface) classIn.newInstance();
                     ai.startServer();
+                    System.out.println("Server started:" + className);
+                    logger.info("Server started:" + className);
                 } catch (Exception e) {
                     logger.error(e);
                 }

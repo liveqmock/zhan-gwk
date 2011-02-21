@@ -85,8 +85,8 @@ public class DAOGenerator {
 //     generateTable("LS_PERSONALINFO");
 //     generateTable("LS_BDGAGENCY_H");
 //     generateTable("LS_CARDBASEINFO");
-//     generateTable("LS_CONSUMEINFO");
-      generateTable("LS_CARDSTATUS");
+     generateTable("LS_CONSUMEINFO");
+//      generateTable("LS_CARDSTATUS");
   }
 
 }

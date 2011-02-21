@@ -18,6 +18,7 @@ import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
 import pub.platform.utils.DateUtil;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -90,13 +91,31 @@ public class odsbReadAction extends Action {
             String dateTime = DateUtil.getCurrentDateTime();
             String currentDate = DateUtil.getCurrentDate();
             //处理本地表
-            String sql = " select a.*,b.cardname,c.stmt_day from odsb_crd_crt_trad a, ls_cardbaseinfo b, odsb_crd_crt c " +
+            /*
+              String sql = " select a.*,b.cardname,c.stmt_day " +
+                    " from odsb_crd_crt_trad a, " +
+                    " ls_cardbaseinfo b, " +
+                    " odsb_crd_crt c " +
                     " where a.crd_no=b.account and a.crd_no=c.crd_no ";
+            */
+            String sql = "select a.*, b.cardname, c.stmt_day " +
+                    "  from (select * " +
+                    "          from odsb_crd_crt_trad t1 " +
+                    "         where not exists " +
+                    "         (select 1 from ls_consumeinfo t2 " +
+                    "                 where nvl(t1.ref_date, ' ') = nvl(t2.ref_date, ' ') " +
+                    "                   and nvl(t1.ref_batch_id, ' ') = nvl(t2.ref_batch_id, ' ') " +
+                    "                   and nvl(t1.ref_seq_no, ' ') = nvl(t2.ref_seq_no, ' '))) a, " +
+                    "       ls_cardbaseinfo b, " +
+                    "       odsb_crd_crt c " +
+                    " where a.crd_no = b.account " +
+                    "   and a.crd_no = c.crd_no";
             rs = dc.executeQuery(sql);
             LSCONSUMEINFO consume = new LSCONSUMEINFO();
 
             //处理本日多次进行导入操作的情况
             lshCount += i_last_today_lsh;
+
             int count = 0;
             while (rs.next()) {
                 //流水号
@@ -108,7 +127,11 @@ public class odsbReadAction extends Action {
                 consume.setAccount(rs.getString("crd_no"));
                 consume.setBusidate(rs.getString("tx_day"));
                 consume.setBusimoney(rs.getDouble("inac_amt"));
-                consume.setBusiname(rs.getString("filler_2"));
+                String businame = rs.getString("filler_2");
+                if (businame == null) {
+                    businame = "无";
+                }
+                consume.setBusiname(businame);
                 consume.setCardname(rs.getString("cardname"));
 
                 //最迟还款日处理
@@ -130,6 +153,11 @@ public class odsbReadAction extends Action {
                 consume.setOdsbdate(currentDate);
                 consume.setOdsbtime(strtime);
                 consume.setRecversion(0);
+
+                //20110210 zhanrui  新增三个参考字段 用于唯一标识一条记录 （未添加索引）
+                consume.setRef_date(rs.getString("ref_date"));
+                consume.setRef_batch_id(rs.getString("ref_batch_id"));
+                consume.setRef_seq_no(rs.getString("ref_seq_no"));
 
                 int insertrtn = consume.insert();
                 if (insertrtn < 0 ) {
@@ -210,9 +238,32 @@ public class odsbReadAction extends Action {
     // 将大于入账日（inac_date）的odsb的贷记卡交易明细数据读入gwk
     private int insertIntoGwk(String inac_date) {
         int exeCount = 0;
+        /*
+        2011/2/10 zhanrui
+        修改获取ODSB数据规则：由根据入帐日期获取修改为根据 三个参考类字段 获取。
+        获取方法：由ODSB读取卡对应的消费信息 ,因效率问题 改进成 inac_date >= 已取回数据的最后入帐日期之前7天
+
         String sql = " insert into odsb_crd_crt_trad  " +
                     " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb_remote a, ls_cardbaseinfo b " +
                     " where a.crd_no = b.account and a.tx_cd in ('40','43') and a.inac_date > '" + inac_date + "' ";
+        */
+        String sql = " insert into odsb_crd_crt_trad  " +
+                    " select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb_remote a, ls_cardbaseinfo b " +
+                    " where a.crd_no = b.account and a.tx_cd in ('40','43') and a.inac_date > '" + getReadOdsbDate(inac_date) + "' ";
+
+        // 因效率问题 改进成 inac_date >= 已取回数据的最后入帐日期之前7天
+/*
+        String sql = "insert into odsb_crd_crt_trad  " +
+                " select t1.* from " +
+                "     (select a.* from  odsbdata.BF_EVT_CRD_CRT_TRAD@odsb_remote a, ls_cardbaseinfo b " +
+                "        where a.crd_no = b.account and a.tx_cd in ('40','43')) t1 and a.inac_date >= '" +  getReadOdsbDate(inac_date) + "' " +
+                "   where not exists " +
+                "      (select 1 from ls_consumeinfo t2 " +
+                "         where nvl(t1.ref_date,' ') = nvl(t2.ref_date,' ')  " +
+                "           and nvl(t1.ref_batch_id,' ') = nvl(t2.ref_batch_id,' ')" +
+                "           and nvl(t1.ref_seq_no,' ') = nvl(t2.ref_seq_no,' ') ) ";
+*/
+
         exeCount = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
         exeCount = dc.executeUpdate(sql);
         return exeCount;
@@ -252,5 +303,26 @@ public class odsbReadAction extends Action {
         }
         rtndate = df.format(c.getTime());
         return rtndate;
+    }
+
+    /**
+     * 本地表最后入帐日期前7天的日期
+     * @param inac_date
+     * @return
+     * @throws ParseException
+     */
+    private String getReadOdsbDate(String inac_date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            cal.setTime(sdf.parse(inac_date));
+        } catch (ParseException e) {
+            //TODO
+            logger.error("日期转换错误！");
+            cal.setTime(new Date(inac_date));
+        }
+        cal.add(Calendar.DATE, -7);
+        return  sdf.format(cal.getTime());
     }
 }

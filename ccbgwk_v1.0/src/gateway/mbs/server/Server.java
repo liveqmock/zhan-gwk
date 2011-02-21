@@ -67,6 +67,7 @@ public class Server extends Thread {
 
     public static void main(String[] args) throws IOException {
         Server server = new Server();
-        server.init();
+//        server.init(); //Ëæ»ú¶Ë¿Ú
+        server.init(8001);
     }
 }

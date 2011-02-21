@@ -1,8 +1,11 @@
 package com.ccb.dao;
-import java.util.*;
-import pub.platform.db.*;
-import pub.platform.utils.*;
 import pub.platform.db.AbstractBasicBean;
+import pub.platform.db.RecordSet;
+import pub.platform.utils.ActionRequest;
+import pub.platform.utils.ChangeFileds;
+import pub.platform.utils.Field;
+
+import java.util.List;
 public class LSCONSUMEINFO extends AbstractBasicBean implements Cloneable {
      public static List find(String sSqlWhere) {           return new LSCONSUMEINFO().findByWhere(sSqlWhere);      }       public static List findAndLock(String sSqlWhere) {           return new LSCONSUMEINFO().findAndLockByWhere(sSqlWhere);      }       public static LSCONSUMEINFO findFirst(String sSqlWhere) {           return (LSCONSUMEINFO)new LSCONSUMEINFO().findFirstByWhere(sSqlWhere);      }       public static LSCONSUMEINFO findFirstAndLock(String sSqlWhere) {           return (LSCONSUMEINFO)new LSCONSUMEINFO().findFirstAndLockByWhere(sSqlWhere);      }            public static RecordSet findRecordSet(String sSqlWhere) {           return new LSCONSUMEINFO().findRecordSetByWhere(sSqlWhere);      }       public static List find(String sSqlWhere,boolean isAutoRelease) {           LSCONSUMEINFO bean = new LSCONSUMEINFO();           bean.setAutoRelease(isAutoRelease);           return bean.findByWhere(sSqlWhere);      }       public static List findAndLock(String sSqlWhere,boolean isAutoRelease) {           LSCONSUMEINFO bean = new LSCONSUMEINFO();           bean.setAutoRelease(isAutoRelease);           return bean.findAndLockByWhere(sSqlWhere);      }       public static LSCONSUMEINFO findFirst(String sSqlWhere,boolean isAutoRelease) {           LSCONSUMEINFO bean = new LSCONSUMEINFO();           bean.setAutoRelease(isAutoRelease);           return (LSCONSUMEINFO)bean.findFirstByWhere(sSqlWhere);      }       public static LSCONSUMEINFO findFirstAndLock(String sSqlWhere,boolean isAutoRelease) {           LSCONSUMEINFO bean = new LSCONSUMEINFO();           bean.setAutoRelease(isAutoRelease);           return (LSCONSUMEINFO)bean.findFirstAndLockByWhere(sSqlWhere);      }       public static RecordSet findRecordSet(String sSqlWhere,boolean isAutoRelease) {           LSCONSUMEINFO bean = new LSCONSUMEINFO();           bean.setAutoRelease(isAutoRelease);           return bean.findRecordSetByWhere(sSqlWhere);      }      public static List findByRow(String sSqlWhere,int row) {           return new LSCONSUMEINFO().findByWhereByRow(sSqlWhere,row);      } String lsh;
 String account;
@@ -24,6 +27,9 @@ String txlog;
 String odsbdate;
 String odsbtime;
 int recversion;
+String ref_date;
+String ref_batch_id;
+String ref_seq_no;
 public static final String TABLENAME ="ls_consumeinfo";
 private String operate_mode = "add";
 public ChangeFileds cf = new ChangeFileds();
@@ -50,6 +56,9 @@ abb.txlog=rs.getString("txlog");abb.setKeyValue("TXLOG",""+abb.getTxlog());
 abb.odsbdate=rs.getString("odsbdate");abb.setKeyValue("ODSBDATE",""+abb.getOdsbdate());
 abb.odsbtime=rs.getString("odsbtime");abb.setKeyValue("ODSBTIME",""+abb.getOdsbtime());
 abb.recversion=rs.getInt("recversion");abb.setKeyValue("RECVERSION",""+abb.getRecversion());
+abb.ref_date=rs.getString("ref_date");abb.setKeyValue("REF_DATE",""+abb.getRef_date());
+abb.ref_batch_id=rs.getString("ref_batch_id");abb.setKeyValue("REF_BATCH_ID",""+abb.getRef_batch_id());
+abb.ref_seq_no=rs.getString("ref_seq_no");abb.setKeyValue("REF_SEQ_NO",""+abb.getRef_seq_no());
 list.add(abb);
 abb.operate_mode = "edit";
 }public String getLsh() { if ( this.lsh == null ) return ""; return this.lsh;}
@@ -72,6 +81,9 @@ public String getTxlog() { if ( this.txlog == null ) return ""; return this.txlo
 public String getOdsbdate() { if ( this.odsbdate == null ) return ""; return this.odsbdate;}
 public String getOdsbtime() { if ( this.odsbtime == null ) return ""; return this.odsbtime;}
 public int getRecversion() { return this.recversion;}
+public String getRef_date() { if ( this.ref_date == null ) return ""; return this.ref_date;}
+public String getRef_batch_id() { if ( this.ref_batch_id == null ) return ""; return this.ref_batch_id;}
+public String getRef_seq_no() { if ( this.ref_seq_no == null ) return ""; return this.ref_seq_no;}
 public void setLsh(String lsh) { sqlMaker.setField("lsh",lsh,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getLsh().equals(lsh)) cf.add("lsh",this.lsh,lsh); } this.lsh=lsh;}
 public void setAccount(String account) { sqlMaker.setField("account",account,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAccount().equals(account)) cf.add("account",this.account,account); } this.account=account;}
 public void setBusidate(String busidate) { sqlMaker.setField("busidate",busidate,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getBusidate().equals(busidate)) cf.add("busidate",this.busidate,busidate); } this.busidate=busidate;}
@@ -92,6 +104,9 @@ public void setTxlog(String txlog) { sqlMaker.setField("txlog",txlog,Field.TEXT)
 public void setOdsbdate(String odsbdate) { sqlMaker.setField("odsbdate",odsbdate,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getOdsbdate().equals(odsbdate)) cf.add("odsbdate",this.odsbdate,odsbdate); } this.odsbdate=odsbdate;}
 public void setOdsbtime(String odsbtime) { sqlMaker.setField("odsbtime",odsbtime,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getOdsbtime().equals(odsbtime)) cf.add("odsbtime",this.odsbtime,odsbtime); } this.odsbtime=odsbtime;}
 public void setRecversion(int recversion) { sqlMaker.setField("recversion",""+recversion,Field.NUMBER); if (this.operate_mode.equals("edit")) { if (this.getRecversion()!=recversion) cf.add("recversion",this.recversion+"",recversion+""); } this.recversion=recversion;}
+public void setRef_date(String ref_date) { sqlMaker.setField("ref_date",ref_date,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getRef_date().equals(ref_date)) cf.add("ref_date",this.ref_date,ref_date); } this.ref_date=ref_date;}
+public void setRef_batch_id(String ref_batch_id) { sqlMaker.setField("ref_batch_id",ref_batch_id,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getRef_batch_id().equals(ref_batch_id)) cf.add("ref_batch_id",this.ref_batch_id,ref_batch_id); } this.ref_batch_id=ref_batch_id;}
+public void setRef_seq_no(String ref_seq_no) { sqlMaker.setField("ref_seq_no",ref_seq_no,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getRef_seq_no().equals(ref_seq_no)) cf.add("ref_seq_no",this.ref_seq_no,ref_seq_no); } this.ref_seq_no=ref_seq_no;}
 public void init(int i,ActionRequest actionRequest) throws Exception { if ( actionRequest.getFieldValue(i,"lsh") !=null ) {this.setLsh(actionRequest.getFieldValue(i,"lsh"));}
 if ( actionRequest.getFieldValue(i,"account") !=null ) {this.setAccount(actionRequest.getFieldValue(i,"account"));}
 if ( actionRequest.getFieldValue(i,"busidate") !=null ) {this.setBusidate(actionRequest.getFieldValue(i,"busidate"));}
@@ -112,6 +127,9 @@ if ( actionRequest.getFieldValue(i,"txlog") !=null ) {this.setTxlog(actionReques
 if ( actionRequest.getFieldValue(i,"odsbdate") !=null ) {this.setOdsbdate(actionRequest.getFieldValue(i,"odsbdate"));}
 if ( actionRequest.getFieldValue(i,"odsbtime") !=null ) {this.setOdsbtime(actionRequest.getFieldValue(i,"odsbtime"));}
 if ( actionRequest.getFieldValue(i,"recversion") !=null && actionRequest.getFieldValue(i,"recversion").trim().length() > 0 ) {this.setRecversion(Integer.parseInt(actionRequest.getFieldValue(i,"recversion")));}
+if ( actionRequest.getFieldValue(i,"ref_date") !=null ) {this.setRef_date(actionRequest.getFieldValue(i,"ref_date"));}
+if ( actionRequest.getFieldValue(i,"ref_batch_id") !=null ) {this.setRef_batch_id(actionRequest.getFieldValue(i,"ref_batch_id"));}
+if ( actionRequest.getFieldValue(i,"ref_seq_no") !=null ) {this.setRef_seq_no(actionRequest.getFieldValue(i,"ref_seq_no"));}
 }public void init(ActionRequest actionRequest) throws Exception { this.init(0,actionRequest);}public void initAll(int i,ActionRequest actionRequest) throws Exception { this.init(i,actionRequest);}public void initAll(ActionRequest actionRequest) throws Exception { this.initAll(0,actionRequest);}public Object clone() throws CloneNotSupportedException { LSCONSUMEINFO obj = (LSCONSUMEINFO)super.clone();obj.setLsh(obj.lsh);
 obj.setAccount(obj.account);
 obj.setBusidate(obj.busidate);
@@ -132,4 +150,7 @@ obj.setTxlog(obj.txlog);
 obj.setOdsbdate(obj.odsbdate);
 obj.setOdsbtime(obj.odsbtime);
 obj.setRecversion(obj.recversion);
+obj.setRef_date(obj.ref_date);
+obj.setRef_batch_id(obj.ref_batch_id);
+obj.setRef_seq_no(obj.ref_seq_no);
 return obj;}}

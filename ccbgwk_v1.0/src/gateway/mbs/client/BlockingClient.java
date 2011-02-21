@@ -30,7 +30,6 @@ import java.io.IOException;
 
 /**
 *     阻塞模式客户端 测试用   html解析
-* @author grro@xsocket.org
 */
 public final class BlockingClient  {
 
@@ -43,7 +42,7 @@ public final class BlockingClient  {
 		}
 		new BlockingClient().call(args[0], Integer.parseInt(args[1]), args[2]);
 */
-        new BlockingClient().call("localhost", Integer.parseInt("8090"), "t");
+        new BlockingClient().call("localhost", Integer.parseInt("8000"), "t");
 
 	}
 

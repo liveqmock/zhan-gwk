@@ -35,6 +35,7 @@ public class TxSocketManager extends HttpServlet {
         printLine();
     }
 
+
     // 销毁
     public void destroy() {
         printLine();
@@ -46,13 +47,12 @@ public class TxSocketManager extends HttpServlet {
             e.printStackTrace();
         }
 
-        System.out.println("关闭调度作业任务信息结束！");
         printLine();
     }
 
-    public void shutdown() {
-        destroy();
-    }
+//    public void shutdown() {
+//        destroy();
+//    }
 
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -62,11 +62,18 @@ public class TxSocketManager extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if ("txshutdown".equals(request.getParameter("action"))) {
-            System.out.println("********  shutdown  **********");
-            shutdown();
+        if ("restart".equals(request.getParameter("action"))) {
+            destroy();
+            init();
         }
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        if ("start".equals(request.getParameter("action"))) {
+            destroy();
+            init();
+        }
+        if ("stop".equals(request.getParameter("action"))) {
+            destroy();
+        }
+        //response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 
     private static void printLine() {

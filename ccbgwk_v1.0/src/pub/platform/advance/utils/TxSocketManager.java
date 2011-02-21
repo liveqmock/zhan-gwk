@@ -41,6 +41,7 @@ public class TxSocketManager extends HttpServlet {
         try {
             TXSocketServer server = TXSocketServer.INSTANCE;
             server.stop();
+            System.out.println("Socket Server ÒÑÍ£Ö¹£¡");
         } catch (Exception e) {
             e.printStackTrace();
         }

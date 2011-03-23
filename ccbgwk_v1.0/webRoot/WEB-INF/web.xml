@@ -9,6 +9,32 @@
         <session-timeout>360</session-timeout>
     </session-config>
 
+    <!--JSF2 配置-->
+    <!-- Change to "Production" when you are ready to deploy -->
+    <!--
+        <context-param>
+            <param-name>javax.faces.PROJECT_STAGE</param-name>
+            <param-value>Development</param-value>
+        </context-param>
+        <servlet>
+            <servlet-name>Faces Servlet</servlet-name>
+            <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+            <load-on-startup>3</load-on-startup>
+        </servlet>
+    -->
+
+
+    <!-- 加载Spring配置文件 -->
+    <!--    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/classes/applicationContext*.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    -->
+
     <servlet>
         <servlet-name>SchedulerManager</servlet-name>
         <servlet-class>pub.platform.advance.utils.SchedulerManager</servlet-class>
@@ -30,11 +56,19 @@
         <servlet-class>pub.platform.security.AdminServlet</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>IElement</servlet-name>
-        <servlet-class>gwk.burlap.server.ElementImpl</servlet-class>
-    </servlet>
+    <!--
+        <servlet>
+            <servlet-name>IElement</servlet-name>
+            <servlet-class>gwk.burlap.server.ElementImpl</servlet-class>
+        </servlet>
+    -->
 
+    <servlet>
+        <servlet-name>TxSocketManager</servlet-name>
+        <servlet-class>pub.platform.advance.utils.TxSocketManager</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    
     <servlet>
         <servlet-name>ControlServlet</servlet-name>
         <servlet-class>pub.ControlServlet</servlet-class>
@@ -42,15 +76,28 @@
             <param-name>initclassset</param-name>
             <param-value>gateway.mbs.xsocketserver.TXSocketServer</param-value>
         </init-param>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>-2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>excelOutput</servlet-name>
+        <servlet-class>report.common.ExcelOutput</servlet-class>
     </servlet>
 
 
-    <servlet-mapping>
-        <servlet-name>IElement</servlet-name>
-        <url-pattern>/burlap</url-pattern>
-    </servlet-mapping>
+    <!--JSF2 mapping-->
+    <!--
+        <servlet-mapping>
+            <servlet-name>Faces Servlet</servlet-name>
+            &lt;!&ndash;<url-pattern>/faces/*</url-pattern>&ndash;&gt;
+            <url-pattern>*.xhtml</url-pattern>
+        </servlet-mapping>
+    -->
 
+    <servlet-mapping>
+        <servlet-name>excelOutput</servlet-name>
+        <url-pattern>/exceloutput</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>ImgServlet</servlet-name>
@@ -59,6 +106,10 @@
     <servlet-mapping>
         <servlet-name>SchedulerManager</servlet-name>
         <url-pattern>/SchedulerManager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TxSocketManager</servlet-name>
+        <url-pattern>/TxSocketManager</url-pattern>
     </servlet-mapping>
 
     <!-- Action Servlet Mapping -->

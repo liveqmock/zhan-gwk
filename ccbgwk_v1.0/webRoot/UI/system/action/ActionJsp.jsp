@@ -22,19 +22,19 @@
 
         dbGrid.setGridType("edit");
         dbGrid
-            .setfieldSQL("select LogicCode as keycode, LogicCode,LogicClass,LogicMethod,LogicDesc from PTLogicAct where  (1=1) ");
+            .setfieldSQL("select LogicCode as keycode, LogicCode,LogicClass,LogicMethod,LogicDesc from PTLogicAct where  ");
         dbGrid.setenumType("-1,0,0,0,0");
         dbGrid.setvisible("false,true,true,true,true");
         dbGrid.setfieldcn("主健,功能标记,功能类,功能方法,功能描述");
 
-        dbGrid.setfieldWidth("5,0,15,40,20,10");
+        dbGrid.setfieldWidth("3,0,15,40,15,20");
         dbGrid.setfieldName("keycode,LogicCode,LogicClass,LogicMethod,LogicDesc");
 
         dbGrid.setfieldType("text,text,text,text,text");
         dbGrid.setfieldCheck(";isNull=false,textLength=20;isNull=false,textLength=200;textLength=50;textLength=200");
         dbGrid.setpagesize(30);
         dbGrid.setCheck(true);
-        dbGrid.setWhereStr("  order by 1");
+        dbGrid.setWhereStr("  1=2 ");
 
         //////数据集按钮
         dbGrid.setdataPilotID("datapilot");

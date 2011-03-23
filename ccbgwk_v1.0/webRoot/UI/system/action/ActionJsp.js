@@ -6,13 +6,13 @@ function body_load()
 
     divfd_ActionTable.style.height = document.body.clientHeight - 180 + "px";
 	 //divfd_ActionTable.style.height="100%";
-	 //ActionTable.fdwidth="100%";
+	 ActionTable.fdwidth="100%";
      ActionTable.actionname     ="sm0011";
      ActionTable.addmethodname  ="addenum";
      ActionTable.editmethodname ="editenum";
      ActionTable.delmethodname  ="delenum";
      
-    initDBGrid("ActionTable");
+     initDBGrid("ActionTable");
 
 }
 
@@ -46,7 +46,7 @@ function ActionTable_TDclick(el){
 ////////²éÑ¯º¯Êý
 function queryClick(){
 
-	var  whereStr ="";
+	var  whereStr =" 1=1 ";
 
 	if (trimStr(document.all["cationid"].value) != "")
 		whereStr += " and ( LogicCode like '%"+document.all.cationid.value+"%')";

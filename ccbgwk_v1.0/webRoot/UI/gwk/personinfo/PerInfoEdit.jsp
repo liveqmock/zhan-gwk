@@ -75,7 +75,7 @@
                         …Ì∑›÷§∫≈
                     </td>
                     <td width="35%" class="data_input">
-                        <input type="text" id="perid" name="perid" onblur="isIdCardNo(this)" value="" style="width:90%" isNull="false">
+                        <input type="text" id="perid" name="perid" value="" style="width:90%" isNull="false">
                         <span class="red_star">*</span>
                     </td>
                 </tr>

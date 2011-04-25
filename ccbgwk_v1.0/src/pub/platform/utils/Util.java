@@ -1,17 +1,18 @@
 package pub.platform.utils;
 
 
-import org.jdom.*;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
+import org.jdom.Element;
+import pub.platform.db.ConnectionManager;
+import pub.platform.db.DBUtil;
+import pub.platform.db.DatabaseConnection;
+import pub.platform.db.RecordSet;
 
-import pub.platform.db.*;
-
-import java.io.*;
-import java.util.*;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Util
 {
@@ -25,7 +26,7 @@ public class Util
 
        String maxcount ="1";
        try{
-            String SQLStr = "select max(" + Keyfield + ")as maxcount from  " + tableName + " " +whereStr ;
+            String SQLStr = "select max(to_number(" + Keyfield + ")) as maxcount from  " + tableName + " " +whereStr ;
             System.out.println("SQLStr="+SQLStr);
             RecordSet rs = dc.executeQuery(SQLStr);
             if(rs.next())

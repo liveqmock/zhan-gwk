@@ -79,10 +79,7 @@
         <load-on-startup>-2</load-on-startup>
     </servlet>
 
-    <servlet>
-        <servlet-name>excelOutput</servlet-name>
-        <servlet-class>report.common.ExcelOutput</servlet-class>
-    </servlet>
+
 
 
     <!--JSF2 mapping-->
@@ -94,10 +91,7 @@
         </servlet-mapping>
     -->
 
-    <servlet-mapping>
-        <servlet-name>excelOutput</servlet-name>
-        <url-pattern>/exceloutput</url-pattern>
-    </servlet-mapping>
+
 
     <servlet-mapping>
         <servlet-name>ImgServlet</servlet-name>

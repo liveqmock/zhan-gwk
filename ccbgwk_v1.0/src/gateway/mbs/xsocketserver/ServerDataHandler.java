@@ -41,66 +41,78 @@ public class ServerDataHandler implements ISocketDataHandler {
         int reqLen = 0;
         byte[] data = connection.readBytesByLength(connection.available());
         logger.debug("data from[" + connection.getRemoteAddress() + "]:");
-
         System.out.println("\r\n");
+        String strdatalog = "";
         for (int i = 0; i < data.length; i++) {
-            System.out.print(data[i] + " ");
+            strdatalog += data[i] + " ";
         }
-        System.out.println("\r\n");
+        logger.info(strdatalog);
         //通讯包处理
         //TODO 先读取前4个字节 核对包长度  若长度不足 需 继续接收数据 ！！
         if (dataPkg.equals("")) {
             dataPkg = getDealBufferLength(data);
             if (dataPkg.length() >= 4) {
-                 reqLen = Integer.parseInt(dataPkg.substring(0,4).trim()); //取得包长度
-                 //整包全部接收完毕
-                 if (dataPkg.length() == reqLen) {
-                     //包解析
-                     runStrData(dataPkg,connection);
-                     //字节数组清空
-                     dataPkg = "";
-                 }
+                reqLen = Integer.parseInt(dataPkg.substring(0, 4).trim()); //取得包长度
+                //整包全部接收完毕
+                if (dataPkg.length() == reqLen) {
+                    //包解析
+                    runStrData(dataPkg, connection);
+                    //字节数组清空
+                    logger.info("交易结束，清除接收包.");
+                    dataPkg = "";
+                } else {
+                    logger.info(dataPkg + " 1 " + reqLen);
+                }
             }
         } else if (dataPkg.length() < 4) {
             dataPkg += getDealBufferLength(data);
-             if (dataPkg.length() >= 4) {
-                 reqLen = Integer.parseInt(dataPkg.substring(0,4).trim()); //取得包长度
-                 //整包全部接收完毕
-                 if (dataPkg.length() == reqLen) {
-                     //包解析
-                     runStrData(dataPkg,connection);
-                     //字节数组清空
-                     dataPkg = "";
-                 }
+            if (dataPkg.length() >= 4) {
+                reqLen = Integer.parseInt(dataPkg.substring(0, 4).trim()); //取得包长度
+
+                //整包全部接收完毕
+                if (dataPkg.length() == reqLen) {
+                    //包解析
+                    runStrData(dataPkg, connection);
+                    //字节数组清空
+                    logger.info("交易结束，清除接收包.");
+                    dataPkg = "";
+                } else {
+                    logger.info(dataPkg + " 2 " + reqLen);
+                }
             }
         } else {
             dataPkg += getDealBufferLength(data);
-            reqLen = Integer.parseInt(dataPkg.substring(0,4).trim()); //取得包长度
+            reqLen = Integer.parseInt(dataPkg.substring(0, 4).trim()); //取得包长度
             //整包全部接收完毕
             if (dataPkg.length() == reqLen) {
                 //包解析
-                runStrData(dataPkg,connection);
+                runStrData(dataPkg, connection);
                 //字节数组清空
+                logger.info("交易结束，清除接收包.");
                 dataPkg = "";
+            } else {
+                logger.info(dataPkg + " 3 " + reqLen);
             }
         }
         return true;
     }
-     //转换字符串
+
+    //转换字符串
     public String getDealBufferLength(byte[] buffer) {
         String strData = "";
-        try{
+        try {
             byte[] pkgLenByte = new byte[buffer.length];
             System.arraycopy(buffer, 0, pkgLenByte, 0, pkgLenByte.length);
-            strData = new String(pkgLenByte,"ISO-8859-1");
+            strData = new String(pkgLenByte, "ISO-8859-1");
         } catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
             return "";
         }
         return strData;
     }
+
     //包处理 并返回响应包
-    public void runStrData(String strData ,INonBlockingConnection connection)
+    public void runStrData(String strData, INonBlockingConnection connection)
             throws IOException, BufferUnderflowException {
         ProtocolHandler protocol = new ProtocolHandler(strData);
         String txncode = protocol.getTxncode();
@@ -112,8 +124,8 @@ public class ServerDataHandler implements ISocketDataHandler {
         ResponseHandler responseHandler = new ResponseHandler();
 
         if ("1000".equals(txncode)) {
-            logger.debug("交易1000开始.");
-            try{
+            logger.info("交易1000开始.");
+            try {
                 T1000Action action = new T1000Action(requestData);
                 action.process();
                 List<ResponseData> responseDataList = action.getResponseDataList();
@@ -127,7 +139,7 @@ public class ServerDataHandler implements ISocketDataHandler {
                     logger.info(new String(responseByte, "ISO-8859-1"));
                     //reponse处理
                     connection.write(responseByte);
-
+                    logger.info("交易1000成功结束.");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -163,7 +175,7 @@ public class ServerDataHandler implements ISocketDataHandler {
                     connection.write(responseByte);
                     logger.debug("交易2000正常结束.");
                 } catch (Exception e) {
-                    logger.error("交易2000处理错误：",e);
+                    logger.error("交易2000处理错误：", e);
                     //TODO 异常处理
                 } finally {
                     requestDataList = new ArrayList();
@@ -173,7 +185,7 @@ public class ServerDataHandler implements ISocketDataHandler {
                 T2000Action action = new T2000Action();
                 action.setRequestDataList(requestDataList);
                 action.noProcess();
-                 ResponseData responseData = action.getResponseData();
+                ResponseData responseData = action.getResponseData();
                 byte[] responseByte = responseHandler.getBytesReponseData(responseData);
                 logger.info("交易2000多包请求:" + requestDataList.size());
                 connection.write(responseByte);

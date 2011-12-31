@@ -41,7 +41,7 @@ public class MyTest {
 //       test.queryElementVersion();
         //test.syncElementCode();
 //        test.writeOfficeCardInfo();
-        test.writeConsumeInfo();
+//        test.writeConsumeInfo();
 //        test.testAdapter_queryservice();
 //        test.testHttp();
     }

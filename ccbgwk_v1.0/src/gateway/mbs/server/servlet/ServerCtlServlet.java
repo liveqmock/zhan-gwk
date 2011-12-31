@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 
 /**
  * 这个类为附助类，用于在Web环境中启动Server类
- * User: zhanrui
  * Date: 2010-7-1
  * Time: 9:23:06
  * To change this template use File | Settings | File Templates.

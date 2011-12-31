@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author Piterlin
- *
  * 每个Processor对像处理一个User
  */
 public class Processor extends Thread {

@@ -11,7 +11,6 @@ package com.ccb.consume;
  * @version 1.0
  */
 
-import com.ccb.dao.LNTASKINFO;
 import gov.mof.fasp.service.BankService;
 import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.logging.Log;
@@ -65,65 +64,67 @@ public class consumeAction extends Action {
             this.res.setMessage("读取消费信息出现错误，请查看系统日志。");
             return -1;
         }
-         if(cardList != null && cardList.size() > 0){
-        List rtnlist = null;
-        try {
-
-            rtnlist = sendConsumeInfoByStatus(cardList, RtnTagKey.SEND_INIT);
-        } catch (Exception e) {
-            logger.error("发送消费信息出现错误，请查看系统日志。", e);
-            this.res.setType(0);
-            this.res.setResult(false);
-            this.res.setMessage("发送消费信息出现错误，请查看系统日志。");
-            return -1;
-        }
-        // 判断是否有返回数据，若无，则更新数据状态为发送失败
-        if (rtnlist == null || rtnlist.size() <= 0) {
+        if (cardList != null && cardList.size() > 0) {
+            List rtnlist = null;
             try {
-                updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_FAIL);
+
+                rtnlist = sendConsumeInfoByStatus(cardList, RtnTagKey.SEND_INIT);
             } catch (Exception e) {
-                logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                logger.error("发送消费信息出现错误，请查看系统日志。", e);
                 this.res.setType(0);
                 this.res.setResult(false);
-                this.res.setMessage("发送数据后更新本地数据状态失败，请查看系统日志。");
+                this.res.setMessage("发送消费信息出现错误，请查看系统日志。");
+                return -1;
             }
-            return -1;
-        } else {
-            // 处理返回信息
-            for (int i = 0; i < rtnlist.size(); i++) {
-                Map m1 = (Map) rtnlist.get(i);
-                String result = (String) m1.get(RtnTagKey.RESULT);
-                // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
-                if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
-                    try {
-                        updateInfoCount += updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_SUCCESS);
-                    } catch (Exception e) {
-                        logger.error("发送数据后更新本地数据为失败状态出现异常，请查看系统日志。");
-                        this.res.setType(0);
-                        this.res.setResult(false);
-                        this.res.setMessage("发送数据后更新本地数据状态出现异常，请查看系统日志。");
-                        return -1;
-                    }
-                } else {
-                    // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
-                    String sameid = (String) m1.get(RtnTagKey.SAMEID);
-                    String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
-                    if ((sameid != null && !"".equals(sameid.trim()))
-                            || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+            // 判断是否有返回数据，若无，则更新数据状态为发送失败
+            if (rtnlist == null || rtnlist.size() <= 0) {
+                try {
+                    updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_FAIL);
+                } catch (Exception e) {
+                    logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                    this.res.setType(0);
+                    this.res.setResult(false);
+                    this.res.setMessage("发送数据后更新本地数据状态失败，请查看系统日志。");
+                }
+                return -1;
+            } else {
+                // 处理返回信息
+                for (int i = 0; i < rtnlist.size(); i++) {
+                    Map m1 = (Map) rtnlist.get(i);
+                    String result = (String) m1.get(RtnTagKey.RESULT);
+                    // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
+                    if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                         try {
-                            updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                            updateInfoCount += updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_SUCCESS);
                         } catch (Exception e) {
-                            logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                            logger.error("发送数据后更新本地数据为失败状态出现异常，请查看系统日志。");
                             this.res.setType(0);
                             this.res.setResult(false);
-                            this.res.setMessage("发送数据后更新本地数据时出现异常，请查看系统日志。");
+                            this.res.setMessage("发送数据后更新本地数据状态出现异常，请查看系统日志。");
                             return -1;
+                        }
+                    } else {
+                        // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
+                        String sameid = (String) m1.get(RtnTagKey.SAMEID);
+                        String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
+                        if ((sameid != null && !"".equals(sameid.trim()))
+                                || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                            try {
+                                updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                            } catch (Exception e) {
+                                logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                this.res.setType(0);
+                                this.res.setResult(false);
+                                this.res.setMessage("发送数据后更新本地数据时出现异常，请查看系统日志。");
+                                return -1;
+                            }
+                        } else {
+                            logger.error("Server response message:" + (String) m1.get("message"));
                         }
                     }
                 }
             }
         }
-         }
         //返回发送总数和发送成功记录数
         if (updateInfoCount != -1) {
             String send_update_count = String.valueOf(this.getSendInfoCount()) + "_" + String.valueOf(updateInfoCount);
@@ -158,63 +159,63 @@ public class consumeAction extends Action {
             this.res.setMessage("读取消费信息出现错误，请查看系统日志。");
             return -1;
         }
-        if(cardList != null && cardList.size() > 0){
-        List rtnlist = null;
-        try {
-            rtnlist = sendConsumeInfoByStatusArr(cardList, status);
-        } catch (Exception e) {
-            logger.error("发送消费信息出现错误，请查看系统日志。", e);
-            this.res.setType(0);
-            this.res.setResult(false);
-            this.res.setMessage("发送消费信息出现错误，请查看系统日志。");
-            return -1;
-        }
-        // 判断是否有返回数据，若无，则更新数据状态为发送失败
-        if (rtnlist == null || rtnlist.size() <= 0) {
+        if (cardList != null && cardList.size() > 0) {
+            List rtnlist = null;
             try {
-                updateAllStatusArrToStatus(status, RtnTagKey.SEND_FAIL);
+                rtnlist = sendConsumeInfoByStatusArr(cardList, status);
             } catch (Exception e) {
-                logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                logger.error("发送消费信息出现错误，请查看系统日志。", e);
                 this.res.setType(0);
                 this.res.setResult(false);
-                this.res.setMessage("发送数据后更新本地数据状态失败，请查看系统日志。");
+                this.res.setMessage("发送消费信息出现错误，请查看系统日志。");
+                return -1;
             }
-            return -1;
-        } else {
-            // 处理返回信息
-            for (int i = 0; i < rtnlist.size(); i++) {
-                Map m1 = (Map) rtnlist.get(i);
-                String result = (String) m1.get(RtnTagKey.RESULT);
-                // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
-                if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
-                    try {
-                        updateInfoCount += updateAllStatusArrToStatus(status, RtnTagKey.SEND_SUCCESS);
-                    } catch (Exception e) {
-                        logger.error("发送数据后更新本地数据为成功状态出现异常，请查看系统日志。");
-                        this.res.setType(0);
-                        this.res.setResult(false);
-                        this.res.setMessage("发送数据后更新本地数据为成功状态出现异常，请查看系统日志。");
-                        return -1;
-                    }
-                } else {
-                    // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
-                    String sameid = (String) m1.get(RtnTagKey.SAMEID);
-                    String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
-                    if ((sameid != null && !"".equals(sameid.trim()))
-                            || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+            // 判断是否有返回数据，若无，则更新数据状态为发送失败
+            if (rtnlist == null || rtnlist.size() <= 0) {
+                try {
+                    updateAllStatusArrToStatus(status, RtnTagKey.SEND_FAIL);
+                } catch (Exception e) {
+                    logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                    this.res.setType(0);
+                    this.res.setResult(false);
+                    this.res.setMessage("发送数据后更新本地数据状态失败，请查看系统日志。");
+                }
+                return -1;
+            } else {
+                // 处理返回信息
+                for (int i = 0; i < rtnlist.size(); i++) {
+                    Map m1 = (Map) rtnlist.get(i);
+                    String result = (String) m1.get(RtnTagKey.RESULT);
+                    // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
+                    if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                         try {
-                            updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                            updateInfoCount += updateAllStatusArrToStatus(status, RtnTagKey.SEND_SUCCESS);
                         } catch (Exception e) {
-                            logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                            logger.error("发送数据后更新本地数据为成功状态出现异常，请查看系统日志。");
                             this.res.setType(0);
                             this.res.setResult(false);
-                            this.res.setMessage("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                            this.res.setMessage("发送数据后更新本地数据为成功状态出现异常，请查看系统日志。");
                             return -1;
+                        }
+                    } else {
+                        // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
+                        String sameid = (String) m1.get(RtnTagKey.SAMEID);
+                        String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
+                        if ((sameid != null && !"".equals(sameid.trim()))
+                                || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                            try {
+                                updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                            } catch (Exception e) {
+                                logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                this.res.setType(0);
+                                this.res.setResult(false);
+                                this.res.setMessage("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                return -1;
+                            }
                         }
                     }
                 }
             }
-        }
         }
         //返回发送总数和发送成功记录数
         if (updateInfoCount != -1) {
@@ -276,11 +277,11 @@ public class consumeAction extends Action {
         wheresqlbfr.append("') and cbi.status = '1' order by lsh ");
         String wheresql = new String(wheresqlbfr);
         String selectsql = "select lsh,csi.account as account,csi.cardname as cardname,busidate,busimoney,businame,limitdate,tx_cd from ls_consumeinfo csi "
-                          +" join ls_cardbaseinfo cbi on csi.account = cbi.account "
-                          + wheresql;
+                + " join ls_cardbaseinfo cbi on csi.account = cbi.account "
+                + wheresql;
 
         System.out.println(selectsql);
-        
+
         RecordSet rs = null;
         List cardList = new ArrayList();
         rs = dc.executeQuery(selectsql);

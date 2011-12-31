@@ -20,8 +20,6 @@ import java.util.List;
 
 
 /**
- * @author Piterlin
- *
  * 服务器，用于监听口
  */
 public class Server extends Thread {

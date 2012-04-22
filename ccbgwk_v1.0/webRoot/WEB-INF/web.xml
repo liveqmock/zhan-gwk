@@ -109,7 +109,7 @@
     <!-- Action Servlet Mapping -->
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
-        <url-pattern>index.html</url-pattern>
+        <url-pattern>*.login</url-pattern>
     </servlet-mapping>
 
     <mime-mapping>
@@ -118,6 +118,6 @@
     </mime-mapping>
 
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.login</welcome-file>
     </welcome-file-list>
 </web-app>

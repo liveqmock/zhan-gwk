@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
 
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class SendCardbaseAction extends Action {
     private static final Log logger = LogFactory.getLog(SendCardbaseAction.class);
 
     // 发送未发送的卡信息
-    public int sendCrdbaseInfos() {
+    public int sendCrdbaseInfos() throws MalformedURLException {
         // 查询ls_cardbaseinfo中尚未发送的正常使用的卡数据
         List cardList = null;
         try {
@@ -136,7 +137,7 @@ public class SendCardbaseAction extends Action {
     }
 
     // 发送卡信息到财政局
-    private List sendCrdInfos(List cardList){
+    private List sendCrdInfos(List cardList) throws MalformedURLException {
         List rtnList = null;
         if (cardList != null && cardList.size() > 0) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

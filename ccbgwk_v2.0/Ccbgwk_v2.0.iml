@@ -9,14 +9,9 @@
         <webroots>
           <root url="file://$MODULE_DIR$/webRoot" relative="/" />
         </webroots>
-        <sourceRoots />
-      </configuration>
-    </facet>
-    <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset1" name="Xml Application Context" removed="false">
-          <file>file://$MODULE_DIR$/resources/applicationContext.xml</file>
-        </fileset>
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/java" />
+        </sourceRoots>
       </configuration>
     </facet>
   </component>
@@ -28,8 +23,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Tomcat 7" level="application_server_libraries" />
-    <orderEntry type="library" name="fbigwk_lib" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Tomcat 7.0.21" level="application_server_libraries" />
   </component>
 </module>
 

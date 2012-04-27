@@ -60,8 +60,8 @@ function cbRetrieve_Click(){
     if (trimStr(document.all["isleaf"].value) != "")
 		whereStr += " and ( isleaf = '"+document.all.isleaf.value+"')";
     
-    if (trimStr(document.all["version"].value) != "")
-		whereStr += " and ( version = '"+document.all.version.value+"' )";
+    if (trimStr(document.all["areacode"].value) != "")
+		whereStr += " and ( areacode = '"+document.all.areacode.value+"' )";
     
 	if (whereStr !=document.all["DbgagencyTable"].whereStr){
 		document.all["DbgagencyTable"].whereStr=whereStr +" order by code ";

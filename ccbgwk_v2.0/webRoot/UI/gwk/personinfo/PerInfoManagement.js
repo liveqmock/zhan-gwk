@@ -1,36 +1,27 @@
 //////初始化信息
 function body_load() {
-	/*if (parent.window.paramValue) {
-		m_objParam = parent.window.paramValue.value;
-	} else {
-		m_objParam = "";
-	} */
-
 	var tab = document.all("PerInfoTab");
-//	var whereStr = "and (parentmenuid='" + m_objParam + "') order by Levelidx";
-//	tab.whereStr = whereStr;
+
 	PerInfoTab.actionname = "sm0021";
-//	divfd_PerInfoTab.style.height="350px";
 	divfd_PerInfoTab.style.height = document.body.clientHeight - 180 + "px";
     PerInfoTab.fdwidth="100%";
-//     PerInfoTab.addmethodname  ="addenum";
 	PerInfoTab.editmethodname = "editenum";
 	PerInfoTab.delmethodname = "delenum";
-     var whereStr = "";
+
+    var whereStr = "";
     var deptCD = document.getElementById("departmentID").value;
     var levelNo = document.getElementById("levelNo").value;
-//    alert(deptCD + "   " + levelNo);
     if (deptCD != null && levelNo != null){
         if(levelNo == 1){
            whereStr += " and lg.supercode = " + deptCD; 
         } else if (levelNo == 2){
             whereStr += " and lg.code = " + deptCD;
         }
-         whereStr += " order by pername ";
+        whereStr += " order by areacode, deptcode, pername ";
         document.all["PerInfoTab"].whereStr = whereStr;
         document.all["PerInfoTab"].RecordCount = "0";
         document.all["PerInfoTab"].AbsolutePage = "1";
-        // Table_Refresh in dbgrid.js pack
+        //alert(document.all["PerInfoTab"].whereStr);
         Table_Refresh("PerInfoTab", false , body_resize);
     }
 }
@@ -58,9 +49,11 @@ function cbRetrieve_Click() {
     if (checkForm(queryForm) == "false")
         return;
     var whereStr = "";
+    if (trimStr(document.getElementById("areacode").value) != "") {
+        whereStr += " and (p.areacode =" + trimStr(document.getElementById("areacode").value) + ")";
+    }
     if (trimStr(document.getElementById("cust_name").value) != "") {
         whereStr += " and (p.pername like'%" + trimStr(document.getElementById("cust_name").value) + "%')";
-//        whereStr += " or (a.cust_py  like'" + trimStr(document.getElementById("cust_name").value) + "%'))";
     }
     if (trimStr(document.getElementById("personalID").value) != ""){
         whereStr += "and p.perid like '" + trimStr(document.getElementById("personalID").value) + "%'";
@@ -68,7 +61,7 @@ function cbRetrieve_Click() {
     if (trimStr(document.getElementById("departmentName").value) != ""){
         whereStr += " and lg.name like '%" + trimStr(document.getElementById("departmentName").value) + "%'";
     }
-    whereStr += " order by pername ";
+    whereStr += " order by areacode, deptcode, pername ";
     document.all["PerInfoTab"].whereStr = whereStr;
     document.all["PerInfoTab"].RecordCount = "0";
     document.all["PerInfoTab"].AbsolutePage = "1";
@@ -111,7 +104,7 @@ function MenuTable_updateRecord_click(tab) {
 }
 
 /**
- * 添加贷款信息
+ * 添加信息
  *
  * @param doType:操作类型
  * @param loanid:贷款申请序号
@@ -141,7 +134,7 @@ function PerInfoTab_appendRecod_click() {
 }
        
 /**
- * 察看贷款详细函数
+ * 察看详细函数
  *
  * @param loanID：贷款申请序号
  * @param doType:select
@@ -185,7 +178,7 @@ function PerInfoTab_TRDbclick() {
 }
 
 /**
- * 编辑贷款信息
+ * 编辑信息
  *
  * @param doType:操作类型
  *            修改 edit

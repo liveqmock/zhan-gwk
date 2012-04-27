@@ -28,6 +28,7 @@ import java.io.InputStream;
  */
 public class ReadExcel extends Action {
     private static final Log logger = LogFactory.getLog(ReadExcel.class);
+
     public String getData(String path) {
         String perName = "";         //姓名
         String perID = "";           //身份证
@@ -35,7 +36,7 @@ public class ReadExcel extends Action {
         int version = 0;             //版本号
         int createCD = 0;            //登陆者
         String superDeptCD = "";     //一级预算单位
-        String cfPerIDs = "";   //重复身份证ID
+        String cfPerIDs = "";        //重复身份证ID
         try {
             LSPERSONALINFO perInfo = new LSPERSONALINFO();
             InputStream input = new FileInputStream(path);

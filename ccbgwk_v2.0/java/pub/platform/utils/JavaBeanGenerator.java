@@ -14,9 +14,12 @@
 
 package pub.platform.utils;
 
-import java.io.*;
+import pub.platform.db.ConnectionManager;
+import pub.platform.db.DatabaseConnection;
+import pub.platform.db.RecordSet;
 
-import pub.platform.db.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class JavaBeanGenerator {
      private FileOutputStream fos;
@@ -114,7 +117,8 @@ public class JavaBeanGenerator {
                System.out.println("Error!");
                return;
           }
-          String filepath = "src/"+classPath.replace('.','/')+"/";
+//          String filepath = "src/"+classPath.replace('.','/')+"/";
+          String filepath = "java/"+classPath.replace('.','/')+"/";
           tablename = tablename.toUpperCase();
           System.out.println("======正在产生类【"+filepath+className+".java】======");
           try {

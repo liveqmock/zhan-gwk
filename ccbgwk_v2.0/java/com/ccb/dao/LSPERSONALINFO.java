@@ -12,6 +12,7 @@ int recversion;
 int createcode;
 String createdate;
 String superdeptcode;
+String areacode;
 public static final String TABLENAME ="ls_personalinfo";
 private String operate_mode = "add";
 public ChangeFileds cf = new ChangeFileds();
@@ -26,6 +27,7 @@ abb.recversion=rs.getInt("recversion");abb.setKeyValue("RECVERSION",""+abb.getRe
 abb.createcode=rs.getInt("createcode");abb.setKeyValue("CREATECODE",""+abb.getCreatecode());
 abb.createdate=rs.getTimeString("createdate");abb.setKeyValue("CREATEDATE",""+abb.getCreatedate());
 abb.superdeptcode=rs.getString("superdeptcode");abb.setKeyValue("SUPERDEPTCODE",""+abb.getSuperdeptcode());
+abb.areacode=rs.getString("areacode");abb.setKeyValue("AREACODE",""+abb.getAreacode());
 list.add(abb);
 abb.operate_mode = "edit";
 }public String getPername() { if ( this.pername == null ) return ""; return this.pername;}
@@ -36,6 +38,7 @@ public int getRecversion() { return this.recversion;}
 public int getCreatecode() { return this.createcode;}
 public String getCreatedate() {  if ( this.createdate == null ) { return ""; } else { return this.createdate.trim().split(" ")[0];} }public String getCreatedateTime() {  if ( this.createdate == null ) return ""; return this.createdate.split("\\.")[0];}
 public String getSuperdeptcode() { if ( this.superdeptcode == null ) return ""; return this.superdeptcode;}
+public String getAreacode() { if ( this.areacode == null ) return ""; return this.areacode;}
 public void setPername(String pername) { sqlMaker.setField("pername",pername,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getPername().equals(pername)) cf.add("pername",this.pername,pername); } this.pername=pername;}
 public void setPerid(String perid) { sqlMaker.setField("perid",perid,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getPerid().equals(perid)) cf.add("perid",this.perid,perid); } this.perid=perid;}
 public void setDeptcode(String deptcode) { sqlMaker.setField("deptcode",deptcode,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getDeptcode().equals(deptcode)) cf.add("deptcode",this.deptcode,deptcode); } this.deptcode=deptcode;}
@@ -44,6 +47,7 @@ public void setRecversion(int recversion) { sqlMaker.setField("recversion",""+re
 public void setCreatecode(int createcode) { sqlMaker.setField("createcode",""+createcode,Field.NUMBER); if (this.operate_mode.equals("edit")) { if (this.getCreatecode()!=createcode) cf.add("createcode",this.createcode+"",createcode+""); } this.createcode=createcode;}
 public void setCreatedate(String createdate) { sqlMaker.setField("createdate",createdate,Field.DATE); if (this.operate_mode.equals("edit")) { if (!this.getCreatedate().equals(createdate)) cf.add("createdate",this.createdate,createdate); } this.createdate=createdate;}
 public void setSuperdeptcode(String superdeptcode) { sqlMaker.setField("superdeptcode",superdeptcode,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getSuperdeptcode().equals(superdeptcode)) cf.add("superdeptcode",this.superdeptcode,superdeptcode); } this.superdeptcode=superdeptcode;}
+public void setAreacode(String areacode) { sqlMaker.setField("areacode",areacode,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAreacode().equals(areacode)) cf.add("areacode",this.areacode,areacode); } this.areacode=areacode;}
 public void init(int i,ActionRequest actionRequest) throws Exception { if ( actionRequest.getFieldValue(i,"pername") !=null ) {this.setPername(actionRequest.getFieldValue(i,"pername"));}
 if ( actionRequest.getFieldValue(i,"perid") !=null ) {this.setPerid(actionRequest.getFieldValue(i,"perid"));}
 if ( actionRequest.getFieldValue(i,"deptcode") !=null ) {this.setDeptcode(actionRequest.getFieldValue(i,"deptcode"));}
@@ -52,6 +56,7 @@ if ( actionRequest.getFieldValue(i,"recversion") !=null && actionRequest.getFiel
 if ( actionRequest.getFieldValue(i,"createcode") !=null && actionRequest.getFieldValue(i,"createcode").trim().length() > 0 ) {this.setCreatecode(Integer.parseInt(actionRequest.getFieldValue(i,"createcode")));}
 if ( actionRequest.getFieldValue(i,"createdate") !=null ) {this.setCreatedate(actionRequest.getFieldValue(i,"createdate"));}
 if ( actionRequest.getFieldValue(i,"superdeptcode") !=null ) {this.setSuperdeptcode(actionRequest.getFieldValue(i,"superdeptcode"));}
+if ( actionRequest.getFieldValue(i,"areacode") !=null ) {this.setAreacode(actionRequest.getFieldValue(i,"areacode"));}
 }public void init(ActionRequest actionRequest) throws Exception { this.init(0,actionRequest);}public void initAll(int i,ActionRequest actionRequest) throws Exception { this.init(i,actionRequest);}public void initAll(ActionRequest actionRequest) throws Exception { this.initAll(0,actionRequest);}public Object clone() throws CloneNotSupportedException { LSPERSONALINFO obj = (LSPERSONALINFO)super.clone();obj.setPername(obj.pername);
 obj.setPerid(obj.perid);
 obj.setDeptcode(obj.deptcode);
@@ -60,4 +65,5 @@ obj.setRecversion(obj.recversion);
 obj.setCreatecode(obj.createcode);
 obj.setCreatedate(obj.createdate);
 obj.setSuperdeptcode(obj.superdeptcode);
+obj.setAreacode(obj.areacode);
 return obj;}}

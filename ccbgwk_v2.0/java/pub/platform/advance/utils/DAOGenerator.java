@@ -82,10 +82,10 @@ public class DAOGenerator {
     // 生成单个表的文件
 //    generateAllTables();
 //     generateTable("ls_taskinfo");
-//     generateTable("LS_PERSONALINFO");
+     generateTable("LS_PERSONALINFO");
 //     generateTable("LS_BDGAGENCY_H");
 //     generateTable("LS_CARDBASEINFO");
-     generateTable("LS_CONSUMEINFO");
+//     generateTable("LS_CONSUMEINFO");
 //      generateTable("LS_CARDSTATUS");
   }
 

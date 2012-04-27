@@ -47,8 +47,7 @@ public class PerInfoEidtAction  extends Action {
                 while (rec.next()) {
                     this.res.setType(0);
                     this.res.setResult(false);
-                    this.res.setMessage(PropertyManager.getProperty("309") + "\r\n身份证号码："
-                            + req.getFieldValue(i, "perid").trim());
+                    this.res.setMessage("身份证号码重复：" + req.getFieldValue(i, "perid").trim());
                     return -1;
                 }
                 if (rec != null) {
@@ -98,7 +97,7 @@ public class PerInfoEidtAction  extends Action {
         }
        this.res.setType(0);
         this.res.setResult(true);
-        this.res.setMessage(PropertyManager.getProperty("200"));
+        this.res.setMessage("处理完成。");
         return 0;
     }
 

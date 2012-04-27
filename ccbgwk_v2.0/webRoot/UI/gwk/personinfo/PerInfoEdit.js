@@ -31,6 +31,10 @@ function formInit() {
  * 根据经办行联动
   */
 function reSelect() {
+    if (document.getElementById("superdeptcode").value == ""){
+        alert("预算单位不能为空！");
+        return;
+    }
     operReSelectCustMgr();
 }
 /**
@@ -61,6 +65,12 @@ function saveClick()
     //预算单位不能为空
     if (document.getElementById("superdeptcode").value == "" || document.getElementById("deptcode").value == ""){
         alert("预算单位不能为空！");
+        //document.getElementById("perId").focus();
+        return;
+    }
+    //所属地区不能为空
+    if (document.getElementById("areacode").value == ""){
+        alert("所属地区不能为空！");
         //document.getElementById("perId").focus();
         return;
     }

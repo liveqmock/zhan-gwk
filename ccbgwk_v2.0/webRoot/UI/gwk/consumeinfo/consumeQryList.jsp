@@ -32,14 +32,22 @@
     dbGrid.setGridType("edit");
 
 
-    String sql = "select lsh,status,cardname,account,busidate,inac_date,busimoney,limitdate," +
+    String sql = " select * from (select (select b.areacode " +
+            "          from ls_personalinfo b " +
+            "         where trim(b.perid) = " +
+            "               (select a.idnumber " +
+            "                  from ls_cardbaseinfo a " +
+            "                 where a.account = t.account)) as areacode, " +
+            " lsh,status,cardname,account,busidate,inac_date,busimoney,limitdate," +
             " tx_cd,ref_number,businame,txlog " +
-            " from ls_consumeinfo " +
+            " from ls_consumeinfo t) " +
             " where 1=1 ";
-    
-    dbGrid.setfieldSQL(sql);
-    dbGrid.setWhereStr(" order by lsh ");
 
+    System.out.println(sql);
+    dbGrid.setfieldSQL(sql);
+    dbGrid.setWhereStr(" order by areacode, lsh ");
+
+    dbGrid.setField("地区", "dropdown", "6", "areacode", "true", "AREACODE");
     dbGrid.setField("流水号", "text", "10", "lsh", "true", "0");
     dbGrid.setField("通讯状态", "dropdown", "8", "status", "true", "CONSUMESTATUS");
     dbGrid.setField("持卡人", "text", "8", "cardname", "true", "0");
@@ -129,6 +137,20 @@
                                                                      value="重 填"
                                                                      onMouseOver="button_onmouseover()"
                                                                      onMouseOut="button_onmouseout()">
+                </td>
+            </tr>
+            <tr>
+                <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">
+                    所属地区
+                </td>
+                <td width="30%" align="right" nowrap="nowrap" class="data_input" colspan="3">
+                    <%
+                        zs = new ZtSelect("areacode", "AREACODE", "");
+                        zs.addAttr("style", "width: 37%");
+                        zs.addAttr("fieldType", "text");
+                        zs.addOption("", "");
+                        out.print(zs);
+                    %>
                 </td>
             </tr>
 

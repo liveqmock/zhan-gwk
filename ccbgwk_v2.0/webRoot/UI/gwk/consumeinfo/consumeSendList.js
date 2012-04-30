@@ -43,9 +43,11 @@ function queryClick() {
     if (trimStr(document.getElementById("inac_date2").value) != "") {
         whereStr += " and inac_date <='" + trimStr(document.getElementById("inac_date2").value) + "' ";
     }
+    if (trimStr(document.all["areacode"].value) != "")
+        whereStr += " and ( areacode ='" + document.getElementById("areacode").value + "')";
 
     if (whereStr != document.all["ActionTable"].whereStr) {
-        document.all["ActionTable"].whereStr = whereStr + " order by lsh ";
+        document.all["ActionTable"].whereStr = whereStr + " order by areacode,lsh ";
         document.all["ActionTable"].RecordCount = "0";
         document.all["ActionTable"].AbsolutePage = "1";
 

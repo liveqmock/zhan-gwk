@@ -29,14 +29,27 @@
     DBGrid dbGrid = new DBGrid();
     dbGrid.setGridID("ActionTable");
     dbGrid.setGridType("edit");
+/*
     String sql = "select lsh,status,cardname,account,busidate,inac_date,busimoney,limitdate," +
             " tx_cd,ref_number,businame,txlog " +
             " from ls_consumeinfo " +
             " where 1=1  ";
+*/
+    String sql = " select * from (select (select b.areacode " +
+            "          from ls_personalinfo b " +
+            "         where trim(b.perid) = " +
+            "               (select a.idnumber " +
+            "                  from ls_cardbaseinfo a " +
+            "                 where a.account = t.account)) as areacode, " +
+            " lsh,status,cardname,account,busidate,inac_date,busimoney,limitdate," +
+            " tx_cd,ref_number,businame,txlog " +
+            " from ls_consumeinfo t) " +
+            " where 1=1 ";
     
     dbGrid.setfieldSQL(sql);
-    dbGrid.setWhereStr(" and status in ('11','12') order by lsh ");
+    dbGrid.setWhereStr(" and status in ('11','12') order by areacode, lsh ");
 
+    dbGrid.setField("地区", "dropdown", "6", "areacode", "true", "AREACODE");
     dbGrid.setField("流水号", "text", "10", "lsh", "true", "0");
     dbGrid.setField("通讯状态", "dropdown", "8", "status", "true", "CONSUMESTATUS");
     dbGrid.setField("持卡人", "text", "8", "cardname", "true", "0");

@@ -47,10 +47,10 @@
         dbGrid.setField("卡号", "text", "12", "account", "true", "0");
         dbGrid.setField("持卡人", "text", "6", "cardname", "true", "0");
         dbGrid.setField("预算单位代码", "text", "10", "deptcode", "true", "0");
-        dbGrid.setField("预算单位名称", "text", "14", "bgcyname", "true", "0");
+        dbGrid.setField("预算单位名称", "text", "10", "bgcyname", "true", "0");
         dbGrid.setField("还款帐户名", "text", "13", "gatheringbankacctname", "true", "0");
         dbGrid.setField("还帐户号", "text", "14", "gatheringbankacctcode", "true", "0");
-        dbGrid.setField("身份证号", "text", "12", "idnumber", "true", "0");
+        dbGrid.setField("身份证号", "text", "14", "idnumber", "true", "0");
         dbGrid.setField("用途", "text", "9", "digest", "true", "0");
         dbGrid.setField("开卡日期", "text", "8", "createdate", "true", "0");
         dbGrid.setField("有效起始日期", "text", "9", "startdate", "true", "0");

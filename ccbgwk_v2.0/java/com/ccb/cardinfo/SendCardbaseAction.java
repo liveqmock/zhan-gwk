@@ -1,8 +1,8 @@
 package com.ccb.cardinfo;
 
 import com.ccb.consume.RtnTagKey;
-import gateway.service.BankService;
-import gateway.service.GwkBurlapServiceFactory;
+import gateway.financebureau.BankService;
+import gateway.financebureau.GwkBurlapServiceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import pub.platform.db.RecordSet;

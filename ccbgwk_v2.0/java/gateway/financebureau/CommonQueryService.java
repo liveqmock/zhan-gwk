@@ -1,4 +1,4 @@
-package gateway.service;
+package gateway.financebureau;
 
 import java.util.List;
 import java.util.Map;

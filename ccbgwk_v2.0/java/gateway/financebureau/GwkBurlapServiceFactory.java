@@ -1,4 +1,4 @@
-package gateway.service;
+package gateway.financebureau;
 
 import com.caucho.burlap.client.BurlapProxyFactory;
 import pub.platform.advance.utils.PropertyManager;

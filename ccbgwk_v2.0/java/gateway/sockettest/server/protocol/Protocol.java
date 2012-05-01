@@ -1,8 +1,8 @@
-package gateway.mbs.server.protocol;
+package gateway.sockettest.server.protocol;
 
-import gateway.mbs.server.domain.RequestData;
-import gateway.mbs.server.domain.User;
-import gateway.mbs.server.protocol.requestaction.ActionRegister;
+import gateway.sockettest.server.domain.RequestData;
+import gateway.sockettest.server.domain.User;
+import gateway.sockettest.server.protocol.requestaction.ActionRegister;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

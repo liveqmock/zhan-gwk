@@ -1,4 +1,4 @@
-package gateway.mbs.server;
+package gateway.sockettest.server;
 
 /**
  * Created by IntelliJ IDEA.
@@ -8,7 +8,7 @@ package gateway.mbs.server;
  * To change this template use File | Settings | File Templates.
  */
 
-import gateway.mbs.server.domain.User;
+import gateway.sockettest.server.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

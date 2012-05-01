@@ -1,4 +1,4 @@
-package gateway.mbs.server.domain;
+package gateway.sockettest.server.domain;
 
 import java.net.Socket;
 

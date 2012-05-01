@@ -1,9 +1,9 @@
-package gateway.mbs.server.protocol.requestaction;
+package gateway.sockettest.server.protocol.requestaction;
 
-import gateway.mbs.server.domain.RequestData;
-import gateway.mbs.server.protocol.Protocol;
-import gateway.mbs.server.protocol.RequestAction;
-import gateway.mbs.server.protocol.response.SendAllUserList;
+import gateway.sockettest.server.domain.RequestData;
+import gateway.sockettest.server.protocol.Protocol;
+import gateway.sockettest.server.protocol.RequestAction;
+import gateway.sockettest.server.protocol.response.SendAllUserList;
 
 /**
  * Created by IntelliJ IDEA.

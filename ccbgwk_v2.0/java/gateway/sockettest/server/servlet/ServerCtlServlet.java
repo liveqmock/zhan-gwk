@@ -1,6 +1,6 @@
-package gateway.mbs.server.servlet;
+package gateway.sockettest.server.servlet;
 
-import gateway.mbs.server.Server;
+import gateway.sockettest.server.Server;
 import gateway.sockettest.util.ServletUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

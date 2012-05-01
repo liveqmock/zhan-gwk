@@ -7,52 +7,48 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class SwingChatClient extends JFrame {
-
-	KFSocketClient client;
-	private static final long serialVersionUID = 1538675161745436968L;
+	NBSocketClient client;
+	private static final long serialVersionUID = 1L;
 
 	public JTextField inputText;
-
 	public JButton loginButton;
-
 	public JButton quitButton;
-
 	public JTextField portField;
-
 	public JTextField hostField;
-
 	public JTextArea area;
-
 	public JScrollBar scroll;
 
 	public SwingChatClient() {
-		super("socket client");
+		super("socket test client");
 
 		loginButton = new JButton(new LoginAction());
 		loginButton.setText("Connect");
 		quitButton = new JButton(new LogoutAction());
 		quitButton.setText("Disconnect");
 
-		inputText = new JTextField(30);
+		inputText = new JTextField(50);
 		inputText.setAction(new BroadcastAction());
-		area = new JTextArea(10, 50);
+
+		area = new JTextArea(15, 60);
 		area.setLineWrap(true);
 		area.setEditable(false);
-		scroll = new JScrollBar();
+
+        scroll = new JScrollBar();
 		scroll.add(area);
-		hostField = new JTextField(10);
+
+        hostField = new JTextField(10);
 		hostField.setText("localhost");
-		// nameField.setEditable(false);
 		portField = new JTextField(10);
 		portField.setText("8000");
-		// serverField.setEditable(false);
 
 		JPanel h = new JPanel();
 		h.setLayout(new BoxLayout(h, BoxLayout.LINE_AXIS));
 		h.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
 		JLabel nameLabel = new JLabel("host: ");
 		JLabel serverLabel = new JLabel("port: ");
-		h.add(nameLabel);
+
+        h.add(nameLabel);
 		h.add(Box.createRigidArea(new Dimension(10, 0)));
 		h.add(hostField);
 		h.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -92,47 +88,35 @@ public class SwingChatClient extends JFrame {
 	}
 
 	public class LoginAction extends AbstractAction {
-		public static final long serialVersionUID = 3596719854773863244L;
 
-		public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
 			try {
-				client = new KFSocketClient(hostField.getText(), Integer
+				client = new NBSocketClient(hostField.getText(), Integer
 						.parseInt(portField.getText()), SwingChatClient.this);
 			} catch (NumberFormatException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (IOException e2) {
+				e2.printStackTrace();
 			}
 		}
 	}
 
 	public class LogoutAction extends AbstractAction {
-		public static final long serialVersionUID = 1655297424639924560L;
 
 		public void actionPerformed(ActionEvent e) {
 			try {
 				client.bc.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
 		}
 	}
 
 	public class BroadcastAction extends AbstractAction {
-		/**
-		 *
-		 */
-		public static final long serialVersionUID = -6276019615521905411L;
-
 		public void actionPerformed(ActionEvent e) {
-
 			try {
 				client.sendData(inputText.getText());
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				area.append(e1.getMessage());
 			}
 		}

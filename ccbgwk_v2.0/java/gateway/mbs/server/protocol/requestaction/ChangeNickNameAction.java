@@ -3,7 +3,7 @@ package gateway.mbs.server.protocol.requestaction;
 import gateway.mbs.server.domain.RequestData;
 import gateway.mbs.server.protocol.Protocol;
 import gateway.mbs.server.protocol.RequestAction;
-import gateway.mbs.server.protocol.response.SendALlUserList;
+import gateway.mbs.server.protocol.response.SendAllUserList;
 import gateway.mbs.server.protocol.response.SendMsgToAll;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,11 +26,11 @@ public class ChangeNickNameAction implements RequestAction {
 
     private static String action = "changeNickname";
 
-    private SendALlUserList sendAllUserList = new SendALlUserList();
+    private SendAllUserList sendAllUserList = new SendAllUserList();
 
     private SendMsgToAll sendMsgToAll=new SendMsgToAll();
     public boolean canDeal(RequestData requestData) {
-        log.info("changeNaickName被调用，请求的action为:"+requestData.getCAction());
+        log.info("changeNickName被调用，请求的action为:"+requestData.getCAction());
         return action.equals(requestData.getCAction());
     }
 

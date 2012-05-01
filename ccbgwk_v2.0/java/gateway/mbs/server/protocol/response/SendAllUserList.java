@@ -13,7 +13,7 @@ import java.util.List;
  * Time: 9:44:21
  * To change this template use File | Settings | File Templates.
  */
-public class SendALlUserList {
+public class SendAllUserList {
     public static String action = "getAllUserListBack";
     public static String userXmlTag="UserList";
 

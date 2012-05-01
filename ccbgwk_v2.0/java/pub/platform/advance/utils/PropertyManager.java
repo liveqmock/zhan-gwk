@@ -36,8 +36,10 @@
 
 package pub.platform.advance.utils;
 
-import java.util.*;
 import java.io.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  *  Manages properties for the entire Jive system. Properties are merely pieces
@@ -86,7 +88,8 @@ public class PropertyManager {
           if(props == null)
                return null;
           try {
-               props = new String(props.getBytes("ISO-8859-1"));
+               //props = new String(props.getBytes("ISO-8859-1"));
+               props = new String(props.getBytes());
           } catch(Exception e) {
 
           }

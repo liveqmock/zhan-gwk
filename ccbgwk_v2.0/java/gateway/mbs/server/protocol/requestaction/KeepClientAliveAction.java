@@ -13,19 +13,10 @@ import gateway.mbs.server.protocol.RequestAction;
  */
 public class KeepClientAliveAction implements RequestAction {
     private static String action = "keepAliveSignal";
-    /* (non-Javadoc)
-     * @see cn.humanmonth.chat.server.protocol.RequestAction#canDeal(cn.humanmonth.chat.server.domain.RequestData)
-     */
     public boolean canDeal(RequestData requestData) {
         return action.equals(requestData.getCAction());
     }
-
-    /* (non-Javadoc)
-     * @see cn.humanmonth.chat.server.protocol.RequestAction#dealReqeust(cn.humanmonth.chat.server.domain.RequestData, cn.humanmonth.chat.server.protocol.Protocol)
-     */
     public void dealReqeust(RequestData requestData, Protocol protocol) {
         // do nothing
-
     }
-
-}   
+}

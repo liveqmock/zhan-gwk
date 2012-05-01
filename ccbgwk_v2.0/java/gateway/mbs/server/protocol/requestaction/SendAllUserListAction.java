@@ -3,7 +3,7 @@ package gateway.mbs.server.protocol.requestaction;
 import gateway.mbs.server.domain.RequestData;
 import gateway.mbs.server.protocol.Protocol;
 import gateway.mbs.server.protocol.RequestAction;
-import gateway.mbs.server.protocol.response.SendALlUserList;
+import gateway.mbs.server.protocol.response.SendAllUserList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +14,7 @@ import gateway.mbs.server.protocol.response.SendALlUserList;
  */
 public class SendAllUserListAction implements RequestAction {
     private static String action = "getAllUserList";
-    private SendALlUserList sendAllUserList = new SendALlUserList();
+    private SendAllUserList sendAllUserList = new SendAllUserList();
 
     /*
      * (non-Javadoc)

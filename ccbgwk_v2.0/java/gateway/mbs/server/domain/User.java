@@ -18,26 +18,10 @@ public class User {
                 .split(":")[1]);
     }
 
-    /**
-     * 客户的ip
-     */
     private String ip;
-    /**
-     * 端口
-     */
     private Integer port;
-    /**
-     * 客户名称、默认值为“游客”  
-     */
-    private String username = "游客";
-
-    /**
-     * 昵称
-     */
-    private String nickName=null;
-    /**
-     * 对应游客的客户端socket
-     */
+    private String username = "anonymous";
+    private String nickName = null;
     private Socket socket;
 
     public boolean equals(Object obj) {
@@ -82,22 +66,22 @@ public class User {
         this.port = port;
     }
 
-    public String getDisplayName(){
-        if(null==this.getNickName()){
+    public String getDisplayName() {
+        if (null == this.getNickName()) {
             return this.getUsername();
-        }else{
+        } else {
             return this.getNickName();
         }
     }
 
     public String getUserNameDetail() {
-        String[] nums=this.getIp().split("\\.");
-        return this.getDisplayName() + "*" + nums[2]+"."+nums[3] + ":" + this.getPort();
+        String[] nums = this.getIp().split("\\.");
+        return this.getDisplayName() + "*" + nums[2] + "." + nums[3] + ":" + this.getPort();
     }
 
-    public String getUserNameDetailWithExcapeRegExp(){
-        String[] nums=this.getIp().split("\\.");
-        return this.getUsername() + "\\*" + nums[2]+"\\."+nums[3] + ":" + this.getPort();
+    public String getUserNameDetailWithExcapeRegExp() {
+        String[] nums = this.getIp().split("\\.");
+        return this.getUsername() + "\\*" + nums[2] + "\\." + nums[3] + ":" + this.getPort();
 
     }
 

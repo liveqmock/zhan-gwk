@@ -9,8 +9,6 @@ import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
 import pub.platform.form.control.Action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +17,7 @@ public class bdgAgencyAction extends Action {
 
     public int initData() {
         try {
-            getAllElementInfo();
+            initAllElementInfo();
         } catch (Exception e) {
             logger.error(e.getMessage());
             this.res.setType(0);
@@ -29,22 +27,21 @@ public class bdgAgencyAction extends Action {
         }
         this.res.setType(0);
         this.res.setResult(true);
-        this.res.setMessage(PropertyManager.getProperty("200"));
+        String message = PropertyManager.getProperty("200");
+        this.res.setMessage(message);
+//        this.res.setMessage("操作成功。");
         return 0;
     }
-    private void getAllElementInfo() {
+
+    private void initAllElementInfo() {
         ElementService service = FaspServiceAdapter.getElementService();
-        List ElementCodeList = new ArrayList();
-        Map m = new HashMap();
-        m.put("CODE", "20101");
-        m.put("NAME", "XXXXX");
-        ElementCodeList.add(m);
 
         DatabaseConnection conn = ConnectionManager.getInstance().get();
         try {
+            String areacode = "001";
             conn.begin();
-            conn.executeUpdate(" delete from  ls_bdgagency where areacode = '370213'");
-            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2010);
+            conn.executeUpdate(" delete from  ls_bdgagency where areacode = '" + areacode + "'");
+            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
             for (int i = 0; i < rtnlist.size(); i++) {
                 Map m1 = (Map) rtnlist.get(i);
                 if (i == rtnlist.size() - 1) {
@@ -70,7 +67,7 @@ public class bdgAgencyAction extends Action {
                             "               t.remark," +
                             "               t.operid," +
                             "               t.operdate) values (" +
-                            " '370213', " +
+                            " '" + areacode + "', " +
                             " '" + code + "', " +
                             " '" + name + "', " +
                             " '" + guid + "', " +
@@ -78,7 +75,7 @@ public class bdgAgencyAction extends Action {
                             " '" + supercode + "', " +
                             " '" + isleaf + "', " +
                             " 0, " +
-                            " 'remark', " +
+                            " '初始化', " +
                             " 'auto', " +
                             " sysdate " +
                             "              )";
@@ -86,10 +83,9 @@ public class bdgAgencyAction extends Action {
                 }
             }
             conn.commit();
-            int i = 0;
+            //int i = 0;
         } catch (Exception e) {
             conn.rollback();
-            logger.error(e);
             throw new RuntimeException("数据库处理错误.", e);
         } finally {
             ConnectionManager.getInstance().release();

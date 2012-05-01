@@ -10,7 +10,7 @@ package gateway.mbs.server;
 
 import gateway.mbs.server.protocol.Protocol;
 import gateway.mbs.server.domain.User;
-import gateway.mbs.server.protocol.response.SendALlUserList;
+import gateway.mbs.server.protocol.response.SendAllUserList;
 import gateway.mbs.server.protocol.response.SendMsgToAll;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +49,7 @@ public class Processor extends Thread {
                     user.getSocket().close();
                 } catch (IOException e1) {
                 }
-                new SendALlUserList().deal(protocol);
+                new SendAllUserList().deal(protocol);
                 if (this.protocol.isHasSendLoginMessage()) {
                     new SendMsgToAll().sendSystemMsg("用户:" + user.getUserNameDetail() + "已退出", protocol);
                     log.info("用户:" + user.getUsername() + "已退出。");

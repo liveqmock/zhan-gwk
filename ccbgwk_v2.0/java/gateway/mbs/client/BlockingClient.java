@@ -26,10 +26,8 @@ import org.xsocket.connection.IBlockingConnection;
 
 import java.io.IOException;
 
-
-
 /**
-*     阻塞模式客户端 测试用   html解析
+*     阻塞模式客户端 测试用
 */
 public final class BlockingClient  {
 

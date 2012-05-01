@@ -16,11 +16,6 @@ public class SendMsgToAllAction implements RequestAction {
     private static String action = "sendMsgToAll";
     private SendMsgToAll sendMsgToAll = new SendMsgToAll();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see cn.humanmonth.home.chat.server.protocol.Action#dealReqeust(cn.humanmonth.home.chat.server.domain.RequestData)
-     */
     public void dealReqeust(RequestData requestData, Protocol protocol) {
         sendMsgToAll.sendMsgToAll(requestData, protocol);
     }

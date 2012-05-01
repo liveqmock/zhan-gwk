@@ -1,4 +1,4 @@
-package gateway.mbs.client;
+package gateway.sockettest.client;
 
 import org.xsocket.connection.IConnectExceptionHandler;
 import org.xsocket.connection.IConnectHandler;

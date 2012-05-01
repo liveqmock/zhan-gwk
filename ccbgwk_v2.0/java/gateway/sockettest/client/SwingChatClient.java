@@ -1,4 +1,4 @@
-package gateway.mbs.client;
+package gateway.sockettest.client;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

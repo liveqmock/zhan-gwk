@@ -1,4 +1,4 @@
-package gateway.mbs.client;
+package gateway.sockettest.client;
 
 /*
  *  Copyright (c) xsocket.org, 2006-2008. All rights reserved.

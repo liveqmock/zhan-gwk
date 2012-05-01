@@ -22,11 +22,6 @@ import java.util.regex.Pattern;
  * Time: 8:10:39
  * To change this template use File | Settings | File Templates.
  */
-/**
- * @author
- *
- * Protocol类用于把客户端传来的字符串转化为服务端的能识别的请求:RequestData
- */
 public class Protocol {
     private Log log = LogFactory.getLog(this.getClass());
 
@@ -43,12 +38,12 @@ public class Protocol {
         this.user = user;
     }
     /**
-     * 处理客户的请求
+     * 处理Client的请求
      */
     public void deal() throws UnsupportedEncodingException, IOException {
         RequestData requestData = this.getClientRequestData(user);
         log.info("用户：" + this.user.getUserNameDetail() + " 传来请求：" + requestData.getRequestXmlString());
-        log.info("从客户端收到的消息：" + requestData.getRequestXmlString());
+        log.info("从Client端收到的消息：" + requestData.getRequestXmlString());
         for (int i = 0; i < actions.size(); i++) {
             RequestAction action = (RequestAction) actions.get(i);
             if (action.canDeal(requestData)) {
@@ -60,7 +55,7 @@ public class Protocol {
                 return;
             }
         }
-        log.info("服务端无法处理客户端传来的字符串：" + requestData.getRequestXmlString());
+        log.info("服务端无法处理Client端传来的字符串：" + requestData.getRequestXmlString());
     }
 
     /**
@@ -77,18 +72,18 @@ public class Protocol {
     }
 
     /**
-     * 获取客户端数据
+     * 获取Client端数据
      */
     private RequestData getClientRequestData(User user) throws UnsupportedEncodingException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(user.getSocket().getInputStream(), "utf8"));
         String requestStr = reader.readLine();
         if (requestStr == null)
-            throw new RuntimeException("不能从socket获取数据，客户可能已退出");
+            throw new RuntimeException("不能从socket获取数据，Client可能已退出");
         return new RequestData(this.getClientActionFromLine(requestStr), requestStr);
     }
 
     /**
-     * 向客户发送信息
+     * 向Client发送信息
      */
     public void sendStringToAllClient(String str) {
         for (int i = 0; i < users.size(); i++) {
@@ -102,7 +97,7 @@ public class Protocol {
     }
 
     /**
-     * 向单个客户发送信息
+     * 向单个Client发送信息
      */
     public void sendStringToSingleClient(User user, String str) {
         try {

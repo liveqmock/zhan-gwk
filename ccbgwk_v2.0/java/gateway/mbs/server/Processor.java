@@ -35,9 +35,7 @@ public class Processor extends Thread {
 
     public void run() {
         // 不管是否要求安全验证，都发出允许链接的认证策略
-        protocol.sendStringToSingleClient(protocol.getUser(),
-                "1234");
-//                "<!--?xml version=\"1.0\"?--><cross-domain-policy><site-control permitted-cross-domain-policies="\"all\"/"><allow-access-from domain="\"*\"" to-ports="\"*\"/"></allow-access-from></site-control></cross-domain-policy>\0");
+        protocol.sendStringToSingleClient(protocol.getUser(), "1234");
         while (true) {
             try {
                 protocol.deal();

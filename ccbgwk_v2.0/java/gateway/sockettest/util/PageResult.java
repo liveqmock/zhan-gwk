@@ -1,4 +1,4 @@
-package gateway.mbs.util;
+package gateway.sockettest.util;
 
 import java.util.LinkedList;
 import java.util.List;

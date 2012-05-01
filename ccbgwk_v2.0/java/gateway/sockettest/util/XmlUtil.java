@@ -1,4 +1,4 @@
-package gateway.mbs.util;
+package gateway.sockettest.util;
 
 /**
  * Created by IntelliJ IDEA.

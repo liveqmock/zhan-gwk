@@ -1,6 +1,6 @@
 package gateway.mbs.server.domain;
 
-import gateway.mbs.util.XmlUtil;
+import gateway.sockettest.util.XmlUtil;
 
 /**
  * Created by IntelliJ IDEA.

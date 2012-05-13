@@ -80,11 +80,26 @@
                 </td>
             </tr>
             <tr>
+                <td width="15%" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
+                <td width="35%" class="data_input">
+                    <%
+                        ZtSelect zs = new ZtSelect("areacode", "AREACODE", "");
+                        zs.addAttr("style", "width: 90%");
+                        zs.addAttr("fieldType", "text");
+                        zs.addAttr("onchange", "getSuperDeptCode()");
+                        zs.addOption("", "");
+                        zs.addAttr("isNull", "false");
+                        out.print(zs);
+                    %>
+                    <span class="red_star">*</span></td>
+            </tr>
+            <tr>
                 <td width="15%" nowrap="nowrap" class="lbl_right_padding">一级预算单位</td>
                 <td width="35%" class="data_input">
                     <%
-                        ZtSelect zs = new ZtSelect("superdeptcode", "", "");
-                        zs.setSqlString("select code , name from ls_bdgagency t where levelno=1 ");
+                        zs = new ZtSelect("superdeptcode", "", "");
+                        zs.addAttr("onClick", "checkAreaCode()");
+                        //zs.setSqlString("select code , name from ls_bdgagency t where levelno=1 ");
                         zs.addAttr("style", "width: 90%");
                         zs.addAttr("fieldType", "text");
                         zs.addAttr("onchange", "reSelect()");
@@ -97,20 +112,6 @@
                 <td width="35%" class="data_input">
                     <%
                         zs = new ZtSelect("deptcode", "", "");
-                        //zs.setSqlString("select OPERID as value ,OPERNAME as text  from ptoper");
-                        zs.addAttr("style", "width: 90%");
-                        zs.addAttr("fieldType", "text");
-                        zs.addAttr("isNull", "false");
-                        zs.addOption("", "");
-                        out.print(zs);
-                    %>
-                    <span class="red_star">*</span></td>
-            </tr>
-            <tr>
-                <td width="15%" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
-                <td width="35%" class="data_input">
-                    <%
-                        zs = new ZtSelect("areacode", "AREACODE", "");
                         //zs.setSqlString("select OPERID as value ,OPERNAME as text  from ptoper");
                         zs.addAttr("style", "width: 90%");
                         zs.addAttr("fieldType", "text");

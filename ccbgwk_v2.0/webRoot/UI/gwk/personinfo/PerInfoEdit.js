@@ -25,7 +25,18 @@ function formInit() {
     //初始化时，把创建者更新成现在登陆者
     document.getElementById("createcode").value = arg.operid;
 }
+/**
+ * 根据所属地区获取一级预算单位
+ */
+function getSuperDeptCode(){
+    if (document.getElementById("areacode").value == ""){
+        alert("所属地区不能为空！");
+        return;
+    }
+    var strSql = "select code as value , name as text from ls_bdgagency t where levelno=1 and areacode="+ document.getElementById("areacode").value;
+    refresh_select("superdeptcode", strSql );
 
+}
 
 /**
  * 根据经办行联动
@@ -42,7 +53,7 @@ function reSelect() {
  */
 function operReSelectCustMgr() {
     var strSql = "select code as value , name as text from ls_bdgagency t  where supercode="+ document.getElementById("superdeptcode").value;
-    strSql = strSql + " and lengthb(t.code) <> 3 ";
+    strSql = strSql + " and lengthb(t.code) <> 3 and areacode="+document.getElementById("areacode").value;
     refresh_select("deptcode", strSql );
 }
 /*
@@ -84,5 +95,13 @@ function saveClick()
     if (analyzeReturnXML(retxml) + "" == "true") {
         window.returnValue = "1";
         window.close();
+    }
+}
+function checkAreaCode(){
+    //所属地区不能为空
+    if (document.getElementById("areacode").value == ""){
+        alert("请先选择所属地区！");
+        document.getElementById("areacode").focus();
+        return;
     }
 }

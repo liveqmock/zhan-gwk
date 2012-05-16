@@ -23,6 +23,7 @@
         String doType = "";      //类型
         String recSequence = "";       //内部序列号
         String deptCD = "";      //预算单位编号
+        String superDeptCD = "";      //一级预算单位编号
         String createName = "";  //操作人员名
         int recVer = 0;      //版本号
         OperatorManager omgr = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
@@ -38,6 +39,7 @@
         if (bean != null) {
             //取得预算单位code
             deptCD = bean.getDeptcode();
+            superDeptCD = bean.getSuperdeptcode();
             recVer = bean.getRecversion();
             StringUtils.getLoadForm(bean, out);
         }
@@ -57,6 +59,7 @@
 <body onload="formInit()">
 <form id="editForm" name="editForm">
     <input type="hidden" id="hhidDeptCode" value="<%=deptCD%>">
+    <input type="hidden" id="hideSuperDeptCode" value="<%=superDeptCD%>">
     <input type="hidden" id="createcode" value="">
     <input type="hidden" id="recinsequence" value="<%=recSequence%>">
     <input type="hidden" id="recversion" value="<%=recVer%>">

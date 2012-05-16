@@ -27,6 +27,22 @@
             <form id="queryForm" name="queryForm">
                 <input type="hidden" id="operType" name="operType" value="initData"/>
                 <input type="hidden" id="newLsh" name="newLsh" value=""/>
+                <tr align="center">
+                    <td align="center" width="35%">
+                        <table>
+                            <tr height="20">
+                                <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
+                                <td width="30%" class="data_input" colspan="3"><%
+                                ZtSelect zs = new ZtSelect("areacode", "AREACODE", "");
+                                zs.addAttr("style", "width: 91%");
+                                zs.addAttr("fieldType", "text");
+                                zs.addOption("", "");
+                                out.print(zs);
+                            %>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
                 <tr height="20">
                     <td align="center" nowrap="nowrap">
                         <input type="button" id="button" onClick="initData()" value="   确  认   ">

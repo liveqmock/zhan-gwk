@@ -23,8 +23,8 @@
       String levelNo = request.getParameter("levelNo");
       String strSql =  "select recinsequence, p.areacode, pername , perid ,lg.name as deptName ,lg1.name superDeptName" +
                ",p.createdate  from ls_personalinfo p" +
-               " left join  ls_bdgagency lg on p.deptcode = lg.code" +
-               " left join ls_bdgagency lg1 on p.superdeptcode = lg1.code where 1=1 ";
+               " left join  ls_bdgagency lg on p.deptcode = lg.code and p.areacode=lg.areacode" +
+               " left join ls_bdgagency lg1 on p.superdeptcode = lg1.code and p.areacode=lg1.areacode where 1=1 ";
        System.out.println(strSql);
        DBGrid dbGrid = new DBGrid();
        dbGrid.setGridID("PerInfoTab");

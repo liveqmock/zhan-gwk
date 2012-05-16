@@ -1,14 +1,15 @@
 package gateway.mbs.xsocketserver.requestaction;
 
 import com.ccb.dao.LSPAYBACKINFO;
+import gateway.financebureau.CommonQueryService;
+import gateway.financebureau.GwkBurlapServiceFactory;
 import gateway.mbs.xsocketserver.RequestAction;
 import gateway.mbs.xsocketserver.domain.RequestData;
 import gateway.mbs.xsocketserver.domain.ResponseData;
-import gov.mof.fasp.service.CommonQueryService;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import pub.platform.advance.utils.PropertyManager;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -112,28 +113,39 @@ public class T1000Action implements RequestAction {
 
     //取得数据
     private List queryConsumeInfo(String voucherid, String year) {
-
+        String areaCode="";
+        String areaName="";
+        List rtnlist = null;
+        CommonQueryService service = null;
         // TODO 判断财政局编号
         // ------2012-04-23 Added by zhangxiaobo---------
-        if ("001".equals(requestData.getAreaCode())) {
-            // TODO 崂山
-            logger.info("================ 链接崂山财政局，查询支付令：" + voucherid + "的消费明细数据 ====================");
-        } else if ("002".equals(requestData.getAreaCode())) {
-            //  TODO 李沧
-            logger.info("================ 链接李沧财政局，查询支付令：" + voucherid + "的消费明细数据 ====================");
+        try{
+            //2012-05-13 linyong
+            areaCode=requestData.getAreaCode();
+            areaName= PropertyManager.getProperty("finance.name."+areaCode);
+            if(areaCode!=null && areaCode!=""){
+                service = GwkBurlapServiceFactory.getInstance().getCommonQueryService(areaCode);
+                logger.info("================ 链接"+areaName+"，查询支付令：" + voucherid + "的消费明细数据 ====================");
+            }else{
+                throw new RuntimeException("财政局编号错误！未知编号：" + requestData.getAreaCode() + "【崂山001，李沧002.】" );
+            }
+//            if ("001".equals(requestData.getAreaCode())) {
+//                service = GwkBurlapServiceFactory.getInstance().getCommonQueryService("001");
+//                // TODO 崂山
+//                logger.info("================ 链接崂山财政局，查询支付令：" + voucherid + "的消费明细数据 ====================");
+//            } else if ("002".equals(requestData.getAreaCode())) {
+//                //  TODO 李沧
+//                logger.info("================ 链接李沧财政局，查询支付令：" + voucherid + "的消费明细数据 ====================");
+//
+//            } else {
+//                throw new RuntimeException("财政局编号错误！未知编号：" + requestData.getAreaCode() + "【崂山001，李沧002.】" );
+//            }
 
-        } else {
-            throw new RuntimeException("财政局编号错误！未知编号：" + requestData.getAreaCode() + "【崂山001，李沧002.】" );
-        }
-
-        CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
-        Map m = new HashMap();
-        m.put("VOUCHERID", voucherid);
-
-        List rtnlist = null;
-        try {
+    //        CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
+            Map m = new HashMap();
+            m.put("VOUCHERID", voucherid);
             rtnlist = service.getQueryListBySql("BANK.CCB", "queryConsumeInfo", m, year);
-        } catch (Exception e) {
+        }catch (Exception e){
             logger.error(e);
             //TODO
             throw new RuntimeException(e);

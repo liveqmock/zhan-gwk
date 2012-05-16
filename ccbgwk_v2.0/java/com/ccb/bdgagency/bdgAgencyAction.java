@@ -1,7 +1,7 @@
 package com.ccb.bdgagency;
 
-import gov.mof.fasp.service.ElementService;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import gateway.financebureau.ElementService;
+import gateway.financebureau.GwkBurlapServiceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import pub.platform.advance.utils.PropertyManager;
@@ -34,18 +34,25 @@ public class bdgAgencyAction extends Action {
     }
 
     private void initAllElementInfo() {
-        ElementService service = FaspServiceAdapter.getElementService();
-
+        //所属区域代码
+        String areacode = "";
+        ElementService service = null;
         DatabaseConnection conn = ConnectionManager.getInstance().get();
         try {
-            String areacode = "001";
+            //获取所属区域代码 2012-05-13 linyong
+            for (int i = 0 ; i < req.getRecorderCount() ; i++){
+                areacode=req.getFieldValue(i,"areacode");
+                System.out.println(areacode);
+            }
+            //根据不同的代码，获取相应的接口 2012-05-13 linyong
+            service = GwkBurlapServiceFactory.getInstance().getElementService(areacode);
             conn.begin();
             conn.executeUpdate(" delete from  ls_bdgagency where areacode = '" + areacode + "'");
             List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
             for (int i = 0; i < rtnlist.size(); i++) {
                 Map m1 = (Map) rtnlist.get(i);
                 if (i == rtnlist.size() - 1) {
-                    String version = (String) m1.get("version");
+                    String version = String.valueOf( m1.get("version"));
                     System.out.println(" version=" + version);
                 } else {
                     String code = (String) m1.get("code");
@@ -91,5 +98,4 @@ public class bdgAgencyAction extends Action {
             ConnectionManager.getInstance().release();
         }
     }
-
 }

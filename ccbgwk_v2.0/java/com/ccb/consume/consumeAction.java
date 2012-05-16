@@ -11,10 +11,12 @@ package com.ccb.consume;
  * @version 1.0
  */
 
-import gov.mof.fasp.service.BankService;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import gateway.financebureau.BankService;
+import gateway.financebureau.GwkBurlapServiceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.quartz.SimpleTrigger;
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
 
@@ -54,9 +56,12 @@ public class consumeAction extends Action {
     public int writeConsumeInfo() {
         // 查询所有初始状态的未发送消费数据
         List cardList = null;
+        HashMap mapConsume=null;
         int updateInfoCount = 0;
         try {
-            cardList = queryInfoByStatus(RtnTagKey.SEND_INIT);
+            //将所有财政局的消费记录获取过来 2012-05-13 linyong
+            mapConsume=queryInfoByStatusMap(RtnTagKey.SEND_INIT);
+//            cardList = queryInfoByStatus(RtnTagKey.SEND_INIT);
         } catch (Exception e) {
             logger.error("读取消费信息出现错误，请查看系统日志。", e);
             this.res.setType(0);
@@ -64,62 +69,70 @@ public class consumeAction extends Action {
             this.res.setMessage("读取消费信息出现错误，请查看系统日志。");
             return -1;
         }
-        if (cardList != null && cardList.size() > 0) {
-            List rtnlist = null;
-            try {
-
-                rtnlist = sendConsumeInfoByStatus(cardList, RtnTagKey.SEND_INIT);
-            } catch (Exception e) {
-                logger.error("发送消费信息出现错误，请查看系统日志。", e);
-                this.res.setType(0);
-                this.res.setResult(false);
-                this.res.setMessage("发送消费信息出现错误，请查看系统日志。");
-                return -1;
-            }
-            // 判断是否有返回数据，若无，则更新数据状态为发送失败
-            if (rtnlist == null || rtnlist.size() <= 0) {
+        String areaCode="";
+        String[] strArr = PropertyManager.getProperty("finance.codeset").split(",");
+        for (int j =0;j<strArr.length;j++){
+            areaCode=strArr[j];
+            //根据所属区域代码，获取将要发送的消费列表 2012-05-13 linyong
+            cardList = (List)mapConsume.get(areaCode);
+            if (cardList != null && cardList.size() > 0) {
+                List rtnlist = null;
+                //发送的记录数等于所有list的记录数  2012-05-13 linyong
+                this.sendInfoCount+=cardList.size();
                 try {
-                    updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_FAIL);
+                    rtnlist = sendConsumeInfoByStatus(areaCode,cardList, RtnTagKey.SEND_INIT);
                 } catch (Exception e) {
-                    logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                    logger.error("发送消费信息出现错误，请查看系统日志。", e);
                     this.res.setType(0);
                     this.res.setResult(false);
-                    this.res.setMessage("发送数据后更新本地数据状态失败，请查看系统日志。");
+                    this.res.setMessage("发送消费信息出现错误，请查看系统日志。");
+                    return -1;
                 }
-                return -1;
-            } else {
-                // 处理返回信息
-                for (int i = 0; i < rtnlist.size(); i++) {
-                    Map m1 = (Map) rtnlist.get(i);
-                    String result = (String) m1.get(RtnTagKey.RESULT);
-                    // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
-                    if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
-                        try {
-                            updateInfoCount += updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_SUCCESS);
-                        } catch (Exception e) {
-                            logger.error("发送数据后更新本地数据为失败状态出现异常，请查看系统日志。");
-                            this.res.setType(0);
-                            this.res.setResult(false);
-                            this.res.setMessage("发送数据后更新本地数据状态出现异常，请查看系统日志。");
-                            return -1;
-                        }
-                    } else {
-                        // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
-                        String sameid = (String) m1.get(RtnTagKey.SAMEID);
-                        String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
-                        if ((sameid != null && !"".equals(sameid.trim()))
-                                || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                // 判断是否有返回数据，若无，则更新数据状态为发送失败
+                if (rtnlist == null || rtnlist.size() <= 0) {
+                    try {
+                        updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_FAIL);
+                    } catch (Exception e) {
+                        logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                        this.res.setType(0);
+                        this.res.setResult(false);
+                        this.res.setMessage("发送数据后更新本地数据状态失败，请查看系统日志。");
+                    }
+                    return -1;
+                } else {
+                    // 处理返回信息
+                    for (int i = 0; i < rtnlist.size(); i++) {
+                        Map m1 = (Map) rtnlist.get(i);
+                        String result = (String) m1.get(RtnTagKey.RESULT);
+                        // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
+                        if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                             try {
-                                updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                                updateInfoCount += updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_SUCCESS);
                             } catch (Exception e) {
-                                logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                logger.error("发送数据后更新本地数据为失败状态出现异常，请查看系统日志。");
                                 this.res.setType(0);
                                 this.res.setResult(false);
-                                this.res.setMessage("发送数据后更新本地数据时出现异常，请查看系统日志。");
+                                this.res.setMessage("发送数据后更新本地数据状态出现异常，请查看系统日志。");
                                 return -1;
                             }
                         } else {
-                            logger.error("Server response message:" + (String) m1.get("message"));
+                            // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
+                            String sameid = (String) m1.get(RtnTagKey.SAMEID);
+                            String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
+                            if ((sameid != null && !"".equals(sameid.trim()))
+                                    || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                                try {
+                                    updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                                } catch (Exception e) {
+                                    logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                    this.res.setType(0);
+                                    this.res.setResult(false);
+                                    this.res.setMessage("发送数据后更新本地数据时出现异常，请查看系统日志。");
+                                    return -1;
+                                }
+                            } else {
+                                logger.error("Server response message:" + (String) m1.get("message"));
+                            }
                         }
                     }
                 }
@@ -162,7 +175,7 @@ public class consumeAction extends Action {
         if (cardList != null && cardList.size() > 0) {
             List rtnlist = null;
             try {
-                rtnlist = sendConsumeInfoByStatusArr(cardList, status);
+                rtnlist = sendConsumeInfoByStatusArr("",cardList, status);
             } catch (Exception e) {
                 logger.error("发送消费信息出现错误，请查看系统日志。", e);
                 this.res.setType(0);
@@ -238,19 +251,25 @@ public class consumeAction extends Action {
 
     }
 
-    private List sendConsumeInfoByStatus(List cardList, String status) throws Exception {
-        return sendConsumeInfoByStatusArr(cardList, new String[]{status});
+    private List sendConsumeInfoByStatus(String areaCode,List cardList, String status) throws Exception {
+        return sendConsumeInfoByStatusArr(areaCode,cardList, new String[]{status});
     }
 
     // 发送某几状态的消费数据到财政局
-    private List sendConsumeInfoByStatusArr(List cardList, String[] statusArr) throws Exception {
+    private List sendConsumeInfoByStatusArr(String areaCode,List cardList, String[] statusArr) throws Exception {
         List rtnlist = null;
+        BankService service=null;
+        String strBank = "";
+        //根据所属区域代码获取建设银行的编码
+        strBank = PropertyManager.getProperty("ccb.code."+areaCode);
         if (cardList.size() > 0) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String strDate = df.format(new Date());
             String year = strDate.substring(0, 4);
-            BankService service = FaspServiceAdapter.getBankService();
-            rtnlist = service.writeConsumeInfo("BANK.CCB", "8015", year, "405", cardList);
+//            BankService service = FaspServiceAdapter.getBankService();
+            //根据所属区域代码连接相应财政局的接口
+            service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
+            rtnlist = service.writeConsumeInfo("BANK.CCB", strBank, year, "405", cardList);
         }
 
         return rtnlist;
@@ -318,6 +337,85 @@ public class consumeAction extends Action {
             rs = null;
         }
         return cardList;
+    }
+
+    // 查询所有某一状态的消费数据
+    private HashMap queryInfoByStatusMap(String status) {
+        return queryInfoByStatusMap(new String[]{status});
+    }
+
+    // 查询所有某几状态的消费数据
+    // 卡未注销
+    // 将所有财政局的消费记录获取过来
+    private HashMap queryInfoByStatusMap(String[] status) {
+        this.sendInfoCount = 0;
+        HashMap mapConsume = new HashMap();
+        String strCode = PropertyManager.getProperty("finance.codeset");
+        String[] strArr = strCode.split(",");
+        String areaCode="";
+        String areaName="";
+        for (int j=0;j<strArr.length;j++){
+            StringBuffer wheresqlbfr = new StringBuffer(" where csi.status in ('");
+            int statusCount = status.length;
+            for (int i = 0; i < statusCount; i++) {
+                wheresqlbfr.append(status[i]);
+                if (i + 1 < statusCount) {
+                    wheresqlbfr.append("','");
+                }
+            }
+            wheresqlbfr.append("')");
+
+            areaCode=strArr[j];
+            areaName=PropertyManager.getProperty("finance.name."+areaCode);
+            wheresqlbfr.append(" and cbi.gatheringbankacctname='"+areaName+"' ");
+            wheresqlbfr.append(" and cbi.status = '1' order by lsh ");
+            String wheresql = new String(wheresqlbfr);
+            String selectsql = "select lsh,csi.account as account,csi.cardname as cardname,busidate,busimoney,businame,limitdate,tx_cd from ls_consumeinfo csi "
+                    + " join ls_cardbaseinfo cbi on csi.account = cbi.account "
+                    + wheresql;
+
+            System.out.println(selectsql);
+
+            RecordSet rs = null;
+            List cardList = new ArrayList();
+            rs = dc.executeQuery(selectsql);
+            while (rs.next()) {
+//                this.sendInfoCount++;
+                Map m = new HashMap();
+                String lsh = rs.getString("lsh");
+                String account = rs.getString("account").trim();
+                String cardname = rs.getString("cardname").trim();
+                String busidate = rs.getString("busidate");
+                busidate = busidate.substring(0, 4) + busidate.substring(5, 7) + busidate.substring(8, 10);
+                Double busimoney = rs.getDouble("busimoney");
+                String businame = rs.getString("businame").trim();
+                String limitdate = rs.getString("limitdate");
+                limitdate = limitdate.substring(0, 4) + limitdate.substring(5, 7) + limitdate.substring(8, 10);
+                String tx_cd = rs.getString("tx_cd");
+                if (busimoney <= 0) {
+                    limitdate = "";
+                }
+                if ("43".equals(tx_cd)) {
+                    busimoney = -busimoney;
+                }
+                m.put("ID", lsh);
+                m.put("ACCOUNT", account);
+                m.put("CARDNAME", cardname);
+                m.put("BUSIDATE", busidate);
+                m.put("BUSIMONEY", busimoney);
+                m.put("BUSINAME", businame);
+                m.put("Limitdate", limitdate);
+                cardList.add(m);
+            }
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+            if(cardList.size()>0){
+                mapConsume.put(areaCode,cardList);
+            }
+        }
+        return mapConsume;
     }
 
     // 更新某一旧状态为新状态(10-初始状态,11-发送失败,12-发送超时,20-发送成功)

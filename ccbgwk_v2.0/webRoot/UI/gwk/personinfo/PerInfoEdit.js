@@ -12,6 +12,8 @@ function formInit() {
         if (operation != "add") {
             load_form();
             // 客户经理初始化
+            getSuperDeptCode();
+            document.getElementById("superdeptcode").value = document.getElementById("hideSuperDeptCode").value;
             operReSelectCustMgr();
             document.getElementById("deptcode").value = document.getElementById("hhidDeptCode").value;
         }

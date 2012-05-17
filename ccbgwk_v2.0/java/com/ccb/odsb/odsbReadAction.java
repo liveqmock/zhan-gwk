@@ -180,7 +180,7 @@ public class odsbReadAction extends Action {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
             this.res.setType(0);
             this.res.setResult(false);
             this.res.setMessage(PropertyManager.getProperty("300"));
@@ -264,7 +264,9 @@ public class odsbReadAction extends Action {
                 "           and nvl(t1.ref_seq_no,' ') = nvl(t2.ref_seq_no,' ') ) ";
 */
 
-        exeCount = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
+        //exeCount = dc.executeUpdate(" truncate table odsb_crd_crt_trad ");
+        //TODO 判断返回值 须确保删除无误
+        exeCount = dc.executeUpdate(" delete from odsb_crd_crt_trad ");
         exeCount = dc.executeUpdate(sql);
         return exeCount;
     }

@@ -64,7 +64,7 @@ function cbRetrieve_Click(){
 		whereStr += " and ( areacode = '"+document.all.areacode.value+"' )";
     
 	if (whereStr !=document.all["DbgagencyTable"].whereStr){
-		document.all["DbgagencyTable"].whereStr=whereStr +" order by code ";
+		document.all["DbgagencyTable"].whereStr=whereStr +" order by areacode,code ";
 		document.all["DbgagencyTable"].RecordCount="0";
 		document.all["DbgagencyTable"].AbsolutePage="1";
 

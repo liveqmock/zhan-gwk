@@ -8,7 +8,6 @@
 ***********************************************************************/
 -->
 <%@page contentType="text/html; charset=GBK" %>
-<%@page import="com.ccb.util.CcbLoanConst" %>
 <%@include file="/global.jsp" %>
 
 <html>

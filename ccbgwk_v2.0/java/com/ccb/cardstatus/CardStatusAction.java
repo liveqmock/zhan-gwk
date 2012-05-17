@@ -1,10 +1,11 @@
 package com.ccb.cardstatus;
 
 import com.ccb.dao.LSCARDSTATUS;
-import gov.mof.fasp.service.BankService;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import gateway.financebureau.BankService;
+import gateway.financebureau.GwkBurlapServiceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.ConnectionManager;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
@@ -29,39 +30,53 @@ public class CardStatusAction extends Action{
         dc = ConnectionManager.getInstance().getConnection();
       // 查询公务卡凭证中最大的GUID（顺序码）
         String maxguid = null;
-        maxguid = queryMaxGuid();
-        if(maxguid != null){
-           // 读取公务卡状态
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String strDate = df.format(new Date());
-            String year = strDate.substring(0, 4);
-            BankService service = FaspServiceAdapter.getBankService();
-            List rtnList = service.getOfficeCardStatus("BANK.CCB", "8015", year, "405", maxguid);
-//            List rtnList = SendConsumeInfoTest.sendConsumeInfoRtn();
-            if(rtnList != null){
-                // TODO 确认卡状态更改接口返回的数据，是否仅发送已停用卡信息
-               // dc.executeUpdate("truncate table ls_cardstatus");
-                LSCARDSTATUS cardstatus = new LSCARDSTATUS();
-                for(Object o : rtnList){
-                   if(o instanceof Map){
-                       Map m = (Map)o;
-                       String account = (String)m.get("account");
-                       String cardname = (String)m.get("cardname");
-                        String status = (String)m.get("status");
-                       String bdgagency = (String)m.get("bdgagency");
-                       String guid = (String)m.get("guid");
-                       cardstatus.setAccount(account);
-                       cardstatus.setCardname(cardname);
-                       cardstatus.setStatus(status);
-                       cardstatus.setBdgagency(bdgagency);
-                       cardstatus.setGuid(guid);
-                       cardstatus.insert();
-                       if(status != null && "128".equalsIgnoreCase(status.trim())){
-                           updateCardbaseStatus(account);
-                       }
-                   }
+        try{
+            maxguid = queryMaxGuid();
+            if(maxguid != null){
+               // 读取公务卡状态
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String strDate = df.format(new Date());
+                String year = strDate.substring(0, 4);
+                //获取财政局编码 2012-05-13 linyong
+                String strCode = PropertyManager.getProperty("finance.codeset");
+                String[] strArr = strCode.split(",");
+                String areaCode="";
+                String strBank="";
+                //根据财政局的编码获取相应的接口信息，然后获取公务卡的状态信息 2012-05-13 linyong
+                for (int i=0;i<strArr.length;i++){
+                    areaCode=strArr[i];
+                    strBank=PropertyManager.getProperty("ccb.code."+strBank);
+                    BankService service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
+                    List rtnList = service.getOfficeCardStatus("BANK.CCB", strBank, year, "405", maxguid);
+        //            List rtnList = SendConsumeInfoTest.sendConsumeInfoRtn();
+                    if(rtnList != null){
+                        // TODO 确认卡状态更改接口返回的数据，是否仅发送已停用卡信息
+                       // dc.executeUpdate("truncate table ls_cardstatus");
+                        LSCARDSTATUS cardstatus = new LSCARDSTATUS();
+                        for(Object o : rtnList){
+                            if(o instanceof Map){
+                                Map m = (Map)o;
+                                String account = (String)m.get("account");
+                                String cardname = (String)m.get("cardname");
+                                String status = (String)m.get("status");
+                                String bdgagency = (String)m.get("bdgagency");
+                                String guid = (String)m.get("guid");
+                                cardstatus.setAccount(account);
+                                cardstatus.setCardname(cardname);
+                                cardstatus.setStatus(status);
+                                cardstatus.setBdgagency(bdgagency);
+                                cardstatus.setGuid(guid);
+                                cardstatus.insert();
+                                if(status != null && "128".equalsIgnoreCase(status.trim())){
+                                    updateCardbaseStatus(account);
+                                }
+                            }
+                        }
+                    }
                 }
             }
+        }catch (Exception e){
+            throw new RuntimeException("获取卡状态信息错误.", e);
         }
        return 0;
     }

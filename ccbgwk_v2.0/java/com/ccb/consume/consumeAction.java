@@ -77,8 +77,6 @@ public class consumeAction extends Action {
             cardList = (List)mapConsume.get(areaCode);
             if (cardList != null && cardList.size() > 0) {
                 List rtnlist = null;
-                //发送的记录数等于所有list的记录数  2012-05-13 linyong
-                this.sendInfoCount+=cardList.size();
                 try {
                     rtnlist = sendConsumeInfoByStatus(areaCode,cardList, RtnTagKey.SEND_INIT);
                 } catch (Exception e) {
@@ -380,7 +378,7 @@ public class consumeAction extends Action {
             List cardList = new ArrayList();
             rs = dc.executeQuery(selectsql);
             while (rs.next()) {
-//                this.sendInfoCount++;
+                this.sendInfoCount++;
                 Map m = new HashMap();
                 String lsh = rs.getString("lsh");
                 String account = rs.getString("account").trim();

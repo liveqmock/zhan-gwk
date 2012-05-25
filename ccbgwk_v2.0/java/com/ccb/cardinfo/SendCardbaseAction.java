@@ -51,8 +51,6 @@ public class SendCardbaseAction extends Action {
             cardList = (List)mapSendCardInfo.get(areaCode);
 
             if(cardList != null && cardList.size() > 0){
-                //发送的记录数等于所有list的记录数  2012-05-13 linyong
-                this.sendCrdTotalCnt+=cardList.size();
                 rtnlist = this.sendCrdInfos(areaCode,cardList);
             }
             if (rtnlist != null && rtnlist.size() > 0) {
@@ -163,7 +161,6 @@ public class SendCardbaseAction extends Action {
                 while (rs.next()) {
                     this.sendCrdTotalCnt++;
                     Map m = new HashMap();
-
                     String account = rs.getString("account").trim();
                     String cardname = rs.getString("cardname").trim();
                     String bdgagency = rs.getString("bdgagency").trim();

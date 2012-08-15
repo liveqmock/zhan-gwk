@@ -1,3 +1,4 @@
+<%@include file="/global.jsp" %>
 <%@ page contentType="text/html; charset=GBK"%>
 <%@ page import="pub.platform.db.*"%>
 <html>

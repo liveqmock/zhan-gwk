@@ -32,7 +32,7 @@ function readFromODSB() {
             }
         }
         // 显示提示信息
-        document.getElementById("divResultInfo").style.display = "block";
+        document.getElementById("c").style.display = "block";
         document.getElementById("_cell_importNewCnt").innerHTML = newCnt;
         document.getElementById("_cell_importNullCnt").innerHTML = nullCnt;
         document.getElementById("_cell_importUpdateCnt").innerHTML = updateCnt;

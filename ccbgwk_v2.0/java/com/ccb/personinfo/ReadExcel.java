@@ -35,8 +35,10 @@ public class ReadExcel extends Action {
         String deptCD = "";          //预算单位
         int version = 0;             //版本号
         int createCD = 0;            //登陆者
+        String areaCode = "";        //区域代码
         String superDeptCD = "";     //一级预算单位
         String cfPerIDs = "";        //重复身份证ID
+
         try {
             LSPERSONALINFO perInfo = new LSPERSONALINFO();
             InputStream input = new FileInputStream(path);
@@ -101,6 +103,9 @@ public class ReadExcel extends Action {
                             superDeptCD = "";
                             break;
                     }
+                    //区域代码
+                    cell5 = sheet.getRow(i).getCell(5);
+                    areaCode = cell5.getStringCellValue().trim();
                     //数据载入表对象
                     perInfo.setPername(perName);
                     perInfo.setPerid(perID);
@@ -108,6 +113,7 @@ public class ReadExcel extends Action {
                     perInfo.setRecversion(version);
                     perInfo.setCreatecode(createCD);
                     perInfo.setSuperdeptcode(superDeptCD);
+                    perInfo.setAreacode(areaCode);
                     //内部序列号取得
                     String nbxlh = SeqUtil.getNbxh();
                     perInfo.setRecinsequence(nbxlh);

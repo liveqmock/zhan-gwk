@@ -80,7 +80,6 @@ var idTmr = "";
         }
         //Excel格式及数据正确性前台验证
         function ExcelFomatCheck(){
-
             var oXL = new ActiveXObject("Excel.Application");
             oXL.Visible=false;
             var oWB;

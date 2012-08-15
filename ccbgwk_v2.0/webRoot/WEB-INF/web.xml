@@ -19,6 +19,9 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     -->
+    <listener>
+        <listener-class>pub.platform.auth.OperOnLineSessionListener</listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>SchedulerManager</servlet-name>
@@ -81,4 +84,5 @@
     <welcome-file-list>
         <welcome-file>index.login</welcome-file>
     </welcome-file-list>
+
 </web-app>

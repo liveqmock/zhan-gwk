@@ -8,7 +8,7 @@ package com.ccb.cardinfo;
  * To change this template use File | Settings | File Templates.
  */
 public class RtnTagVal {
-    public static final String RESULT = "result";
+    public static final String RESULT = "RESULT";
     public static final String SAMEID = "sameidnumber";
     public static final String SAMEACCOUNT = "sameaccount";
     public static final String RESULT_SUCCESS = "success";

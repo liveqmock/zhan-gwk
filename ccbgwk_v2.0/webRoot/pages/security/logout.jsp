@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=GBK" %>
 <%@ page import="pub.platform.security.OperatorManager" %>
 <%@ page import="pub.platform.form.config.SystemAttributeNames" %>
-<%@page import="java.util.Enumeration"%>
-
+<%@ page import="java.util.Enumeration"%>
+<%@ page import="pub.platform.security.OnLineOpersManager" %>
 <html>
      <head>
           <title>Logout</title>
@@ -14,6 +14,7 @@
                          <%
                               OperatorManager om = (OperatorManager)session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
                               if ( om != null ) {
+                                OnLineOpersManager.removeOperFromServer(session.getId()+om.getOperator().getOperid(),application);
                               	om.logout();
                               }
                               Enumeration p_enum = session.getAttributeNames();
@@ -28,7 +29,7 @@
                               String isClose = request.getParameter("isclose");
                               if(isClose==null || isClose.trim().equals("")){
                          %>
-                         <jsp:forward page="/pages/security/login.jsp"/>
+                         <jsp:forward page="/index.login"/>
                          <%
                                }else{
                                		out.println("<script>window.close();</script>");

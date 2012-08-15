@@ -80,7 +80,7 @@ function ActionTable_query_click() {
 
     if ((trobj.ValueStr != undefined) && (trobj.ValueStr != "")) {
         var tmp = trobj.ValueStr.split(";");
-        lsh = tmp[0];
+        lsh = tmp[1];
 
     }
     var arg = new Object();

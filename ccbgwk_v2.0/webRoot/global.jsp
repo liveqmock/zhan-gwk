@@ -23,6 +23,11 @@
 <%@ page import="pub.platform.security.OperatorManager" %>
 <%@ page import="pub.platform.form.config.SystemAttributeNames" %>
 
+<script type="text/javascript">
+    var g_jsContextPath = "<%=contextPath%>";
+</script>
+
+
 <script language="javascript" src="<%=contextPath %>/js/basic.js"></script>
 <script language="javascript" src="<%=contextPath %>/js/xmlHttp.js"></script>
 <script language="javascript" src="<%=contextPath %>/js/dbgrid.js"></script>

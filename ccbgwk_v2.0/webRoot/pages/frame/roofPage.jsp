@@ -10,6 +10,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%
     OperatorManager om = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
+    String contextPath = request.getContextPath();
     if (om == null) {
         om = new OperatorManager();
 
@@ -53,7 +54,7 @@
     <script type="text/javascript">
         function Relogin() {
             parent.window.reload = "true";
-            parent.window.location.replace("/index.html");
+            parent.window.location.replace("<%=contextPath%>/pages/security/logout.jsp");
 //            parent.window.location.replace("/close.jsp");
 //            parent.window.location.replace("/welcome.jsp");
         }

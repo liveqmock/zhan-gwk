@@ -6,6 +6,7 @@ import gov.mof.fasp.service.ElementService;
 import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
 import pub.platform.db.RecordSet;
@@ -32,31 +33,33 @@ public class LongTuTest {
         LongTuTest test = new LongTuTest();
 
 
-         test.getAllElementInfo();
+//         test.getAllElementInfo();
 //       test.queryElementVersion();
         //test.syncElementCode();
 //        test.writeOfficeCardInfo();
 //        test.writeConsumeInfo();
 //        test.testAdapter_queryservice();
 //        test.testHttp();
+        test.insertCardInfo();
     }
 
 
     public void getAllElementInfo() {
         ElementService service = FaspServiceAdapter.getElementService();
-        List ElementCodeList = new ArrayList();
-        Map m = new HashMap();
-        m.put("CODE", "20101");
-        m.put("NAME", "XXXXX");
-        ElementCodeList.add(m);
+//        List ElementCodeList = new ArrayList();
+//        Map m = new HashMap();
+//        m.put("CODE", "20101");
+//        m.put("NAME", "XXXXX");
+//        ElementCodeList.add(m);
 
         DatabaseConnection conn = ConnectionManager.getInstance().get();
         try {
             //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
             conn.begin();
-            int rtn = conn.executeUpdate(" delete from  ls_bdgagency where areacode = '266100'");
+            //int rtn = conn.executeUpdate(" delete from  ls_bdgagency where areacode = '266100'");
             //TODO rtn
-            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2010);
+            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
+            System.out.println(String.valueOf(rtnlist.size()));
             for (int i = 0; i < rtnlist.size(); i++) {
                 Map m1 = (Map) rtnlist.get(i);
                 if (i == rtnlist.size() - 1) {
@@ -94,7 +97,7 @@ public class LongTuTest {
                             " 'auto', " +
                             " sysdate " +
                             "              )";
-                    rtn = conn.executeUpdate(sql);
+                    //rtn = conn.executeUpdate(sql);
                 }
             }
             conn.commit();
@@ -371,5 +374,29 @@ public class LongTuTest {
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+    public void insertCardInfo(){
+        DatabaseConnection conn = ConnectionManager.getInstance().get();
+//        String insertCrdBsSql = "insert into ls_cardbaseinfo (select o.crd_no,p.pername,p.deptcode,'"+
+//            PropertyManager.getProperty("finance.name.001")+"'," +
+//            "'建设银行','37101986827059123456',p.perid,'公务卡开卡',8015,o.open_card_dt,o.open_card_dt," +
+//            "substr(o.open_card_dt,0,4)+3||substr(o.open_card_dt,5,6) as enddate ,'0',null,'AUTO',sysdate,'0'" +
+//            ",null,to_char(sysdate,'yyyy-mm-dd'),to_char(sysdate,'HH24:MI:SS'),0,'1' from ls_personalinfo p" +
+//            " left join odsb_crd_crt o on p.perid = o.embosser_name3";
+//        int rtn= conn.executeUpdate(insertCrdBsSql);
+
+        String strSql = "select t.gatheringbankacctname,t.account,t.idnumber From ls_cardbaseinfo t "+
+                "where trim(translate(nvl(t.gatheringbankacctname,'X'),'0123456789',' '))is null ";
+        RecordSet rs = conn.executeQuery(strSql);
+        if (rs!=null){
+            while(rs.next()){
+                strSql="update ls_cardbaseinfo set gatheringbankacctname='"+
+                    PropertyManager.getProperty("finance.name."+rs.getString("gatheringbankacctname"))+
+                    "',bank="+PropertyManager.getProperty("ccb.code."+rs.getString("gatheringbankacctname"))+
+                    " where account='"+rs.getString("account")+"' and idnumber='"+rs.getString("idnumber")+"' ";
+                int rtn = conn.executeUpdate(strSql);
+            }
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package pub.platform.system.manage.oper;
 
+import pub.platform.auth.MD5Helper;
 import pub.platform.form.control.*;
 import pub.platform.system.manage.dao.*;
 
@@ -8,7 +9,8 @@ public class PasswordInsertAction extends Action {
 
      public int doBusiness() {
            
-           operbean.setOperpasswd(this.req.getFieldValue("newpwd"));
+           //operbean.setOperpasswd(this.req.getFieldValue("newpwd"));
+           operbean.setOperpasswd(MD5Helper.getMD5String(this.req.getFieldValue("newpwd")));
            
            this.res.setType(0);
            

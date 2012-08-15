@@ -13,7 +13,7 @@
     su.setForcePhysicalPath(true);
     su.initialize(pageContext);
     su.setMaxFileSize(10000000);     //限制上传文件大小
-    su.setTotalMaxFileSize(20000);
+    su.setTotalMaxFileSize(4194304);
     su.setAllowedFilesList("xls");
     su.setDeniedFilesList("exe,bat,jsp,htm,html,gif");
 //

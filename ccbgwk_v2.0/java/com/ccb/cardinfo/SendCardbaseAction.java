@@ -129,9 +129,9 @@ public class SendCardbaseAction extends Action {
                 m.put("ACCOUNT", account);
                 m.put("CARDNAME", cardname);
                 m.put("Bdgagency", bdgagency);
-                m.put("GATHERINGBANKACCTNAME ", GATHERINGBANKACCTNAME);
-                m.put("GATHERINGBANKNAME ", GATHERINGBANKNAME);
-                m.put("GATHERINGBANKACCTCODE ", GATHERINGBANKACCTCODE);
+                m.put("GATHERINGBANKACCTNAME", GATHERINGBANKACCTNAME);
+                m.put("GATHERINGBANKNAME", GATHERINGBANKNAME);
+                m.put("GATHERINGBANKACCTCODE", GATHERINGBANKACCTCODE);
                 m.put("IDNUMBER", IDNUMBER);
                 m.put("DIGEST", DIGEST);
                 m.put("BANK", BANK);
@@ -164,29 +164,29 @@ public class SendCardbaseAction extends Action {
                     String account = rs.getString("account").trim();
                     String cardname = rs.getString("cardname").trim();
                     String bdgagency = rs.getString("bdgagency").trim();
-                    String GATHERINGBANKACCTNAME = rs.getString("GATHERINGBANKACCTNAME").trim();
-                    String GATHERINGBANKNAME = rs.getString("GATHERINGBANKNAME").trim();
-                    String GATHERINGBANKACCTCODE = rs.getString("GATHERINGBANKACCTCODE").trim();
-                    String IDNUMBER = rs.getString("IDNUMBER").trim();
-                    String DIGEST = rs.getString("DIGEST").trim();
-                    String BANK = rs.getString("BANK").trim();
-                    String CREATEDATE = rs.getString("CREATEDATE").trim();
-                    String Startdate = rs.getString("Startdate").trim();
+                    String gatheringbankacctname = rs.getString("gatheringbankacctname").trim();
+                    String gatheringbankname = rs.getString("gatheringbankname").trim();
+                    String gatheringbankacctcode = rs.getString("gatheringbankacctcode").trim();
+                    String idnumber = rs.getString("idnumber").trim();
+                    String digest = rs.getString("digest").trim();
+                    String bank = rs.getString("bank").trim();
+                    String createdate = rs.getString("createdate").trim();
+                    String startdate = rs.getString("startdate").trim();
                     String enddate = rs.getString("enddate").trim();
                     String action = rs.getString("action").trim();
 
 
-                    m.put("ACCOUNT", account);
-                    m.put("CARDNAME", cardname);
-                    m.put("Bdgagency", bdgagency);
-                    m.put("GATHERINGBANKACCTNAME ", GATHERINGBANKACCTNAME);
-                    m.put("GATHERINGBANKNAME ", GATHERINGBANKNAME);
-                    m.put("GATHERINGBANKACCTCODE ", GATHERINGBANKACCTCODE);
-                    m.put("IDNUMBER", IDNUMBER);
-                    m.put("DIGEST", DIGEST);
-                    m.put("BANK", BANK);
-                    m.put("CREATEDATE", CREATEDATE);
-                    m.put("Startdate", Startdate);
+                    m.put("account", account);
+                    m.put("cardname", cardname);
+                    m.put("bdgagency", bdgagency);
+                    m.put("gatheringbankacctname", gatheringbankacctname);
+                    m.put("gatheringbankname", gatheringbankname);
+                    m.put("gatheringbankacctcode", gatheringbankacctcode);
+                    m.put("idnumber", idnumber);
+                    m.put("digest", digest);
+                    m.put("bank", bank);
+                    m.put("createdate", createdate);
+                    m.put("startdate", startdate);
                     m.put("enddate", enddate);
                     m.put("action", action);
                     cardList.add(m);
@@ -206,9 +206,24 @@ public class SendCardbaseAction extends Action {
     private List sendCrdInfos(String areaCode,List cardList) throws MalformedURLException {
         List rtnList = null;
         BankService service=null;
+        //银行代码
         String strBank = "";
+        //龙图接口版本号 2012-10-29
+        String longtuVer = "";
+        //业务系统标示 2012-10-29
+        String applicationid = "";
+        //行政区划编码 2012-10-29
+        String admdivCode="";
         //根据所属区域代码获取建设银行的编码 2012-05-13 linyong
         strBank = PropertyManager.getProperty("ccb.code."+areaCode);
+        longtuVer = PropertyManager.getProperty("longtu.version."+areaCode);
+        admdivCode = PropertyManager.getProperty("admdiv.code."+areaCode);
+        //根据不同的代码获取相应的业务系统标识 2012-10-29
+        applicationid = PropertyManager.getProperty("application.id."+areaCode);
+        if ("".equals(applicationid)){
+            applicationid="BANK.CCB";
+        }
+
         if (cardList != null && cardList.size() > 0) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String strDate = df.format(new Date());
@@ -216,8 +231,12 @@ public class SendCardbaseAction extends Action {
             //BankService service = FaspServiceAdapter.getBankService();
             // 参数 areaCode
             service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
-            rtnList = service.writeOfficeCard("BANK.CCB", strBank, year, "405", cardList);
 
+            if("v1".equals(longtuVer)){
+                rtnList = service.writeOfficeCard(applicationid, strBank, year, "405", cardList);
+            }else if("v2".equals(longtuVer)){
+                rtnList = service.writeOfficeCard(applicationid, strBank, year, admdivCode,"405", cardList);
+            }
             //rtnList = SendConsumeInfoTest.sendConsumeInfoRtn();
         }
         return rtnList;

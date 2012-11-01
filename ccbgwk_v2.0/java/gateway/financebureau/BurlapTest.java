@@ -1,7 +1,7 @@
 package gateway.financebureau;
 
-import gov.mof.fasp.service.*;
-import gov.mof.fasp.service.adapter.client.FaspServiceAdapter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
@@ -21,6 +21,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class BurlapTest {
+    private static final Log logger = LogFactory.getLog(BurlapTest.class);
     public static void main(String... args){
         BurlapTest test = new BurlapTest();
 //        test.qryElementInfo();
@@ -29,14 +30,132 @@ public class BurlapTest {
         test.testMap(strArr);
 
     }
+
+
     private void qryElementInfo(){
         ElementService service = null;
+        DatabaseConnection conn = ConnectionManager.getInstance().get();
         try {
-            service = GwkBurlapServiceFactory.getInstance().getElementService("002");
-            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
-            System.out.println(rtnlist.size());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
+            conn.begin();
+            int rtn = conn.executeUpdate(" delete from  ls_bdgagency where areacode = '003'");
+            //TODO rtn
+            service = GwkBurlapServiceFactory.getInstance().getElementService("003");
+            List rtnlist = service.queryAllElementCode("TJHQ.INDEX", "FUNC", 2012);
+            System.out.println(String.valueOf(rtnlist.size()));
+            for (int i = 0; i < rtnlist.size(); i++) {
+                Map m1 = (Map) rtnlist.get(i);
+                if (i == rtnlist.size() - 1) {
+                    String version = (String) m1.get("version");
+                    System.out.println(" version=" + version);
+                } else {
+                    String code = (String) m1.get("code");
+                    String name = (String) m1.get("name");
+                    String guid = (String) m1.get("guid");
+                    String levelno = (String) m1.get("levelno");
+                    String supercode = (String) m1.get("supercode");
+                    String isleaf = (String) m1.get("isleaf");
+//                    String starttime = (String) m1.get("starttime");
+                    System.out.println("code=" + code + name);
+                    String sql = "insert into ls_bdgagency t" +
+                            "              (t.areacode," +
+                            "               t.code," +
+                            "               t.name," +
+                            "               t.guid," +
+                            "               t.levelno," +
+                            "               t.supercode," +
+                            "               t.isleaf," +
+//                            "               t.starttime," +
+                            "               t.version," +
+                            "               t.remark," +
+                            "               t.operid," +
+                            "               t.operdate) values (" +
+                            " '003', " +
+                            " '" + code + "', " +
+                            " '" + name + "', " +
+                            " '" + guid + "', " +
+                            " '" + levelno + "', " +
+                            " '" + supercode + "', " +
+                            " '" + isleaf + "', " +
+//                            " '" + starttime + "', " +
+                            " 0, " +
+                            " 'remark', " +
+                            " 'auto', " +
+                            " sysdate " +
+                            "              )";
+                    rtn = conn.executeUpdate(sql);
+                }
+            }
+            conn.commit();
+            int i = 0;
+        } catch (Exception e) {
+            conn.rollback();
+            logger.error(e);
+        } finally {
+            ConnectionManager.getInstance().release();
+        }
+    }
+    //获取功能科目
+    private void getFuncInfo(){
+        ElementService service = null;
+        DatabaseConnection conn = ConnectionManager.getInstance().get();
+        try {
+            //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
+            conn.begin();
+            int rtn = conn.executeUpdate(" delete from  ls_func where areacode = '003'");
+            //TODO rtn
+            service = GwkBurlapServiceFactory.getInstance().getElementService("003");
+            List rtnlist = service.queryAllElementCode("TJHQ.INDEX", "FUNC", 2012);
+            System.out.println(String.valueOf(rtnlist.size()));
+            for (int i = 0; i < rtnlist.size(); i++) {
+                Map m1 = (Map) rtnlist.get(i);
+                if (i == rtnlist.size() - 1) {
+                    String version = (String) m1.get("version");
+                    System.out.println(" version=" + version);
+                } else {
+                    String code = (String) m1.get("code");
+                    String name = (String) m1.get("name");
+                    String guid = (String) m1.get("guid");
+                    String levelno = (String) m1.get("levelno");
+                    String supercode = (String) m1.get("supercode");
+                    String isleaf = (String) m1.get("isleaf");
+                    String starttime = (String) m1.get("starttime");
+                    System.out.println("code=" + code + name);
+                    String sql = "insert into ls_func t" +
+                            "(t.areacode,t.code," +
+                            "               t.name," +
+                            "               t.guid," +
+                            "               t.levelno," +
+                            "               t.supercode," +
+                            "               t.isleaf," +
+                            "               t.starttime," +
+                            "               t.version," +
+                            "               t.remark," +
+                            "               t.operid," +
+                            "               t.operdate) values (" +
+                            " '003', " +
+                            " '" + code + "', " +
+                            " '" + name + "', " +
+                            " '" + guid + "', " +
+                            " '" + levelno + "', " +
+                            " '" + supercode + "', " +
+                            " '" + isleaf + "', " +
+                            " '" + starttime + "', " +
+                            " 0, " +
+                            " 'remark', " +
+                            " 'auto', " +
+                            " sysdate " +
+                            "              )";
+                    rtn = conn.executeUpdate(sql);
+                }
+            }
+            conn.commit();
+            int i = 0;
+        } catch (Exception e) {
+            conn.rollback();
+            logger.error(e);
+        } finally {
+            ConnectionManager.getInstance().release();
         }
     }
     /*
@@ -51,8 +170,8 @@ public class BurlapTest {
         m.put("VOUCHERID", "10-016001-000001");
         try {
             //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
-            service = GwkBurlapServiceFactory.getInstance().getBankService("002");
-//            List rtnlist = service.queryConsumeInfo("BANK.CCB","300001","2012","","10030001-0002");
+            service = GwkBurlapServiceFactory.getInstance().getBankService("003");
+//            List rtnlist = service.queryConsumeInfo("TJHQ.INDEX","300001","2012","","10030001-0003");
 //            for (int i = 0; i < rtnlist.size(); i++) {
 //                rtnlist.get(1);
 //
@@ -131,7 +250,7 @@ public class BurlapTest {
             if(cardList.size()>0){
                 mapConsume.put(areaCode,cardList);
             }
-            List listConsume = (List)mapConsume.get("002");
+            List listConsume = (List)mapConsume.get("003");
             if (listConsume!=null){
                 System.out.println(String.valueOf(listConsume.size()));
             }

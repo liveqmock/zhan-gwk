@@ -112,6 +112,9 @@ var idTmr = "";
                 }else if (oSheet.cells(1,5).value != "一级预算单位"){
                     alert(FormatTitle);
                     return false;
+                }else if (oSheet.cells(1,6).value != "区域代码"){
+                    alert(FormatTitle);
+                    return false;
                 }
                 //身份证号码正确性验证
                 var ExcelCount=oSheet.UsedRange.Rows.Count; //行数

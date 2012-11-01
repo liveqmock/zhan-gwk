@@ -1,6 +1,7 @@
 package gateway.mbs.xsocketserver.requestaction;
 
 import com.ccb.dao.LSPAYBACKINFO;
+import gateway.financebureau.BankService;
 import gateway.financebureau.CommonQueryService;
 import gateway.financebureau.GwkBurlapServiceFactory;
 import gateway.mbs.xsocketserver.RequestAction;
@@ -117,14 +118,34 @@ public class T1000Action implements RequestAction {
         String areaName="";
         List rtnlist = null;
         CommonQueryService service = null;
+        BankService bankService=null;
+        //银行代码
+        String strBank = "";
+        //龙图接口版本号 2012-10-29
+        String longtuVer = "";
+        //业务系统标示 2012-10-29
+        String applicationid = "";
+        //行政区划编码 2012-10-29
+        String admdivCode="";
+
         // TODO 判断财政局编号
         // ------2012-04-23 Added by zhangxiaobo---------
         try{
             //2012-05-13 linyong
             areaCode=requestData.getAreaCode();
+            //根据所属区域代码获取建设银行的编码 2012-05-13 linyong
+            strBank = PropertyManager.getProperty("ccb.code."+areaCode);
+            longtuVer = PropertyManager.getProperty("longtu.version."+areaCode);
+            admdivCode = PropertyManager.getProperty("admdiv.code."+areaCode);
+            //根据不同的代码获取相应的业务系统标识 2012-10-29
+            applicationid = PropertyManager.getProperty("application.id."+areaCode);
+            if ("".equals(applicationid)){
+                applicationid="BANK.CCB";
+            }
             areaName= PropertyManager.getProperty("finance.name."+areaCode);
             if(areaCode!=null && areaCode!=""){
                 service = GwkBurlapServiceFactory.getInstance().getCommonQueryService(areaCode);
+                bankService = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
                 logger.info("================ 链接"+areaName+"，查询支付令：" + voucherid + "的消费明细数据 ====================");
             }else{
                 throw new RuntimeException("财政局编号错误！未知编号：" + requestData.getAreaCode() + "【崂山001，李沧002.】" );
@@ -141,16 +162,48 @@ public class T1000Action implements RequestAction {
 //                throw new RuntimeException("财政局编号错误！未知编号：" + requestData.getAreaCode() + "【崂山001，李沧002.】" );
 //            }
 
-    //        CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
-            Map m = new HashMap();
-            m.put("VOUCHERID", voucherid);
-            rtnlist = service.getQueryListBySql("BANK.CCB", "queryConsumeInfo", m, year);
+            //        CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
+            if("v1".equals(longtuVer)){
+                Map m = new HashMap();
+                m.put("VOUCHERID", voucherid);
+                rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, year);
+            }else if("v2".equals(longtuVer)){
+                //todo 消费数据
+                rtnlist = bankService.queryVoucherByBillCode(applicationid,strBank,year,admdivCode,"405","5",voucherid);
+                rtnlist = convertToPayBackInfo(voucherid,rtnlist);
+            }
+
+//            rtnlist = service.getQueryListBySql("BANK.CCB", "queryConsumeInfo", m, year);
         }catch (Exception e){
             logger.error(e);
             //TODO
             throw new RuntimeException(e);
         }
         return rtnlist;
+    }
+    //由于新接口中返回报文与原有的有冲突，需要将新报文重新组合返给银行柜台 2012-10-29
+    private List convertToPayBackInfo(String voucherid,List oldList){
+        List listBank = new ArrayList();
+        List listDetails = new ArrayList();
+        Map m1 = new HashMap();
+        if (oldList.size()>1){
+            m1 = (Map)oldList.get(1);
+        }  else {
+            m1 = (Map)oldList.get(0);
+        }
+        String result = (String) m1.get("result");
+        if ("success".equalsIgnoreCase(result)){
+            m1.clear();
+            m1 = (Map)oldList.get(0);
+            listDetails = (List)m1.get("details");
+            for(int i=0;i<listDetails.size();i++){
+                Map m2 = new HashMap();
+                m2 = (Map)listDetails.get(i);
+                m2.put("voucherid",voucherid);
+                listBank.add(m2);
+            }
+        }
+        return listBank;
     }
 
     /**
@@ -168,12 +221,24 @@ public class T1000Action implements RequestAction {
 
         for (int i = 0; i < burlapRtnList.size(); i++) {
             Map m = (Map) burlapRtnList.get(i);
-
-            String voucherid = (String) m.get("VOUCHERID");
-            String account = (String) m.get("ACCOUNT");
-            String cardname = (String) m.get("CARDNAME");
+            //由于接口有改变，返回变量可能大小写不同 2012-10-29
+            String voucherid = (String) m.get("voucherid");
+            if (voucherid == null){
+                voucherid = (String) m.get("VOUCHERID");
+            }
+            String account = (String) m.get("account");
+            if (account == null){
+                account = (String) m.get("ACCOUNT");
+            }
+            String cardname = (String) m.get("cardname");
+            if(cardname == null){
+                cardname = (String) m.get("CARDNAME");
+            }
 //            String amtstr = (String) m.get("AMT");     20100929 haiyu modify
-            String amtstr = String.valueOf(m.get("AMT"));
+            String amtstr = String.valueOf(m.get("amt"));
+            if(amtstr == null){
+                amtstr = String.valueOf(m.get("AMT"));
+            }
 //            double amt =Double.parseDouble(amtstr);
 //            String year = (String)m.get("year");                20100929 haiyu modify
             long amt = (long) (Double.parseDouble(amtstr) * 100);   //20100929 haiyu modify

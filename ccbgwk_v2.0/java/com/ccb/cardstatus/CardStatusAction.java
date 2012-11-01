@@ -42,11 +42,18 @@ public class CardStatusAction extends Action{
                 String[] strArr = strCode.split(",");
                 String areaCode="";
                 String strBank="";
+//                String applicationid = "";
                 //根据财政局的编码获取相应的接口信息，然后获取公务卡的状态信息 2012-05-13 linyong
                 for (int i=0;i<strArr.length;i++){
                     areaCode=strArr[i];
                     strBank=PropertyManager.getProperty("ccb.code."+strBank);
                     BankService service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
+                    //根据不同的代码获取相应的业务系统标识 2012-10-29
+//                    applicationid = PropertyManager.getProperty("application.id."+areaCode);
+//                    if ("".equals(applicationid)){
+//                        applicationid="BANK.CCB";
+//                    }
+//                    List rtnList = service.getOfficeCardStatus(applicationid, strBank, year, "405", maxguid);
                     List rtnList = service.getOfficeCardStatus("BANK.CCB", strBank, year, "405", maxguid);
         //            List rtnList = SendConsumeInfoTest.sendConsumeInfoRtn();
                     if(rtnList != null){

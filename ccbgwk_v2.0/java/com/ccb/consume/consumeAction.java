@@ -15,7 +15,6 @@ import gateway.financebureau.BankService;
 import gateway.financebureau.GwkBurlapServiceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.SimpleTrigger;
 import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
@@ -257,9 +256,23 @@ public class consumeAction extends Action {
     private List sendConsumeInfoByStatusArr(String areaCode,List cardList, String[] statusArr) throws Exception {
         List rtnlist = null;
         BankService service=null;
+        //银行代码
         String strBank = "";
+        //龙图接口版本号 2012-10-29
+        String longtuVer = "";
+        //业务系统标示 2012-10-29
+        String applicationid = "";
+        //行政区划编码 2012-10-29
+        String admdivCode="";
         //根据所属区域代码获取建设银行的编码
         strBank = PropertyManager.getProperty("ccb.code."+areaCode);
+        longtuVer = PropertyManager.getProperty("longtu.version."+areaCode);
+        admdivCode = PropertyManager.getProperty("admdiv.code."+areaCode);
+        //根据不同的代码获取相应的业务系统标识 2012-10-29
+        applicationid = PropertyManager.getProperty("application.id."+areaCode);
+        if ("".equals(applicationid)){
+            applicationid="BANK.CCB";
+        }
         if (cardList.size() > 0) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String strDate = df.format(new Date());
@@ -267,7 +280,13 @@ public class consumeAction extends Action {
 //            BankService service = FaspServiceAdapter.getBankService();
             //根据所属区域代码连接相应财政局的接口
             service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
-            rtnlist = service.writeConsumeInfo("BANK.CCB", strBank, year, "405", cardList);
+
+            if("v1".equals(longtuVer)){
+                rtnlist = service.writeConsumeInfo(applicationid, strBank, year, "405", cardList);
+            }else if("v2".equals(longtuVer)){
+                rtnlist = service.writeConsumeInfo(applicationid, strBank, year,admdivCode,"405", cardList);
+            }
+//            rtnlist = service.writeConsumeInfo("BANK.CCB", strBank, year, "405", cardList);
         }
 
         return rtnlist;
@@ -321,13 +340,13 @@ public class consumeAction extends Action {
             if ("43".equals(tx_cd)) {
                 busimoney = -busimoney;
             }
-            m.put("ID", lsh);
-            m.put("ACCOUNT", account);
-            m.put("CARDNAME", cardname);
-            m.put("BUSIDATE", busidate);
-            m.put("BUSIMONEY", busimoney);
-            m.put("BUSINAME", businame);
-            m.put("Limitdate", limitdate);
+            m.put("id", lsh);
+            m.put("account", account);
+            m.put("cardname", cardname);
+            m.put("busidate", busidate);
+            m.put("busimoney", busimoney);
+            m.put("businame", businame);
+            m.put("limitdate", limitdate);
             cardList.add(m);
         }
         if (rs != null) {
@@ -396,13 +415,13 @@ public class consumeAction extends Action {
                 if ("43".equals(tx_cd)) {
                     busimoney = -busimoney;
                 }
-                m.put("ID", lsh);
-                m.put("ACCOUNT", account);
-                m.put("CARDNAME", cardname);
-                m.put("BUSIDATE", busidate);
-                m.put("BUSIMONEY", busimoney);
-                m.put("BUSINAME", businame);
-                m.put("Limitdate", limitdate);
+                m.put("id", lsh);
+                m.put("account", account);
+                m.put("cardname", cardname);
+                m.put("busidate", busidate);
+                m.put("busimoney", busimoney);
+                m.put("businame", businame);
+                m.put("limitdate", limitdate);
                 cardList.add(m);
             }
             if (rs != null) {

@@ -9,6 +9,8 @@ import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
 import pub.platform.form.control.Action;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,20 +37,36 @@ public class bdgAgencyAction extends Action {
 
     private void initAllElementInfo() {
         //所属区域代码
-        String areacode = "";
+        String areaCode = "";
         ElementService service = null;
+        //业务系统标识
+        String applicationid="";
+        String strDate = "";
+        String year = "";
+
         DatabaseConnection conn = ConnectionManager.getInstance().get();
         try {
             //获取所属区域代码 2012-05-13 linyong
             for (int i = 0 ; i < req.getRecorderCount() ; i++){
-                areacode=req.getFieldValue(i,"areacode");
-                System.out.println(areacode);
+                areaCode=req.getFieldValue(i,"areacode");
+                System.out.println(areaCode);
             }
+            //根据不同的代码获取相应的业务系统标识 2012-10-29
+            applicationid = PropertyManager.getProperty("application.id."+areaCode);
+            if ("".equals(applicationid)){
+                applicationid="BANK.CCB";
+            }
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            strDate = df.format(new Date());
+            year = strDate.substring(0, 4);
             //根据不同的代码，获取相应的接口 2012-05-13 linyong
-            service = GwkBurlapServiceFactory.getInstance().getElementService(areacode);
+            service = GwkBurlapServiceFactory.getInstance().getElementService(areaCode);
             conn.begin();
-            conn.executeUpdate(" delete from  ls_bdgagency where areacode = '" + areacode + "'");
-            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
+            conn.executeUpdate(" delete from  ls_bdgagency where areacode = '" + areaCode + "'");
+
+            List rtnlist = service.queryAllElementCode(applicationid, "BDGAGENCY", Integer.getInteger(year));
+//            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
+
             for (int i = 0; i < rtnlist.size(); i++) {
                 Map m1 = (Map) rtnlist.get(i);
                 if (i == rtnlist.size() - 1) {
@@ -60,6 +78,9 @@ public class bdgAgencyAction extends Action {
                     String guid = (String) m1.get("guid");
                     String levelno = (String) m1.get("levelno");
                     String supercode = (String) m1.get("supercode");
+                    if(supercode==null){
+                        supercode="";
+                    }
                     String isleaf = (String) m1.get("isleaf");
                     System.out.println("code=" + code + name);
                     String sql = "insert into ls_bdgagency t" +
@@ -74,7 +95,7 @@ public class bdgAgencyAction extends Action {
                             "               t.remark," +
                             "               t.operid," +
                             "               t.operdate) values (" +
-                            " '" + areacode + "', " +
+                            " '" + areaCode + "', " +
                             " '" + code + "', " +
                             " '" + name + "', " +
                             " '" + guid + "', " +

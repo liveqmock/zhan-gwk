@@ -264,10 +264,13 @@ public class consumeAction extends Action {
         String applicationid = "";
         //行政区划编码 2012-10-29
         String admdivCode="";
+        //财政编码 2012-10-29
+        String finOrgCode="";
         //根据所属区域代码获取建设银行的编码
         strBank = PropertyManager.getProperty("ccb.code."+areaCode);
         longtuVer = PropertyManager.getProperty("longtu.version."+areaCode);
         admdivCode = PropertyManager.getProperty("admdiv.code."+areaCode);
+        finOrgCode = PropertyManager.getProperty("fin.org.code."+areaCode);
         //根据不同的代码获取相应的业务系统标识 2012-10-29
         applicationid = PropertyManager.getProperty("application.id."+areaCode);
         if ("".equals(applicationid)){
@@ -282,9 +285,9 @@ public class consumeAction extends Action {
             service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
 
             if("v1".equals(longtuVer)){
-                rtnlist = service.writeConsumeInfo(applicationid, strBank, year, "405", cardList);
+                rtnlist = service.writeConsumeInfo(applicationid, strBank, year, finOrgCode, cardList);
             }else if("v2".equals(longtuVer)){
-                rtnlist = service.writeConsumeInfo(applicationid, strBank, year,admdivCode,"405", cardList);
+                rtnlist = service.writeConsumeInfo(applicationid, strBank, year,admdivCode,finOrgCode, cardList);
             }
 //            rtnlist = service.writeConsumeInfo("BANK.CCB", strBank, year, "405", cardList);
         }

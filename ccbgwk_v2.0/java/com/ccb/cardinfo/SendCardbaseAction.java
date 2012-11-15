@@ -171,8 +171,11 @@ public class SendCardbaseAction extends Action {
                     String digest = rs.getString("digest").trim();
                     String bank = rs.getString("bank").trim();
                     String createdate = rs.getString("createdate").trim();
+                    createdate = createdate.substring(0, 4) + createdate.substring(5, 7) + createdate.substring(8, 10);
                     String startdate = rs.getString("startdate").trim();
+                    startdate = startdate.substring(0, 4) + startdate.substring(5, 7) + startdate.substring(8, 10);
                     String enddate = rs.getString("enddate").trim();
+                    enddate = enddate.substring(0, 4) + enddate.substring(5, 7) + enddate.substring(8, 10);
                     String action = rs.getString("action").trim();
 
 
@@ -214,10 +217,14 @@ public class SendCardbaseAction extends Action {
         String applicationid = "";
         //行政区划编码 2012-10-29
         String admdivCode="";
+        //财政编码 2012-10-29
+        String finOrgCode="";
         //根据所属区域代码获取建设银行的编码 2012-05-13 linyong
         strBank = PropertyManager.getProperty("ccb.code."+areaCode);
         longtuVer = PropertyManager.getProperty("longtu.version."+areaCode);
         admdivCode = PropertyManager.getProperty("admdiv.code."+areaCode);
+        finOrgCode = PropertyManager.getProperty("fin.org.code."+areaCode);
+
         //根据不同的代码获取相应的业务系统标识 2012-10-29
         applicationid = PropertyManager.getProperty("application.id."+areaCode);
         if ("".equals(applicationid)){
@@ -233,9 +240,9 @@ public class SendCardbaseAction extends Action {
             service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
 
             if("v1".equals(longtuVer)){
-                rtnList = service.writeOfficeCard(applicationid, strBank, year, "405", cardList);
+                rtnList = service.writeOfficeCard(applicationid, strBank, year, finOrgCode, cardList);
             }else if("v2".equals(longtuVer)){
-                rtnList = service.writeOfficeCard(applicationid, strBank, year, admdivCode,"405", cardList);
+                rtnList = service.writeOfficeCard(applicationid, strBank, year, admdivCode,finOrgCode, cardList);
             }
             //rtnList = SendConsumeInfoTest.sendConsumeInfoRtn();
         }

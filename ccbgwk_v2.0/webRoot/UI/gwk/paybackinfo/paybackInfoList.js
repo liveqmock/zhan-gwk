@@ -31,6 +31,9 @@ function queryClick() {
     if (trimStr(document.all["voucherid"].value) != "")
         whereStr += " and ( voucherid like '%" + document.all.voucherid.value + "%')";
 
+    if (trimStr(document.all["areacode"].value) != "")
+        whereStr += " and ( areacode ='" + document.getElementById("areacode").value + "')";
+
     if (trimStr(document.all["status"].value) != "")
         whereStr += " and ( status ='" + document.all.status.value + "')";
 

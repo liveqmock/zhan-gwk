@@ -7,7 +7,8 @@
 --%>
 <%@ page contentType="text/html; charset=GBK" %>
 <%@include file="/global.jsp" %>
-<%@ page import="pub.platform.db.*" %>
+<%@page import="pub.platform.db.*" %>
+<%@page import="pub.platform.advance.utils.PropertyManager" %>
 <html>
 <head>
     <title>
@@ -15,6 +16,18 @@
     </title>
     <script language="javascript" src="cardinfoquery.js"></script>
     <%
+        OperatorManager om = (OperatorManager)session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
+        if ( om == null ) {
+            om = new OperatorManager();
+            session.setAttribute(SystemAttributeNames.USER_INFO_NAME,om);
+        }
+        //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+        String areacode = om.getOperator().getDeptid();
+        //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+        String strRemark = om.getOperator().getFillstr150();
+        //获取判断条件 2012-11-26
+        String strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
+
         String strSql = "select pinfo.areacode as areacode,\n" +
                 "       cdinfo.account,\n" +
                 "       cdinfo.cardname,\n" +
@@ -31,8 +44,11 @@
                 "       cdinfo.status\n" +
                 "  from ls_cardbaseinfo cdinfo, ls_personalinfo pinfo\n" +
                 "  where trim(cdinfo.idnumber) = trim(pinfo.perid)\n" +
-                "    and 1=1";
-        System.out.println(strSql);
+                "  and 1=1";
+        if(!strJudeFlag.equals(strRemark)){
+            strSql = strSql + " and pinfo.areacode='"+areacode+"'";
+        }
+//        System.out.println(strSql);
         DBGrid dbGrid = new DBGrid();
         dbGrid.setGridID("cardInfoTab");
         dbGrid.setGridType("edit");
@@ -126,6 +142,7 @@
                     <input name="Input" class="buttonGrooveDisable" type="reset" value="重填">
                 </td>
             </tr>
+            <%if (strJudeFlag.equals(strRemark)){%>
             <tr height="20">
                 <td width="10%" align="right" nowrap="nowrap" class="lbl_right_padding">
                     所属地区
@@ -140,6 +157,11 @@
                     %>
                 </td>
             </tr>
+            <%}else {%>
+            <input type="hidden" style="width:90%;" id="areacode" name="areacode" size="40"
+                   value="<%=areacode%>"
+                   class="ajax-suggestion url-getLoanPull.jsp">
+            <%}%>
         </form>
     </table>
 </fieldset>

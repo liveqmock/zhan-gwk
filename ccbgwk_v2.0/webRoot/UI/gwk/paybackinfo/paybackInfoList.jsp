@@ -14,6 +14,7 @@
 <%@page import="pub.platform.form.config.SystemAttributeNames" %>
 <%@page import="pub.platform.db.DBGrid" %>
 <%@page import="pub.platform.html.ZtSelect" %>
+<%@page import="pub.platform.advance.utils.PropertyManager" %>
 <html>
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=GBK">
@@ -26,6 +27,12 @@
 <%
     OperatorManager omgr = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
     String deptId = omgr.getOperator().getPtDeptBean().getDeptid();
+    //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+    String areacode = omgr.getOperator().getDeptid();
+    //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+    String strRemark = omgr.getOperator().getFillstr150();
+    //获取判断条件 2012-11-26
+    String strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
 
     DBGrid dbGrid = new DBGrid();
     dbGrid.setGridID("ActionTable");
@@ -34,7 +41,9 @@
 
     String sql = "select voucherid,account,cardname,amt,querydate,operid,operdate,status,paybackdate,remark from ls_paybackinfo paybackinfo" +
             " where 1=1 ";
-
+    if(!strJudeFlag.equals(strRemark)){
+        sql = sql + " and areacode='"+areacode+"'";
+    }
     dbGrid.setfieldSQL(sql);
     dbGrid.setWhereStr(" order by voucherid ");
 
@@ -104,6 +113,26 @@
                                                                      onMouseOut="button_onmouseout()">
                 </td>
             </tr>
+            <%if (strJudeFlag.equals(strRemark)){%>
+            <tr>
+                <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">
+                    所属地区
+                </td>
+                <td width="30%" align="right" nowrap="nowrap" class="data_input" colspan="3">
+                    <%
+                        zs = new ZtSelect("areacode", "AREACODE", "");
+                        zs.addAttr("style", "width: 37%");
+                        zs.addAttr("fieldType", "text");
+                        zs.addOption("", "");
+                        out.print(zs);
+                    %>
+                </td>
+            </tr>
+            <%}else {%>
+            <input type="hidden" style="width:90%;" id="areacode" name="areacode" size="40"
+                   value="<%=areacode%>"
+                   class="ajax-suggestion url-getLoanPull.jsp">
+            <%}%>
         </form>
     </table>
 

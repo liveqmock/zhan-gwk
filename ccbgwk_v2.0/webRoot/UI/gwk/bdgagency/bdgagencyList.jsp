@@ -8,6 +8,8 @@
 <%@ page contentType="text/html; charset=GBK" %>
 <%@include file="/global.jsp" %>
 <%@ page import="pub.platform.db.*" %>
+<%@page import="pub.platform.advance.utils.PropertyManager" %>
+
 <html>
 <head><title>预算单位信息查询</title>
     <LINK href="/css/ccb.css" type="text/css" rel="stylesheet">
@@ -19,10 +21,26 @@
     <script language="javascript" src="/js/dbutil.js"></script>
     <script language="javascript" src="bdgagencyList.js"></script>
     <%
+        OperatorManager om = (OperatorManager)session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
+        if ( om == null ) {
+            om = new OperatorManager();
+            session.setAttribute(SystemAttributeNames.USER_INFO_NAME,om);
+        }
+        //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+        String areacode = om.getOperator().getDeptid();
+        //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+        String strRemark = om.getOperator().getFillstr150();
+        //获取判断条件 2012-11-26
+        String strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
+
         DBGrid dbGrid = new DBGrid();
         dbGrid.setGridID("DbgagencyTable");
         dbGrid.setGridType("edit");
-        dbGrid.setfieldSQL("select areacode,code,name,guid,levelno,supercode,isleaf,version,remark from ls_bdgagency where (1=1)");
+        String strSql = "select areacode,code,name,guid,levelno,supercode,isleaf,version,remark from ls_bdgagency where (1=1)";
+        if(!strJudeFlag.equals(strRemark)){
+            strSql = strSql + " and areacode='"+areacode+"'";
+        }
+        dbGrid.setfieldSQL(strSql);
         dbGrid.setField("地区", "dropdown", "10", "areacode", "true", "AREACODE");
         dbGrid.setField("编号", "text", "20", "code", "true", "0");
         dbGrid.setField("名称", "text", "30", "name", "true", "0");
@@ -85,14 +103,25 @@
                     zs.addOption("", "");
                     out.print(zs);
                 %>
-                <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
-                <td width="30%" class="data_input" colspan="3"><%
-                    zs = new ZtSelect("areacode", "AREACODE", "");
-                    zs.addAttr("style", "width: 91%");
-                    zs.addAttr("fieldType", "text");
-                    zs.addOption("", "");
-                    out.print(zs);
-                %>
+
+                <%if (strJudeFlag.equals(strRemark)){%>
+                    <td width="15%" align="right" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
+                    <td width="30%" class="data_input" colspan="3"><%
+                        zs = new ZtSelect("areacode", "AREACODE", "");
+                        zs.addAttr("style", "width: 91%");
+                        zs.addAttr("fieldType", "text");
+                        zs.addOption("", "");
+                        out.print(zs);
+                    %>
+                <%}else {%>
+                    <td width="15%" align="right" nowrap="nowrap" class="data_input"> </td>
+                    <td width="30%" class="data_input" colspan="3">
+                    <input type="hidden" style="width:90%;" id="areacode" name="areacode" size="40"
+                           value="<%=areacode%>"
+                           class="ajax-suggestion url-getLoanPull.jsp">
+                    </td>
+                <%}%>
+
 
 
                 <td width="10%" align="right" nowrap="nowrap"><input name="Input"

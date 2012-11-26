@@ -1,12 +1,12 @@
 package pub.platform.db;
 
+import pub.platform.form.config.EnumerationBean;
+import pub.platform.form.config.EnumerationType;
+import pub.platform.utils.Basic;
+
 import java.math.BigDecimal;
-import java.lang.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
-import pub.platform.form.config.*;
-import pub.platform.utils.Basic;
 
 public class DBGrid {
     private String ID = "";
@@ -987,7 +987,7 @@ public class DBGrid {
 
             int RecorderIndex = 0;
             String selectSql = fieldSQL + whereStr;
-
+            System.out.print(selectSql);
             // PreparedStatement ps = DBCon.getPreparedStatement(selectSql);
             // rs = DBCon.executeQuery(ps,pageSize * (AbsolutePage - 1) + 1,pageSize);
 

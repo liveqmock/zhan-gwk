@@ -11,6 +11,7 @@
 <%@ page import="com.ccb.util.*" %>
 <%@ page import="com.ccb.dao.LSPERSONALINFO" %>
 <%@ page import="com.ccb.dao.PTOPER" %>
+<%@page import="pub.platform.advance.utils.PropertyManager" %>
 <html>
 <head><title>个人信息录入</title>
     <LINK href="/css/ccb.css" type="text/css" rel="stylesheet">
@@ -32,6 +33,12 @@
         if (!doType.equals("add")) {
             recSequence = request.getParameter("recSequ");
         }
+        //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+        String areacode = omgr.getOperator().getDeptid();
+        //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+        String strRemark = omgr.getOperator().getFillstr150();
+        //获取判断条件 2012-11-26
+        String strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
 
         // 初始化页面
         LSPERSONALINFO bean = LSPERSONALINFO.findFirst(" where recinsequence='" + recSequence + "'");
@@ -82,6 +89,7 @@
                     <span class="red_star">*</span>
                 </td>
             </tr>
+            <%if (strJudeFlag.equals(strRemark)){%>
             <tr>
                 <td width="15%" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
                 <td width="35%" class="data_input">
@@ -96,11 +104,27 @@
                     %>
                     <span class="red_star">*</span></td>
             </tr>
+            <%}else {%>
+            <tr>
+                <td width="15%" nowrap="nowrap" class="lbl_right_padding">所属地区</td>
+                <td width="35%" class="data_input">
+                    <%
+                        ZtSelect zs = new ZtSelect("areacode", "AREACODE", areacode);
+                        zs.addAttr("style", "width: 90%");
+                        zs.addAttr("fieldType", "text");
+                        zs.addAttr("onclick", "getSuperDeptCode()");
+                        zs.addOption("", "");
+                        zs.addAttr("isNull", "false");
+                        out.print(zs);
+                    %>
+                    <span class="red_star">*</span></td>
+            </tr>
+            <%}%>
             <tr>
                 <td width="15%" nowrap="nowrap" class="lbl_right_padding">一级预算单位</td>
                 <td width="35%" class="data_input">
                     <%
-                        zs = new ZtSelect("superdeptcode", "", "");
+                        ZtSelect zs = new ZtSelect("superdeptcode", "", "");
                         zs.addAttr("onClick", "checkAreaCode()");
                         //zs.setSqlString("select code , name from ls_bdgagency t where levelno=1 ");
                         zs.addAttr("style", "width: 90%");
@@ -137,7 +161,7 @@
                 </td>
                 <td width="20%" nowrap="nowrap" class="lbl_right_padding">操作时间</td>
                 <td width="30%" class="data_input"><input type="text" value="<%=BusinessDate.getToday() %>"
-                                                          style="width:90%" disabled="disabled">
+                                                          style="width:90%" disabled="disabled" on>
                 </td>
             </tr>
         </table>

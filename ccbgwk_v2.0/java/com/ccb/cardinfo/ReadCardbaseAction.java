@@ -165,23 +165,25 @@ public class ReadCardbaseAction extends Action {
             String accounts = new String(accountBuffer).trim();
             if (!"".equals(accounts)) {
                 // 将新增账户保存到ls_cardbaseinfo,字段gatheringbankacctname存放所属区域代码
+                // 添加areacode字段 2012-12-14
                 String insertCrdBsSql = "insert into ls_cardbaseinfo (select o.crd_no,p.pername,p.deptcode,p.areacode," +
                         "'建设银行','37101986827059123456',p.perid,'公务卡开卡',8015,o.open_card_dt,o.open_card_dt," +
                         "substr(o.open_card_dt,0,4)+3||substr(o.open_card_dt,5,6) as enddate ,'0',null,'AUTO',sysdate,'0'" +
-                        ",null,to_char(sysdate,'yyyy-mm-dd'),to_char(sysdate,'HH24:MI:SS'),0,'1' from ls_personalinfo p" +
+                        ",null,to_char(sysdate,'yyyy-mm-dd'),to_char(sysdate,'HH24:MI:SS'),0,'1',p.areacode from ls_personalinfo p" +
                         " left join odsb_crd_crt o on p.perid = o.embosser_name3 where o.crd_no in (" + accounts + "))";
                 newCnt = dc.executeUpdate(insertCrdBsSql);
                 //插入记录成功以后，根据所属区域代码更新gatheringbankacctname和bank两个字段 2012-05-13 linyong
                 //查询gatheringbankacctname是数字的记录
-                String strSql = "select t.gatheringbankacctname,t.account,t.idnumber From ls_cardbaseinfo t "+
+                // 添加areacode字段 2012-12-14
+                String strSql = "select t.gatheringbankacctname,t.account,t.idnumber,t.areacode From ls_cardbaseinfo t "+
                         "where trim(translate(nvl(t.gatheringbankacctname,'X'),'0123456789',' '))is null ";
                 rs = dc.executeQuery(strSql);
                 //获取数据集以后进行遍历，更新
                 if (rs!=null){
                     while(rs.next()){
                         strSql="update ls_cardbaseinfo set gatheringbankacctname='"+
-                                PropertyManager.getProperty("finance.name." + rs.getString("gatheringbankacctname"))+
-                                "',bank="+PropertyManager.getProperty("ccb.code."+rs.getString("gatheringbankacctname"))+
+                                PropertyManager.getProperty("finance.name." + rs.getString("areacode"))+
+                                "',bank="+PropertyManager.getProperty("ccb.code."+rs.getString("areacode"))+
                                 " where account='"+rs.getString("account")+"' and idnumber='"+rs.getString("idnumber")+"' ";
                         int rtn = dc.executeUpdate(strSql);
                     }

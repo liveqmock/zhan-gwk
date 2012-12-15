@@ -7,6 +7,7 @@ import pub.platform.db.ConnectionManager;
 import pub.platform.db.DatabaseConnection;
 import pub.platform.db.RecordSet;
 
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,24 @@ public class BurlapTest {
 //        test.qryElementInfo();
         String status="10";
         String[] strArr = new String[]{status};
-        test.testMap(strArr);
+//        test.testMap(strArr);
+
+//        test.testAdapter_queryservice();
+
+        try {
+            String b;
+            FileInputStream in = new FileInputStream("d:\\CardResponse005.txt");
+            FileOutputStream ou = new FileOutputStream("d:\\out.txt");
+            PrintStream p=new PrintStream(ou);
+            BufferedReader sb = new BufferedReader(new FileReader(new File("d:\\CardResponse005.txt")));
+            while ((b = sb.readLine()) != null) {
+                System.out.println(b);
+                b += "\n";
+                ou.write(b.getBytes());
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
@@ -165,12 +183,14 @@ public class BurlapTest {
     public void testAdapter_queryservice() {
         BankService service = null;
         List cardList = new ArrayList();
+        List rtnlist = new ArrayList();
         Map m = new HashMap();
 //        m.put("bankcode", "8015");
         m.put("VOUCHERID", "10-016001-000001");
         try {
             //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
-            service = GwkBurlapServiceFactory.getInstance().getBankService("003");
+            service = GwkBurlapServiceFactory.getInstance().getBankService("004");
+            rtnlist = service.queryVoucherByBillCode("TJHQ.INDEX", "108001", "2012", "437028200000", "3302130000", "5", "10-310001-000102");
 //            List rtnlist = service.queryConsumeInfo("TJHQ.INDEX","300001","2012","","10030001-0003");
 //            for (int i = 0; i < rtnlist.size(); i++) {
 //                rtnlist.get(1);

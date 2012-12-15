@@ -26,6 +26,7 @@ String odsbdate;
 String odsbtime;
 int recversion;
 String status;
+String areacode;
 public static final String TABLENAME ="ls_cardbaseinfo";
 private String operate_mode = "add";
 public ChangeFileds cf = new ChangeFileds();
@@ -54,6 +55,7 @@ abb.odsbdate=rs.getString("odsbdate");abb.setKeyValue("ODSBDATE",""+abb.getOdsbd
 abb.odsbtime=rs.getString("odsbtime");abb.setKeyValue("ODSBTIME",""+abb.getOdsbtime());
 abb.recversion=rs.getInt("recversion");abb.setKeyValue("RECVERSION",""+abb.getRecversion());
 abb.status=rs.getString("status");abb.setKeyValue("STATUS",""+abb.getStatus());
+abb.areacode=rs.getString("areacode");abb.setKeyValue("AREACODE",""+abb.getAreacode());
 list.add(abb);
 abb.operate_mode = "edit";
 }public String getAccount() { if ( this.account == null ) return ""; return this.account;}
@@ -78,6 +80,7 @@ public String getOdsbdate() { if ( this.odsbdate == null ) return ""; return thi
 public String getOdsbtime() { if ( this.odsbtime == null ) return ""; return this.odsbtime;}
 public int getRecversion() { return this.recversion;}
 public String getStatus() { if ( this.status == null ) return ""; return this.status;}
+public String getAreacode() { if ( this.areacode == null ) return ""; return this.areacode;}
 public void setAccount(String account) { sqlMaker.setField("account",account,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAccount().equals(account)) cf.add("account",this.account,account); } this.account=account;}
 public void setCardname(String cardname) { sqlMaker.setField("cardname",cardname,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getCardname().equals(cardname)) cf.add("cardname",this.cardname,cardname); } this.cardname=cardname;}
 public void setBdgagency(String bdgagency) { sqlMaker.setField("bdgagency",bdgagency,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getBdgagency().equals(bdgagency)) cf.add("bdgagency",this.bdgagency,bdgagency); } this.bdgagency=bdgagency;}
@@ -100,6 +103,7 @@ public void setOdsbdate(String odsbdate) { sqlMaker.setField("odsbdate",odsbdate
 public void setOdsbtime(String odsbtime) { sqlMaker.setField("odsbtime",odsbtime,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getOdsbtime().equals(odsbtime)) cf.add("odsbtime",this.odsbtime,odsbtime); } this.odsbtime=odsbtime;}
 public void setRecversion(int recversion) { sqlMaker.setField("recversion",""+recversion,Field.NUMBER); if (this.operate_mode.equals("edit")) { if (this.getRecversion()!=recversion) cf.add("recversion",this.recversion+"",recversion+""); } this.recversion=recversion;}
 public void setStatus(String status) { sqlMaker.setField("status",status,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getStatus().equals(status)) cf.add("status",this.status,status); } this.status=status;}
+public void setAreacode(String areacode) { sqlMaker.setField("areacode",areacode,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAreacode().equals(areacode)) cf.add("areacode",this.areacode,areacode); } this.areacode=areacode;}
 public void init(int i,ActionRequest actionRequest) throws Exception { if ( actionRequest.getFieldValue(i,"account") !=null ) {this.setAccount(actionRequest.getFieldValue(i,"account"));}
 if ( actionRequest.getFieldValue(i,"cardname") !=null ) {this.setCardname(actionRequest.getFieldValue(i,"cardname"));}
 if ( actionRequest.getFieldValue(i,"bdgagency") !=null ) {this.setBdgagency(actionRequest.getFieldValue(i,"bdgagency"));}
@@ -122,6 +126,7 @@ if ( actionRequest.getFieldValue(i,"odsbdate") !=null ) {this.setOdsbdate(action
 if ( actionRequest.getFieldValue(i,"odsbtime") !=null ) {this.setOdsbtime(actionRequest.getFieldValue(i,"odsbtime"));}
 if ( actionRequest.getFieldValue(i,"recversion") !=null && actionRequest.getFieldValue(i,"recversion").trim().length() > 0 ) {this.setRecversion(Integer.parseInt(actionRequest.getFieldValue(i,"recversion")));}
 if ( actionRequest.getFieldValue(i,"status") !=null ) {this.setStatus(actionRequest.getFieldValue(i,"status"));}
+if ( actionRequest.getFieldValue(i,"areacode") !=null ) {this.setAreacode(actionRequest.getFieldValue(i,"areacode"));}
 }public void init(ActionRequest actionRequest) throws Exception { this.init(0,actionRequest);}public void initAll(int i,ActionRequest actionRequest) throws Exception { this.init(i,actionRequest);}public void initAll(ActionRequest actionRequest) throws Exception { this.initAll(0,actionRequest);}public Object clone() throws CloneNotSupportedException { LSCARDBASEINFO obj = (LSCARDBASEINFO)super.clone();obj.setAccount(obj.account);
 obj.setCardname(obj.cardname);
 obj.setBdgagency(obj.bdgagency);
@@ -144,4 +149,5 @@ obj.setOdsbdate(obj.odsbdate);
 obj.setOdsbtime(obj.odsbtime);
 obj.setRecversion(obj.recversion);
 obj.setStatus(obj.status);
+obj.setAreacode(obj.areacode);
 return obj;}}

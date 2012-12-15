@@ -9,6 +9,10 @@ import pub.platform.advance.utils.PropertyManager;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,9 +30,18 @@ public class SendCardbaseAction extends Action {
     private int sendCrdSucCnt = 0;
 
     private static final Log logger = LogFactory.getLog(SendCardbaseAction.class);
+    private String pubAreaCode = "";
+    private String strRemark = "";
+    private String strJudeFlag = "";
 
     // 发送未发送的卡信息
     public int sendCrdbaseInfos() throws MalformedURLException {
+        //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+        pubAreaCode = this.getOperator().getDeptid();
+        //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+        strRemark = this.getOperator().getFillstr150();
+        //获取判断条件 2012-11-26
+        strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
         // 查询ls_cardbaseinfo中尚未发送的正常使用的卡数据
         List cardList = null;
         HashMap mapSendCardInfo = null;
@@ -43,14 +56,15 @@ public class SendCardbaseAction extends Action {
             return -1;
         }
         String areaCode="";
-        String[] strArr = PropertyManager.getProperty("finance.codeset").split(",");
-        for (int j =0;j<strArr.length;j++){
+        this.sendCrdTotalCnt =0;
+        //当不具有管理员权限时，只能查看本支行的数据
+        if(!strJudeFlag.equals(strRemark)){
             List rtnlist = null;
-            areaCode=strArr[j];
+            areaCode=pubAreaCode;
             //根据所属区域代码，获取将要发送的记录 2012-05-13 linyong
             cardList = (List)mapSendCardInfo.get(areaCode);
-
             if(cardList != null && cardList.size() > 0){
+                this.sendCrdTotalCnt = cardList.size();
                 rtnlist = this.sendCrdInfos(areaCode,cardList);
             }
             if (rtnlist != null && rtnlist.size() > 0) {
@@ -62,7 +76,8 @@ public class SendCardbaseAction extends Action {
                     if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                         try {
                             // 更新本地数据状态
-                            this.sendCrdSucCnt += updateSentFlag("1");
+                            // 条件中加入所属区域编码 2012-12-14 linyong
+                            this.sendCrdSucCnt += updateSentFlag("1",areaCode,"");
                         } catch (Exception e) {
                             logger.error("发送数据后更新本地数据为已发送状态出现异常，请查看系统日志。");
                             this.res.setType(0);
@@ -89,16 +104,84 @@ public class SendCardbaseAction extends Action {
                     }
                 }
             }
-        }
+        } else {
+            String[] strArr = PropertyManager.getProperty("finance.codeset").split(",");
+            for (int j =0;j<strArr.length;j++){
+                List rtnlist = null;
+                areaCode=strArr[j];
+                //根据所属区域代码，获取将要发送的记录 2012-05-13 linyong
+                cardList = (List)mapSendCardInfo.get(areaCode);
 
-            String send_update_count = String.valueOf(this.sendCrdTotalCnt)+ "_" + String.valueOf(this.sendCrdSucCnt);
-            this.res.setFieldName("rtnCnt");
-            this.res.setFieldType("text");
-            this.res.setEnumType("0");
-            this.res.setFieldValue(send_update_count);
-            this.res.setType(4);
-            this.res.setResult(true);
+                if(cardList != null && cardList.size() > 0){
+                    this.sendCrdTotalCnt =this.sendCrdTotalCnt + cardList.size();
+                    rtnlist = this.sendCrdInfos(areaCode,cardList);
+                }
+                if (rtnlist != null && rtnlist.size() > 0) {
+                    // 处理返回信息
+                    for (int i = 0; i < rtnlist.size(); i++) {
+                        Map m1 = (Map) rtnlist.get(i);
+                        String result = (String) m1.get(RtnTagKey.RESULT);
+                        // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
+                        if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
+                            try {
+                                // 更新本地数据状态
+                                // 条件中加入所属区域编码 2012-12-14 linyong
+                                this.sendCrdSucCnt += updateSentFlag("1",areaCode,"");
+                            } catch (Exception e) {
+                                logger.error("发送数据后更新本地数据为已发送状态出现异常，请查看系统日志。");
+                                this.res.setType(0);
+                                this.res.setResult(false);
+                                this.res.setMessage("发送数据后更新本地数据为已发送状态出现异常，请查看系统日志。");
+                                return -1;
+                            }
+                        } else {
+                            // 判断是否有重复帐号和身份证号，若有，则更改记录状态为已发送
+                            String sameid = (String) m1.get("sameidnumber");
+                            String sameaccount = (String) m1.get("sameaccount");
+                            if ((sameid != null && !"".equals(sameid.trim()))
+                                    && (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                                try {
+                                    this.sendCrdSucCnt += updateSentFlag(sameid, sameaccount);
+                                } catch (Exception e) {
+                                    logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                    this.res.setType(0);
+                                    this.res.setResult(false);
+                                    this.res.setMessage("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                    return -1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        String send_update_count = String.valueOf(this.sendCrdTotalCnt)+ "_" + String.valueOf(this.sendCrdSucCnt);
+        this.res.setFieldName("rtnCnt");
+        this.res.setFieldType("text");
+        this.res.setEnumType("0");
+        this.res.setFieldValue(send_update_count);
+        this.res.setType(4);
+        this.res.setResult(true);
         return 0;
+    }
+
+    private void writeObject(List tempList,String areaCode) {
+        try {
+
+            FileOutputStream outStream = new FileOutputStream("D:/CardResponse"+areaCode+".txt");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outStream);
+            for(int i=0;i<tempList.size();i++){
+                Map m = new HashMap();
+                m = (Map)tempList.get(i);
+                objectOutputStream.writeUnshared(m);
+            }
+            outStream.close();
+            System.out.println("successful");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 查询未发送的正常卡数据
@@ -153,13 +236,14 @@ public class SendCardbaseAction extends Action {
         String areaName="";
         for (int i=0; i<strArr.length;i++){
             areaCode=strArr[i];
-            areaName=PropertyManager.getProperty("finance.name."+areaCode);
+//            areaName=PropertyManager.getProperty("finance.name."+areaCode);
             List cardList = new ArrayList();
-            String querySql = "select * from ls_cardbaseinfo where sentflag = '0' and gatheringbankacctname='"+areaName+"'";
+//            String querySql = "select * from ls_cardbaseinfo where sentflag = '0' and gatheringbankacctname='"+areaName+"'";
+            // 使用areacode 2012-12-14
+            String querySql = "select * from ls_cardbaseinfo where sentflag = '0' and areacode='"+areaCode+"'";
             RecordSet rs = dc.executeQuery(querySql);
             if (rs != null) {
                 while (rs.next()) {
-                    this.sendCrdTotalCnt++;
                     Map m = new HashMap();
                     String account = rs.getString("account").trim();
                     String cardname = rs.getString("cardname").trim();
@@ -237,12 +321,16 @@ public class SendCardbaseAction extends Action {
             String year = strDate.substring(0, 4);
             //BankService service = FaspServiceAdapter.getBankService();
             // 参数 areaCode
-            service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
-
-            if("v1".equals(longtuVer)){
-                rtnList = service.writeOfficeCard(applicationid, strBank, year, finOrgCode, cardList);
-            }else if("v2".equals(longtuVer)){
-                rtnList = service.writeOfficeCard(applicationid, strBank, year, admdivCode,finOrgCode, cardList);
+            try{
+                service = GwkBurlapServiceFactory.getInstance().getBankService(areaCode);
+                if("v1".equals(longtuVer)){
+                    rtnList = service.writeOfficeCard(applicationid, strBank, year, finOrgCode, cardList);
+                }else if("v2".equals(longtuVer)){
+                    rtnList = service.writeOfficeCard(applicationid, strBank, year, admdivCode,finOrgCode, cardList);
+                }
+                logger.info(strDate+" 向编码为:"+areaCode+"的财政局发送卡信息成功！");
+            } catch (Exception ex){
+                logger.error(strDate+" 向编码为:"+areaCode+"的财政局发送卡信息失败！"+ex.getMessage());
             }
             //rtnList = SendConsumeInfoTest.sendConsumeInfoRtn();
         }
@@ -256,11 +344,76 @@ public class SendCardbaseAction extends Action {
         rtnCnt = dc.executeUpdate(updateSql);
         return rtnCnt;
     }
+    //根据所属区域更新为已发送 2012-12-14
+    private int updateSentFlag(String status,String areaCode,String tmpStr){
+        int rtnCnt = 0;
+        String updateSql = "update ls_cardbaseinfo set sentflag = '1' where status = '"+status+"' and sentflag = '0'"+
+                " and areaCode='"+areaCode+"'";
+        rtnCnt = dc.executeUpdate(updateSql);
+        return rtnCnt;
+    }
      private int updateSentFlag(String sameid,String sameaccount){
         int rtnCnt = 0;
         String updateSql = "update ls_cardbaseinfo set sentflag = '1' where account = '"+sameaccount+
                            "' and idnumber = '"+sameid+"'and sentflag = '0'";
         rtnCnt = dc.executeUpdate(updateSql);
         return rtnCnt;
+    }
+
+    public int sendAllCardInfo() throws MalformedURLException {
+        // 查询ls_cardbaseinfo中尚未发送的正常使用的卡数据
+        List cardList = null;
+        HashMap mapSendCardInfo = null;
+        try {
+            mapSendCardInfo = querySendCrdsMap();
+//            cardList = querySendCrds();
+        } catch (Exception e) {
+            logger.error("查询尚未发送的卡信息数据时出现异常，请查看系统日志。");
+            return -1;
+        }
+        String areaCode="";
+        String[] strArr = PropertyManager.getProperty("finance.codeset").split(",");
+        for (int j =0;j<strArr.length;j++){
+            List rtnlist = null;
+            areaCode=strArr[j];
+            //根据所属区域代码，获取将要发送的记录 2012-05-13 linyong
+            cardList = (List)mapSendCardInfo.get(areaCode);
+
+            if(cardList != null && cardList.size() > 0){
+                rtnlist = this.sendCrdInfos(areaCode,cardList);
+            }
+            if (rtnlist != null && rtnlist.size() > 0) {
+                // 处理返回信息
+                for (int i = 0; i < rtnlist.size(); i++) {
+                    Map m1 = (Map) rtnlist.get(i);
+                    String result = (String) m1.get(RtnTagKey.RESULT);
+                    // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
+                    if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
+                        try {
+                            // 更新本地数据状态
+                            // 条件中加入所属区域编码 2012-12-14 linyong
+                            this.sendCrdSucCnt += updateSentFlag("1",areaCode,"");
+                        } catch (Exception e) {
+                            logger.error("发送数据后更新本地数据为已发送状态出现异常，请查看系统日志。");
+                            return -1;
+                        }
+                    } else {
+                        // 判断是否有重复帐号和身份证号，若有，则更改记录状态为已发送
+                        String sameid = (String) m1.get("sameidnumber");
+                        String sameaccount = (String) m1.get("sameaccount");
+                        if ((sameid != null && !"".equals(sameid.trim()))
+                                && (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                            try {
+                                this.sendCrdSucCnt += updateSentFlag(sameid, sameaccount);
+                            } catch (Exception e) {
+                                logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                return -1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
     }
 }

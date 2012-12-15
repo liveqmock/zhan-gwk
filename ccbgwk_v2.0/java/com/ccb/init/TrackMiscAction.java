@@ -9,6 +9,10 @@ import pub.platform.form.control.Action;
 public class TrackMiscAction extends Action {
     private static final Log logger = LogFactory.getLog(TrackMiscAction.class);
 
+    private String areacode = "";
+    private String strRemark = "";
+    private String strJudeFlag = "";
+
     /**
      * <p/>
      * 初始化查询
@@ -19,6 +23,13 @@ public class TrackMiscAction extends Action {
      * @return
      */
     public int initQuery() {
+        //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+        areacode = this.getOperator().getDeptid();
+        //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+        strRemark = this.getOperator().getFillstr150();
+        //获取判断条件 2012-11-26
+        strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
+
         int count = 0;
         StringBuffer show_content = new StringBuffer();
         try {
@@ -61,6 +72,10 @@ public class TrackMiscAction extends Action {
     private int queryCardBaseInfos(){
         int count = 0;
         String selectsql = "select count(*) as sendCnt from ls_cardbaseinfo where status = '1' and sentflag = '0'";
+        //当不具有管理员权限时，只能查看本支行的数据 2012-11-26
+        if(!strJudeFlag.equals(strRemark)){
+            selectsql = selectsql+" and areacode='"+areacode+"'";
+        }
         RecordSet rs = null;
         rs = dc.executeQuery(selectsql);
         while (rs.next()) {
@@ -72,6 +87,10 @@ public class TrackMiscAction extends Action {
     private int queryCardBaseNullInfos(){
         int count = 0;
         String selectsql = "select count(*) as sendCnt from ls_cardbaseinfo where status = '128' and sentflag = '0'";
+        //当不具有管理员权限时，只能查看本支行的数据 2012-11-26
+        if(!strJudeFlag.equals(strRemark)){
+            selectsql = selectsql+" and areacode='"+areacode+"'";
+        }
         RecordSet rs = null;
         rs = dc.executeQuery(selectsql);
         while (rs.next()) {
@@ -99,6 +118,10 @@ public class TrackMiscAction extends Action {
             }
         }
         wheresqlbfr.append("')");
+        //当不具有管理员权限时，只能查看本支行的数据
+        if(!strJudeFlag.equals(strRemark)){
+            wheresqlbfr.append(" and areacode='"+areacode+"'");
+        }
         String wheresql = new String(wheresqlbfr);
         String selectsql = "select count(*) as statusCount from ls_consumeinfo " + wheresql;
         RecordSet rs = null;
@@ -114,6 +137,10 @@ public class TrackMiscAction extends Action {
 
         int count = 0;
         String selectsql = "select count(*) as notCount from ls_paybackinfo where status = '00'";
+        //当不具有管理员权限时，只能查看本支行的数据 2012-11-26
+        if(!strJudeFlag.equals(strRemark)){
+            selectsql = selectsql+" and areacode='"+areacode+"'";
+        }
         RecordSet rs = null;
         rs = dc.executeQuery(selectsql);
         while (rs.next()) {

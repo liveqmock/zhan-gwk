@@ -14,6 +14,7 @@
 <%@page import="pub.platform.form.config.SystemAttributeNames" %>
 <%@page import="pub.platform.db.DBGrid" %>
 <%@page import="pub.platform.html.ZtSelect" %>
+<%@page import="pub.platform.advance.utils.PropertyManager" %>
 <html>
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=GBK">
@@ -25,6 +26,12 @@
 <%
     OperatorManager omgr = (OperatorManager) session.getAttribute(SystemAttributeNames.USER_INFO_NAME);
     String deptId = omgr.getOperator().getPtDeptBean().getDeptid();
+    //获取登录用户所属部门，只有分行的用户有权限查看其它支行的数据 2012-11-26
+    String areacode = omgr.getOperator().getDeptid();
+    //获取备注里面的内容，如果是admin，有查看其它支行数据的权限 2012-11-26
+    String strRemark = omgr.getOperator().getFillstr150();
+    //获取判断条件 2012-11-26
+    String strJudeFlag = PropertyManager.getProperty("pub.plat.admin.jude.flag");
 
     DBGrid dbGrid = new DBGrid();
     dbGrid.setGridID("ActionTable");
@@ -36,15 +43,18 @@
             " where 1=1  ";
 */
     String sql = " select * from (select (select b.areacode " +
-            "          from ls_personalinfo b " +
-            "         where trim(b.perid) = " +
-            "               (select a.idnumber " +
-            "                  from ls_cardbaseinfo a " +
-            "                 where a.account = t.account)) as areacode, " +
+            " from ls_personalinfo b " +
+            " where trim(b.perid) = " +
+            " (select a.idnumber " +
+            " from ls_cardbaseinfo a " +
+            " where a.account = t.account)) as areacode, " +
             " lsh,status,cardname,account,busidate,inac_date,busimoney,limitdate," +
             " tx_cd,ref_number,businame,txlog " +
             " from ls_consumeinfo t) " +
             " where 1=1 ";
+    if(!strJudeFlag.equals(strRemark)){
+        sql = sql + " and areacode='"+areacode+"'";
+    }
     
     dbGrid.setfieldSQL(sql);
     dbGrid.setWhereStr(" and status in ('11','12') order by areacode, lsh ");

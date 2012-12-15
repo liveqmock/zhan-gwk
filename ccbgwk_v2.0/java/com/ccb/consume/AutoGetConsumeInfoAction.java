@@ -98,16 +98,16 @@ public class AutoGetConsumeInfoAction extends Action {
             */
             String sql = "select a.*, b.cardname, c.stmt_day " +
                     "  from (select * " +
-                    "          from odsb_crd_crt_trad t1 " +
-                    "         where not exists " +
-                    "         (select 1 from ls_consumeinfo t2 " +
-                    "                 where nvl(t1.ref_date, ' ') = nvl(t2.ref_date, ' ') " +
-                    "                   and nvl(t1.ref_batch_id, ' ') = nvl(t2.ref_batch_id, ' ') " +
-                    "                   and nvl(t1.ref_seq_no, ' ') = nvl(t2.ref_seq_no, ' '))) a, " +
-                    "       ls_cardbaseinfo b, " +
-                    "       odsb_crd_crt c " +
+                    "  from odsb_crd_crt_trad t1 " +
+                    "  where not exists " +
+                    "  (select 1 from ls_consumeinfo t2 " +
+                    "  where nvl(t1.ref_date, ' ') = nvl(t2.ref_date, ' ') " +
+                    "  and nvl(t1.ref_batch_id, ' ') = nvl(t2.ref_batch_id, ' ') " +
+                    "  and nvl(t1.ref_seq_no, ' ') = nvl(t2.ref_seq_no, ' '))) a, " +
+                    "  ls_cardbaseinfo b, " +
+                    "  odsb_crd_crt c " +
                     " where a.crd_no = b.account " +
-                    "   and a.crd_no = c.crd_no";
+                    " and a.crd_no = c.crd_no";
             rs = dc.executeQuery(sql);
             LSCONSUMEINFO consume = new LSCONSUMEINFO();
 

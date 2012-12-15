@@ -64,7 +64,7 @@ public class bdgAgencyAction extends Action {
             conn.begin();
             conn.executeUpdate(" delete from  ls_bdgagency where areacode = '" + areaCode + "'");
 
-            List rtnlist = service.queryAllElementCode(applicationid, "BDGAGENCY", Integer.getInteger(year));
+            List rtnlist = service.queryAllElementCode(applicationid, "BDGAGENCY", Integer.parseInt(year));
 //            List rtnlist = service.queryAllElementCode("BANK.CCB", "BDGAGENCY", 2012);
 
             for (int i = 0; i < rtnlist.size(); i++) {

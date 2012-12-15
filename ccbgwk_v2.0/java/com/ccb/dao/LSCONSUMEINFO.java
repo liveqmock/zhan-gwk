@@ -30,6 +30,7 @@ int recversion;
 String ref_date;
 String ref_batch_id;
 String ref_seq_no;
+String areacode;
 public static final String TABLENAME ="ls_consumeinfo";
 private String operate_mode = "add";
 public ChangeFileds cf = new ChangeFileds();
@@ -59,6 +60,7 @@ abb.recversion=rs.getInt("recversion");abb.setKeyValue("RECVERSION",""+abb.getRe
 abb.ref_date=rs.getString("ref_date");abb.setKeyValue("REF_DATE",""+abb.getRef_date());
 abb.ref_batch_id=rs.getString("ref_batch_id");abb.setKeyValue("REF_BATCH_ID",""+abb.getRef_batch_id());
 abb.ref_seq_no=rs.getString("ref_seq_no");abb.setKeyValue("REF_SEQ_NO",""+abb.getRef_seq_no());
+abb.areacode=rs.getString("areacode");abb.setKeyValue("AREACODE",""+abb.getAreacode());
 list.add(abb);
 abb.operate_mode = "edit";
 }public String getLsh() { if ( this.lsh == null ) return ""; return this.lsh;}
@@ -84,6 +86,7 @@ public int getRecversion() { return this.recversion;}
 public String getRef_date() { if ( this.ref_date == null ) return ""; return this.ref_date;}
 public String getRef_batch_id() { if ( this.ref_batch_id == null ) return ""; return this.ref_batch_id;}
 public String getRef_seq_no() { if ( this.ref_seq_no == null ) return ""; return this.ref_seq_no;}
+public String getAreacode() { if ( this.areacode == null ) return ""; return this.areacode;}
 public void setLsh(String lsh) { sqlMaker.setField("lsh",lsh,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getLsh().equals(lsh)) cf.add("lsh",this.lsh,lsh); } this.lsh=lsh;}
 public void setAccount(String account) { sqlMaker.setField("account",account,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAccount().equals(account)) cf.add("account",this.account,account); } this.account=account;}
 public void setBusidate(String busidate) { sqlMaker.setField("busidate",busidate,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getBusidate().equals(busidate)) cf.add("busidate",this.busidate,busidate); } this.busidate=busidate;}
@@ -107,6 +110,7 @@ public void setRecversion(int recversion) { sqlMaker.setField("recversion",""+re
 public void setRef_date(String ref_date) { sqlMaker.setField("ref_date",ref_date,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getRef_date().equals(ref_date)) cf.add("ref_date",this.ref_date,ref_date); } this.ref_date=ref_date;}
 public void setRef_batch_id(String ref_batch_id) { sqlMaker.setField("ref_batch_id",ref_batch_id,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getRef_batch_id().equals(ref_batch_id)) cf.add("ref_batch_id",this.ref_batch_id,ref_batch_id); } this.ref_batch_id=ref_batch_id;}
 public void setRef_seq_no(String ref_seq_no) { sqlMaker.setField("ref_seq_no",ref_seq_no,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getRef_seq_no().equals(ref_seq_no)) cf.add("ref_seq_no",this.ref_seq_no,ref_seq_no); } this.ref_seq_no=ref_seq_no;}
+public void setAreacode(String areacode) { sqlMaker.setField("areacode",areacode,Field.TEXT); if (this.operate_mode.equals("edit")) { if (!this.getAreacode().equals(areacode)) cf.add("areacode",this.areacode,areacode); } this.areacode=areacode;}
 public void init(int i,ActionRequest actionRequest) throws Exception { if ( actionRequest.getFieldValue(i,"lsh") !=null ) {this.setLsh(actionRequest.getFieldValue(i,"lsh"));}
 if ( actionRequest.getFieldValue(i,"account") !=null ) {this.setAccount(actionRequest.getFieldValue(i,"account"));}
 if ( actionRequest.getFieldValue(i,"busidate") !=null ) {this.setBusidate(actionRequest.getFieldValue(i,"busidate"));}
@@ -130,6 +134,7 @@ if ( actionRequest.getFieldValue(i,"recversion") !=null && actionRequest.getFiel
 if ( actionRequest.getFieldValue(i,"ref_date") !=null ) {this.setRef_date(actionRequest.getFieldValue(i,"ref_date"));}
 if ( actionRequest.getFieldValue(i,"ref_batch_id") !=null ) {this.setRef_batch_id(actionRequest.getFieldValue(i,"ref_batch_id"));}
 if ( actionRequest.getFieldValue(i,"ref_seq_no") !=null ) {this.setRef_seq_no(actionRequest.getFieldValue(i,"ref_seq_no"));}
+if ( actionRequest.getFieldValue(i,"areacode") !=null ) {this.setAreacode(actionRequest.getFieldValue(i,"areacode"));}
 }public void init(ActionRequest actionRequest) throws Exception { this.init(0,actionRequest);}public void initAll(int i,ActionRequest actionRequest) throws Exception { this.init(i,actionRequest);}public void initAll(ActionRequest actionRequest) throws Exception { this.initAll(0,actionRequest);}public Object clone() throws CloneNotSupportedException { LSCONSUMEINFO obj = (LSCONSUMEINFO)super.clone();obj.setLsh(obj.lsh);
 obj.setAccount(obj.account);
 obj.setBusidate(obj.busidate);
@@ -153,4 +158,5 @@ obj.setRecversion(obj.recversion);
 obj.setRef_date(obj.ref_date);
 obj.setRef_batch_id(obj.ref_batch_id);
 obj.setRef_seq_no(obj.ref_seq_no);
+obj.setAreacode(obj.areacode);
 return obj;}}

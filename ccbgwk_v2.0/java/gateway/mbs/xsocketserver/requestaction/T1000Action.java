@@ -105,7 +105,6 @@ public class T1000Action implements RequestAction {
                 logger.error("交易1000返回数据不存在:支付令号 " + voucherid + ",年度 " + year);
                 setErrorResponseData("100");
                 responseDataList.add(this.responseData);
-
             }
         }
         logger.info(voucherid + " " + year);
@@ -127,7 +126,8 @@ public class T1000Action implements RequestAction {
         String applicationid = "";
         //行政区划编码 2012-10-29
         String admdivCode="";
-
+        //财政编码 2012-10-29
+        String finOrgCode="";
         // TODO 判断财政局编号
         // ------2012-04-23 Added by zhangxiaobo---------
         try{
@@ -137,6 +137,7 @@ public class T1000Action implements RequestAction {
             strBank = PropertyManager.getProperty("ccb.code."+areaCode);
             longtuVer = PropertyManager.getProperty("longtu.version."+areaCode);
             admdivCode = PropertyManager.getProperty("admdiv.code."+areaCode);
+            finOrgCode = PropertyManager.getProperty("fin.org.code."+areaCode);
             //根据不同的代码获取相应的业务系统标识 2012-10-29
             applicationid = PropertyManager.getProperty("application.id."+areaCode);
             if ("".equals(applicationid)){
@@ -163,17 +164,21 @@ public class T1000Action implements RequestAction {
 //            }
 
             //        CommonQueryService service = FaspServiceAdapter.getCommonQueryService();
-            if("v1".equals(longtuVer)){
-                Map m = new HashMap();
-                m.put("VOUCHERID", voucherid);
-                rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, year);
-            }else if("v2".equals(longtuVer)){
-                //todo 消费数据
-                rtnlist = bankService.queryVoucherByBillCode(applicationid,strBank,year,admdivCode,"405","5",voucherid);
-                rtnlist = convertToPayBackInfo(voucherid,rtnlist);
+            try{
+                if("v1".equals(longtuVer)){
+                    Map m = new HashMap();
+                    m.put("VOUCHERID", voucherid);
+                    rtnlist = service.getQueryListBySql(applicationid, "queryConsumeInfo", m, year);
+                }else if("v2".equals(longtuVer)){
+                    //todo 消费数据
+                    rtnlist = bankService.queryVoucherByBillCode(applicationid,strBank,year,admdivCode,finOrgCode,"5",voucherid);
+                    rtnlist = convertToPayBackInfo(voucherid,rtnlist);
+                }
+                logger.info("通过支付令，向编码为:"+areaCode+"的财政局获取消费信息成功！");
+            } catch (Exception ex){
+                logger.error("通过支付令，向编码为:"+areaCode+"的财政局获取消费信息失败！");
             }
-
-//            rtnlist = service.getQueryListBySql("BANK.CCB", "queryConsumeInfo", m, year);
+            //            rtnlist = service.getQueryListBySql("BANK.CCB", "queryConsumeInfo", m, year);
         }catch (Exception e){
             logger.error(e);
             //TODO
@@ -235,9 +240,13 @@ public class T1000Action implements RequestAction {
                 cardname = (String) m.get("CARDNAME");
             }
 //            String amtstr = (String) m.get("AMT");     20100929 haiyu modify
-            String amtstr = String.valueOf(m.get("amt"));
+//            String amtstr = String.valueOf(m.get("amt"));
+//            if(amtstr == null){
+//                amtstr = String.valueOf(m.get("AMT"));
+//            }
+            String amtstr = (String) m.get("amt");
             if(amtstr == null){
-                amtstr = String.valueOf(m.get("AMT"));
+                amtstr = (String)m.get("AMT");
             }
 //            double amt =Double.parseDouble(amtstr);
 //            String year = (String)m.get("year");                20100929 haiyu modify
@@ -262,11 +271,9 @@ public class T1000Action implements RequestAction {
 
 
     private void savePaybackinfoToDB(List<LSPAYBACKINFO> paybackInfos) {
-
         for (LSPAYBACKINFO info : paybackInfos) {
             info.insert();
         }
-
     }
 
 

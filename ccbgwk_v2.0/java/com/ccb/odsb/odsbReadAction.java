@@ -98,18 +98,19 @@ public class odsbReadAction extends Action {
                     " odsb_crd_crt c " +
                     " where a.crd_no=b.account and a.crd_no=c.crd_no ";
             */
-            String sql = "select a.*, b.cardname, c.stmt_day " +
+            // Ìí¼Ó×Ö¶Îareacode 2012-12-14
+            String sql = "select a.*, b.cardname,b.areacode, c.stmt_day " +
                     "  from (select * " +
-                    "          from odsb_crd_crt_trad t1 " +
-                    "         where not exists " +
-                    "         (select 1 from ls_consumeinfo t2 " +
-                    "                 where nvl(t1.ref_date, ' ') = nvl(t2.ref_date, ' ') " +
-                    "                   and nvl(t1.ref_batch_id, ' ') = nvl(t2.ref_batch_id, ' ') " +
-                    "                   and nvl(t1.ref_seq_no, ' ') = nvl(t2.ref_seq_no, ' '))) a, " +
-                    "       ls_cardbaseinfo b, " +
-                    "       odsb_crd_crt c " +
-                    " where a.crd_no = b.account " +
-                    "   and a.crd_no = c.crd_no";
+                    "  from odsb_crd_crt_trad t1 " +
+                    "  where not exists " +
+                    "  (select 1 from ls_consumeinfo t2 " +
+                    "  where nvl(t1.ref_date, ' ') = nvl(t2.ref_date, ' ') " +
+                    "  and nvl(t1.ref_batch_id, ' ') = nvl(t2.ref_batch_id, ' ') " +
+                    "  and nvl(t1.ref_seq_no, ' ') = nvl(t2.ref_seq_no, ' '))) a, " +
+                    "  ls_cardbaseinfo b, " +
+                    "  odsb_crd_crt c " +
+                    "  where a.crd_no = b.account " +
+                    "  and a.crd_no = c.crd_no";
             rs = dc.executeQuery(sql);
             LSCONSUMEINFO consume = new LSCONSUMEINFO();
 
@@ -158,6 +159,8 @@ public class odsbReadAction extends Action {
                 consume.setRef_date(rs.getString("ref_date"));
                 consume.setRef_batch_id(rs.getString("ref_batch_id"));
                 consume.setRef_seq_no(rs.getString("ref_seq_no"));
+                // Ìí¼Ó×Ö¶Îareacode2012-12-14 linyong
+                consume.setAreacode(rs.getString("areacode"));
 
                 int insertrtn = consume.insert();
                 if (insertrtn < 0 ) {

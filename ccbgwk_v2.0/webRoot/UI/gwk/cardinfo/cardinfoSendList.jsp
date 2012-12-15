@@ -48,11 +48,12 @@
         if(!strJudeFlag.equals(strRemark)){
             strSql = strSql + " and pinfo.areacode='"+areacode+"'";
         }
+
         DBGrid dbGrid = new DBGrid();
         dbGrid.setGridID("cardInfoTab");
         dbGrid.setGridType("edit");
         dbGrid.setfieldSQL(strSql);
-        dbGrid.setWhereStr(" order by areacode, bgcyname,cdinfo.account");
+        dbGrid.setWhereStr(" and cdinfo.sentflag = '0' order by areacode, bgcyname,cdinfo.account");
         dbGrid.setField("地区", "dropdown", "6", "areacode", "true", "AREACODE");
         dbGrid.setField("卡号", "text", "12", "account", "true", "0");
         dbGrid.setField("持卡人", "text", "6", "cardname", "true", "0");

@@ -72,6 +72,9 @@ public class SendCardbaseAction extends Action {
                 for (int i = 0; i < rtnlist.size(); i++) {
                     Map m1 = (Map) rtnlist.get(i);
                     String result = (String) m1.get(RtnTagKey.RESULT);
+                    if (result == null){
+                        result = (String) m1.get("RESULT");
+                    }
                     // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                     if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                         try {
@@ -121,6 +124,9 @@ public class SendCardbaseAction extends Action {
                     for (int i = 0; i < rtnlist.size(); i++) {
                         Map m1 = (Map) rtnlist.get(i);
                         String result = (String) m1.get(RtnTagKey.RESULT);
+                        if (result == null){
+                            result = (String) m1.get("RESULT");
+                        }
                         // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                         if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                             try {
@@ -387,6 +393,9 @@ public class SendCardbaseAction extends Action {
                 for (int i = 0; i < rtnlist.size(); i++) {
                     Map m1 = (Map) rtnlist.get(i);
                     String result = (String) m1.get(RtnTagKey.RESULT);
+                    if (result == null){
+                        result = (String) m1.get("RESULT");
+                    }
                     // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                     if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                         try {

@@ -117,6 +117,9 @@ public class consumeAction extends Action {
                     for (int i = 0; i < rtnlist.size(); i++) {
                         Map m1 = (Map) rtnlist.get(i);
                         String result = (String) m1.get(RtnTagKey.RESULT);
+                        if (result == null){
+                            result = (String) m1.get("RESULT");
+                        }
                         // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                         if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                             try {
@@ -187,6 +190,9 @@ public class consumeAction extends Action {
                         for (int i = 0; i < rtnlist.size(); i++) {
                             Map m1 = (Map) rtnlist.get(i);
                             String result = (String) m1.get(RtnTagKey.RESULT);
+                            if (result == null){
+                                result = (String) m1.get("RESULT");
+                            }
                             // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                             if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                                 try {
@@ -324,6 +330,9 @@ public class consumeAction extends Action {
                     for (int i = 0; i < rtnlist.size(); i++) {
                         Map m1 = (Map) rtnlist.get(i);
                         String result = (String) m1.get(RtnTagKey.RESULT);
+                        if (result == null){
+                            result = (String) m1.get("RESULT");
+                        }
                         // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                         if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                             try {
@@ -394,6 +403,9 @@ public class consumeAction extends Action {
                         for (int i = 0; i < rtnlist.size(); i++) {
                             Map m1 = (Map) rtnlist.get(i);
                             String result = (String) m1.get(RtnTagKey.RESULT);
+                            if (result == null){
+                                result = (String) m1.get("RESULT");
+                            }
                             // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                             if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                                 try {
@@ -767,11 +779,98 @@ public class consumeAction extends Action {
                     for (int i = 0; i < rtnlist.size(); i++) {
                         Map m1 = (Map) rtnlist.get(i);
                         String result = (String) m1.get(RtnTagKey.RESULT);
+                        if (result == null){
+                            result = (String) m1.get("RESULT");
+                        }
                         // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
                         if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
                             try {
                                 // 条件中加入所属区域编码 2012-12-14 linyong
                                 updateInfoCount += updateAllStatusToStatus(RtnTagKey.SEND_INIT, RtnTagKey.SEND_SUCCESS,areaCode);
+                            } catch (Exception e) {
+                                logger.error("发送数据后更新本地数据为失败状态出现异常，请查看系统日志。");
+                                return -1;
+                            }
+                        } else {
+                            // 判断是否有重复流水号和帐号，若有，则更改记录状态为发送成功
+                            String sameid = (String) m1.get(RtnTagKey.SAMEID);
+                            String sameaccount = (String) m1.get(RtnTagKey.SAMEACCOUNT);
+                            if ((sameid != null && !"".equals(sameid.trim()))
+                                    || (sameaccount != null && !"".equals(sameaccount.trim()))) {
+                                try {
+                                    updateInfoCount += updateSameIdRecordStatus(sameid, sameaccount);
+                                } catch (Exception e) {
+                                    logger.error("发送数据后更新重复发送的数据时出现异常，请查看系统日志。");
+                                    return -1;
+                                }
+                            } else {
+                                logger.error("Server response message:" + (String) m1.get("message"));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //返回发送总数和发送成功记录数
+        if (updateInfoCount != -1) {
+        } else {
+            logger.error("发送数据后更新本地数据状态失败，请查看系统日志。");
+            return -1;
+        }
+        return 0;
+    }
+
+    public int sendAllConsumeExpInfo() {
+        // 查询所有初始状态的未发送消费数据
+        List cardList = null;
+        HashMap mapConsume=null;
+        int updateInfoCount = 0;
+        String[] status = new String[]{RtnTagKey.SEND_FAIL, RtnTagKey.SEND_TIME_OUT};
+        try {
+            //将所有财政局的消费记录获取过来 2012-05-13 linyong
+            mapConsume=queryInfoByStatusMap(status);
+//            cardList = queryInfoByStatus(RtnTagKey.SEND_INIT);
+        } catch (Exception e) {
+            logger.error("读取消费信息出现错误，请查看系统日志。", e);
+            return -1;
+        }
+        String areaCode="";
+        String[] strArr = PropertyManager.getProperty("finance.codeset").split(",");
+        for (int j =0;j<strArr.length;j++){
+            areaCode=strArr[j];
+            //根据所属区域代码，获取将要发送的消费列表 2012-05-13 linyong
+            cardList = (List)mapConsume.get(areaCode);
+            if (cardList != null && cardList.size() > 0) {
+                List rtnlist = null;
+                try {
+                    rtnlist = sendConsumeInfoByStatusArr(areaCode,cardList,status);
+                } catch (Exception e) {
+                    logger.error("发送消费信息出现错误，请查看系统日志。", e);
+                    return -1;
+                }
+                // 判断是否有返回数据，若无，则更新数据状态为发送失败
+                if (rtnlist == null || rtnlist.size() <= 0) {
+                    try {
+                        // 条件中加入所属区域编码 2012-12-14 linyong
+                        updateAllStatusArrToStatus(status, RtnTagKey.SEND_FAIL,areaCode);
+                    } catch (Exception e) {
+                        logger.error("发送数据后更新本地数据为失败状态失败，请查看系统日志。");
+                    }
+                    return -1;
+                } else {
+                    // 处理返回信息
+                    for (int i = 0; i < rtnlist.size(); i++) {
+                        Map m1 = (Map) rtnlist.get(i);
+                        String result = (String) m1.get(RtnTagKey.RESULT);
+                        if (result == null){
+                            result = (String) m1.get("RESULT");
+                        }
+                        // 通过判断result的值判断是否发送成功，若全部成功则返回一个result==success的值
+                        if (RtnTagKey.RESULT_SUCCESS.equalsIgnoreCase(result)) {
+                            try {
+                                // 条件中加入所属区域编码 2012-12-14 linyong
+                                updateInfoCount += updateAllStatusArrToStatus(status, RtnTagKey.SEND_SUCCESS,areaCode);
                             } catch (Exception e) {
                                 logger.error("发送数据后更新本地数据为失败状态出现异常，请查看系统日志。");
                                 return -1;

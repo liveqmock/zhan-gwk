@@ -197,6 +197,9 @@ public class T1000Action implements RequestAction {
             m1 = (Map)oldList.get(0);
         }
         String result = (String) m1.get("result");
+        if (result == null){
+            result = (String) m1.get("RESULT");
+        }
         if ("success".equalsIgnoreCase(result)){
             m1.clear();
             m1 = (Map)oldList.get(0);

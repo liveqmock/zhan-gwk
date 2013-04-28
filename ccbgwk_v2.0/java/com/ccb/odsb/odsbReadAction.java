@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import pub.platform.advance.utils.PropertyManager;
+import pub.platform.db.ConnectionManager;
+import pub.platform.db.DatabaseConnection;
 import pub.platform.db.RecordSet;
 import pub.platform.form.control.Action;
 import pub.platform.utils.DateUtil;
@@ -329,5 +331,83 @@ public class odsbReadAction extends Action {
         }
         cal.add(Calendar.DATE, -7);
         return  sdf.format(cal.getTime());
+    }
+
+    public void insertDb(){
+        DatabaseConnection conn = ConnectionManager.getInstance().get();
+        try {
+            //service.createElementCode("AAA", "FUNC", 2008, ElementCodeList);
+            conn.begin();
+            String yymmdd = DateUtil.getDateStr();
+            String sql = "select max(lsh) as lsh from ls_consumeinfo where lsh like '" + yymmdd + "%'";
+            String last_today_lsh = null;
+            int i_last_today_lsh = 0;
+            rs = conn.executeQuery(sql);
+            while (rs.next()) {
+                last_today_lsh = rs.getString("lsh");
+            }
+            if (last_today_lsh != null) {
+                i_last_today_lsh = Integer.parseInt(last_today_lsh.substring(8, 15));
+            }
+
+
+            int lshCount =0;
+            sql = "select * from ls_consumeInfo_temp";
+
+            rs = conn.executeQuery(sql);
+            LSCONSUMEINFO consume = new LSCONSUMEINFO();
+
+            //处理本日多次进行导入操作的情况
+            int TotalCount=0;
+            lshCount += i_last_today_lsh;
+            while (rs.next()) {
+                //流水号
+                TotalCount++;
+                lshCount++;
+                String lsh = String.valueOf(lshCount);
+                lsh = yymmdd + StringUtils.leftPad(lsh, 7, '0');
+                consume.setLsh(lsh);
+                consume.setAccount(rs.getString("ACCOUNT"));
+                consume.setBusidate(rs.getString("BUSIDATE"));
+                consume.setBusimoney(rs.getDouble("BUSIMONEY"));
+                consume.setBusiname(rs.getString("BUSINAME"));
+                consume.setCardname(rs.getString("CARDNAME"));
+
+                consume.setLimitdate(rs.getString("LIMITDATE"));
+
+                consume.setRemark(rs.getString("REMARK"));
+                consume.setOperid(rs.getString("OPERID"));
+                consume.setOperdate(rs.getString("OPERDATE"));
+                consume.setStatus(rs.getString("STATUS"));
+                consume.setTx_cd(rs.getString("TX_CD"));
+                consume.setRef_number(rs.getString("REF_NUMBER"));
+                consume.setCmbi_merch_no(rs.getString("CMBI_MERCH_NO"));
+                consume.setInac_date(rs.getString("INAC_DATE"));
+                consume.setInac_amt(rs.getDouble("INAC_AMT"));
+                consume.setTxlog(rs.getString("TXLOG"));
+                consume.setOdsbdate(rs.getString("ODSBDATE"));
+                consume.setOdsbtime(rs.getString("ODSBTIME"));
+                consume.setRecversion(0);
+
+                //20110210 zhanrui  新增三个参考字段 用于唯一标识一条记录 （未添加索引）
+                consume.setRef_date(rs.getString("REF_DATE"));
+                consume.setRef_batch_id(rs.getString("REF_BATCH_ID"));
+                consume.setRef_seq_no(rs.getString("REF_SEQ_NO"));
+                // 添加字段areacode2012-12-14 linyong
+                consume.setAreacode("001");
+
+                int insertrtn = consume.insert();
+            }
+            System.out.println(String.valueOf(TotalCount));
+        } catch (Exception e) {
+            conn.rollback();
+            logger.error(e);
+        } finally {
+            ConnectionManager.getInstance().release();
+        }
+    }
+    public static void main(String[] args){
+        odsbReadAction odsb = new odsbReadAction();
+        odsb.insertDb();
     }
 }
